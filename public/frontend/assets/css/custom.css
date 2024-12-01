@@ -1,0 +1,67 @@
+ /* Custom styles for the fixed bottom navigation */
+ .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #FED700;
+    z-index: 1000;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    display: none;
+    /* Default hidden */
+}
+
+.bottom-nav .nav-item .nav-link {
+    color: #000000 !important;
+    font-size: 12px;
+    text-align: center;
+    padding: 10px 5px;
+}
+
+.bottom-nav .nav-item {
+    flex: 1;
+}
+
+/* Add padding to body only for smaller screens */
+@media (max-width: 1200px) {
+    body {
+        padding-bottom: 60px;
+        /* Space for the fixed navbar */
+    }
+
+    .bottom-nav {
+        display: flex;
+        /* Show the navbar on smaller screens */
+    }
+
+    .u-go-to {
+        bottom: 80px !important;
+    }
+}
+
+/* Custom styling for the offcanvas sidebar */
+.offcanvas {
+    max-width: 80%;
+    /* Sidebar width */
+}
+
+.offcanvas-body ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.offcanvas-body ul li {
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.offcanvas-body ul li a {
+    color: #000;
+    text-decoration: none;
+}
+
+.offcanvas-body ul li a:hover {
+    color: #17a2b8;
+    /* Highlight color */
+}
+
