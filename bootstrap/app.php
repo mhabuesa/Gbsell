@@ -17,6 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'merchant' => Merchant::class,
             'ValidateShop' => ValidateShop::class
+        ])->validateCsrfTokens(except: [
+            '/pay','/pay-via-ajax', '/success','/cancel','/fail','/ipn'
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

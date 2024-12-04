@@ -104,7 +104,11 @@ class CartController extends Controller
         Cookie::queue('cart', json_encode($cartData), 60 * 24 * 30);
 
 
-        return redirect()->back()->with('success', 'Product added to cart successfully.');
+        if($request->submit_button == 'add_to_cart'){
+            return redirect()->back()->with('success', 'Product added to cart successfully.');
+        }else{
+            return redirect()->route('cart', $shopUrl)->with('success', 'Product added to cart successfully.');
+        }
     }
     //Cart View
     public function cart($shopUrl)

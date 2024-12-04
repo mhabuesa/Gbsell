@@ -158,21 +158,26 @@
                                                     <div class="prodcut-price">
                                                         @if ($product->variant->sortBy('current_price')->first()->regular_price != null)
                                                             <small class="text-gray-100"><del>৳ {{ $product->variant->sortBy('current_price')->first()->regular_price }}</del></small>
-                                                        @else
-
                                                         @endif
                                                         <div class="text-gray-100">৳ {{ $product->variant->sortBy('current_price')->first()->current_price }}</div>
                                                     </div>
                                                     <div class="d-none d-xl-block prodcut-add-cart">
-                                                        <a href="single-product-fullwidth.html" class="btn-add-cart btn-primary transition-3d-hover"><i class="ec ec-add-to-cart"></i></a>
+                                                        <a href="{{ route('shop.product', ['slug' => $product->slug, 'shopUrl' => $shop->url]) }}" class="btn-add-cart btn-primary transition-3d-hover"><i class="ec ec-add-to-cart"></i></a>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="product-item__footer">
-                                                <div class="border-top pt-2 flex-center-between flex-wrap">
-                                                    <a href="compare.html" class="text-gray-6 font-size-13"><i class="ec ec-compare mr-1 font-size-15"></i> Compare</a>
-                                                    <a href="wishlist.html" class="text-gray-6 font-size-13"><i class="ec ec-favorites mr-1 font-size-15"></i> Wishlist</a>
-                                                </div>
+                                                @if ($product->variant->sortBy('current_price')->first()->regular_price != null)
+                                                    <div class="border-top pt-2 flex-center-between flex-wrap d-flex justify-content-center">
+                                                        <a href="{{ route('wishlist.store', ['shopUrl' => $shop->url, 'product_id' => $product->id]) }}" class="text-gray-6 font-size-13 mr-2"><i
+                                                            class="ec ec-favorites mr-1 font-size-15"></i> Wishlist</a>
+                                                    </div>
+                                                @else
+                                                    <div class="border-top pt-2 flex-center-between flex-wrap d-flex justify-content-center mt-4">
+                                                        <a href="{{ route('wishlist.store', ['shopUrl' => $shop->url, 'product_id' => $product->id]) }}" class="text-gray-6 font-size-13 mr-2"><i
+                                                            class="ec ec-favorites mr-1 font-size-15"></i> Wishlist</a>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>

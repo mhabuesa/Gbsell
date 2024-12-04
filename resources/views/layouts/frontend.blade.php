@@ -579,15 +579,12 @@
                                         <!-- End Input -->
                                     </li>
                                     <!-- End Search -->
+
                                     <li class="col d-none d-xl-block"><a
-                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/compare.html"
-                                            class="text-gray-90" data-toggle="tooltip" data-placement="top"
-                                            title="Compare"><i class="font-size-22 ec ec-compare"></i></a></li>
-                                    <li class="col d-none d-xl-block"><a
-                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/wishlist.html"
+                                            href="{{ route('wishlist', $shop->url) }}"
                                             class="text-gray-90" data-toggle="tooltip" data-placement="top"
                                             title="Favorites"><i class="font-size-22 ec ec-favorites"></i></a></li>
-                                    <li class="col d-xl-none px-2 px-sm-3"><a
+                                    <li class="col d-none d-xl-block px-2 px-sm-3"><a
                                             href="https://transvelo.github.io/electro-html/2.0/html/shop/my-account.html"
                                             class="text-gray-90" data-toggle="tooltip" data-placement="top"
                                             title="My Account"><i class="font-size-22 ec ec-user"></i></a></li>
@@ -915,10 +912,13 @@
                 </a>
             </div>
             <div class="nav-item">
-                <a class="nav-link" href="#"><i class="fas fa-exchange-alt fa-lg"></i><br>Compare</a>
+                <a class="nav-link" href=""><i class="font-size-22 ec ec-user fa-lg"></i><br>Account</a>
             </div>
             <div class="nav-item">
-                <a class="nav-link" href="#"><i class="fas fa-shopping-cart fa-lg"></i><br>Cart</a>
+                <a class="nav-link" href="{{route('wishlist', $shop->url)}}"><i class="font-size-22 ec ec-favorites fa-lg"></i><br>Wishlist</a>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link" href="{{ route('cart', $shop->url) }}"><i class="fas fa-shopping-cart fa-lg"></i><br>Cart</a>
             </div>
         </div>
     </nav>
@@ -1182,6 +1182,8 @@
         showToast('{{ session('error') }}', 'error');
     </script>
 @endif
+
+
 
     @stack('script')
 </body>

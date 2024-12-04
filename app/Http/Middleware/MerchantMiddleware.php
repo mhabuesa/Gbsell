@@ -30,6 +30,8 @@ class MerchantMiddleware
             return redirect()->route('signin.view')->with('error', 'Access Denied. Your account is deactivated by Shop Owner!');
         }
 
+        
+
         return $next($request);
     }
 }

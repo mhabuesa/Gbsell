@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
-use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use App\Events\InvoiceGenerated;
+use App\Events\MerchantMailVerify;
+use App\Listeners\SendInvoiceEmail;
 use Illuminate\Support\Facades\Event;
+use App\Listeners\SendMerchantVerifyEmail;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -13,8 +17,11 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
-        \App\Events\MerchantMailVerify::class => [
-            \App\Listeners\SendMerchantVerifyEmail::class,
+        MerchantMailVerify::class => [
+            SendMerchantVerifyEmail::class,
+        ],
+        InvoiceGenerated::class => [
+            SendInvoiceEmail::class,
         ],
     ];
 

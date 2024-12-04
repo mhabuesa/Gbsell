@@ -156,7 +156,8 @@
                                             </selec>
                                             <!-- End Select -->
                                     </div>
-                                    <input type="text" class="product_id" name="product_id" value="{{ $product->id }}" hidden>
+                                    <input type="text" class="product_id" name="product_id"
+                                        value="{{ $product->id }}" hidden>
                                     <div class="mb-2 pb-0dot5 mt-4">
                                         <button type="submit" name="submit_button" value="add_to_cart"
                                             class="btn btn-block btn-primary-dark submit_btn"><i
@@ -170,10 +171,9 @@
 
 
                                 <div class="flex-content-center flex-wrap">
-                                    <a href="#" class="text-gray-6 font-size-13 mr-2"><i
+                                    <a href="{{ route('wishlist.store', ['shopUrl' => $shop->url, 'product_id' => $product->id]) }}" class="text-gray-6 font-size-13 mr-2"><i
                                             class="ec ec-favorites mr-1 font-size-15"></i> Wishlist</a>
-                                    <a href="#" class="text-gray-6 font-size-13 ml-2"><i
-                                            class="ec ec-compare mr-1 font-size-15"></i> Compare</a>
+
                                 </div>
                             </div>
                         </div>
@@ -191,14 +191,12 @@
                         <ul class="nav nav-classic nav-tab nav-tab-lg justify-content-xl-center flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visble border-0 pb-1 pb-xl-0 mb-n1 mb-xl-0"
                             id="pills-tab-8" role="tablist">
                             <li class="nav-item flex-shrink-0 flex-xl-shrink-1 z-index-2">
-                                <a class="nav-link active" id="description-tab" data-toggle="pill"
-                                    href="#description" role="tab" aria-controls="description"
-                                    aria-selected="true">Description</a>
+                                <a class="nav-link active" id="description-tab" data-toggle="pill" href="#description"
+                                    role="tab" aria-controls="description" aria-selected="true">Description</a>
                             </li>
                             <li class="nav-item flex-shrink-0 flex-xl-shrink-1 z-index-2">
-                                <a class="nav-link" id="review-tab" data-toggle="pill"
-                                    href="#review" role="tab" aria-controls="review"
-                                    aria-selected="false">Reviews</a>
+                                <a class="nav-link" id="review-tab" data-toggle="pill" href="#review" role="tab"
+                                    aria-controls="review" aria-selected="false">Reviews</a>
                             </li>
                         </ul>
                     </div>
@@ -209,8 +207,7 @@
                                 aria-labelledby="description-tab">
                                 <p>{!! $product->description !!}</p>
                             </div>
-                            <div class="tab-pane fade" id="review" role="tabpanel"
-                                aria-labelledby="review-tab">
+                            <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
                                 <div class="row mb-8">
                                     <div class="col-md-6">
                                         <div class="mb-3">

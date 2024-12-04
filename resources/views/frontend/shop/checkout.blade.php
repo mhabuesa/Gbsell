@@ -295,7 +295,7 @@
                                     <div id="shopCartHeadingFour"
                                         class="custom-control custom-checkbox d-flex align-items-center">
                                         <input type="checkbox" class="custom-control-input" id="shippingdiffrentAddress"
-                                            name="shipCheck">
+                                            name="ship_check">
                                         <label class="custom-control-label form-label" for="shippingdiffrentAddress"
                                             data-toggle="collapse" data-target="#shopCartfour" aria-expanded="false"
                                             aria-controls="shopCartfour">
@@ -444,6 +444,13 @@
         updateShipping();
     });
 </script>
+
+@if ($errors->any())
+    <script>
+        showToast('Please fill in all required shipping details correctly.', 'error');
+    </script>
+@endif
+
 
 
 @endpush

@@ -4,12 +4,14 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cookie;
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ShopController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\SslCommerzPaymentController;
+use App\Http\Controllers\WishlistController;
 
 // Index View
 Route::get('/', [FrontendController::class, 'index'])->name('index');
@@ -39,12 +41,19 @@ Route::prefix('{shopUrl}')
 
         Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
         Route::post('/order/store', [OrderController::class, 'order_store'])->name('order.store');
-        Route::get('/order/store', [OrderController::class, 'order_store'])->name('order.store');
+        Route::get('/pay', [SslCommerzPaymentController::class, 'index'])->name('sslpay');
+        Route::get('/order/placed', [OrderController::class, 'order_placed'])->name('order.placed');
 
-
-        Route::post('/success', [OrderController::class, 'success']);
-
-
-
+        Route::get('/wishlist', [WishlistController::class, 'wishlist'])->name('wishlist');
+        Route::get('/wishlist/store/{product_id}', [WishlistController::class, 'wishlist_store'])->name('wishlist.store');
+        Route::get('/wishlist/remove/{product_id}', [WishlistController::class, 'wishlist_remove'])->name('wishlist.remove');
     });
+
+    //SSLCOMMERZ START
+    Route::post('/success', [SslCommerzPaymentController::class, 'success']);
+    Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax']);
+    Route::post('/fail', [SslCommerzPaymentController::class, 'fail']);
+    Route::post('/cancel', [SslCommerzPaymentController::class, 'cancel']);
+    Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);
+    //SSLCOMMERZ END
 
