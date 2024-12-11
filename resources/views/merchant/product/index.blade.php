@@ -38,6 +38,7 @@
                                 <th class="text-center" style="width: 50px;">#</th>
                                 <th style="width: 150px;">Photo</th>
                                 <th>Name</th>
+                                <th>Product ID</th>
                                 <th class="d-none d-sm-table-cell" style="width: 15%;">Condition</th>
                                 <th class="d-none d-sm-table-cell" style="width: 15%;">Stock</th>
                                 <th class="d-none d-sm-table-cell" style="width: 15%;">Status</th>
@@ -64,6 +65,9 @@
                                             <img src="{{ asset($product->preview) }}" class="" style="width: 40px;"
                                                 alt="Photo">
                                         @endif
+                                    </td>
+                                    <td class="fw-semibold fs-sm">
+                                        {{ $product->product_code }}
                                     </td>
                                     <td class="fw-semibold fs-sm">
                                         {{ $product->name }}

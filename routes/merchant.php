@@ -6,7 +6,9 @@ use App\Http\Controllers\SmsController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ColorController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
@@ -15,6 +17,7 @@ use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MerchantAuthController;
 use App\Http\Controllers\MerchantUserController;
+use App\Http\Controllers\OrderDeliverController;
 use App\Http\Controllers\FrontCustomizeController;
 use App\Http\Controllers\PaymentGatewayController;
 use App\Http\Controllers\SslCommerzPaymentController;
@@ -125,27 +128,31 @@ Route::middleware('merchant')->group(function () {
         Route::post('/status/update/{id}', 'status_update')->name('status.update');
     });
 
+    Route::controller(ReviewController::class)->group(function () {
+        Route::get('/review/list', 'review_list')->name('review.list');
+        Route::delete('/review/destroy/{id}', 'review_destroy')->name('review.destroy');
+        Route::post('/review/approve/{id}', 'review_approve')->name('review.approve');
+    });
+
+    Route::controller(OrderController::class)->group(function () {
+        Route::get('/order/list', 'index')->name('order.index');
+        Route::get('/order/deliver', 'deliver')->name('order.deliver');
+        Route::get('/order/complate', 'complate')->name('order.complate');
+        Route::get('/order/cancel', 'cancel')->name('order.cancelled');
+        Route::get('/order/details/{oeder_id}', 'details')->name('order.details');
+        Route::post('/order/status/update/{id}', 'order_status_update')->name('order.status.update');
+    });
+
+    Route::controller(OrderDeliverController::class)->group(function () {
+        Route::post('/steadfast/delivery', 'steadfast_delivery')->name('steadfast.delivery');
+    });
+
      // Resource Controller
     Route::resource('/category', CategoryController::class);
     Route::resource('/product', ProductController::class);
     Route::resource('/attribute', AttributeController::class);
     Route::resource('/color', ColorController::class);
     Route::resource('/coupon', CouponController::class);
-
-
-    // //SSLCOMMERZ START
-    // Route::get('/example1', [SslCommerzPaymentController::class, 'exampleEasyCheckout']);
-    // Route::get('/example2', [SslCommerzPaymentController::class, 'exampleHostedCheckout']);
-
-    // Route::post('/pay', [SslCommerzPaymentController::class, 'index']);
-    // Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax']);
-
-    // // Route::post('/success', [SslCommerzPaymentController::class, 'success']);
-    // Route::post('/fail', [SslCommerzPaymentController::class, 'fail']);
-    // Route::post('/cancel', [SslCommerzPaymentController::class, 'cancel']);
-
-    // Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);
-    // //SSLCOMMERZ END
 
 
 

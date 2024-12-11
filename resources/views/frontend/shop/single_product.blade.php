@@ -1,4 +1,23 @@
 @extends('layouts.frontend')
+@push('style')
+    <style>
+        .fas.fa-star {
+            color: gold;
+        }
+
+        .far.fa-star {
+            color: #ccc;
+        }
+
+        .cursor-pointer {
+            cursor: pointer !important;
+        }
+
+        .fs_20 {
+            font-size: 20px !important;
+        }
+    </style>
+@endpush
 @section('content')
     <main id="content" role="main">
         <!-- breadcrumb -->
@@ -60,15 +79,15 @@
                                 class="font-size-12 text-gray-5 mb-2 d-inline-block">{{ $product->category->name }}</a>
                             <h2 class="font-size-25 text-lh-1dot2">{{ $product->name }}</h2>
                             <div class="mb-2">
-                                <a class="d-inline-flex align-items-center small font-size-15 text-lh-1" href="#">
+                                <a class="d-inline-flex align-items-center small font-size-15 text-lh-1" href="javascript:;">
                                     <div class="text-warning mr-2">
-                                        <small class="fas fa-star"></small>
-                                        <small class="fas fa-star"></small>
-                                        <small class="fas fa-star"></small>
-                                        <small class="fas fa-star"></small>
-                                        <small class="far fa-star text-muted"></small>
+                                        <small class="{{ $ratingOutOf5 >= 1 ? 'fas fa-star' : 'far fa-star text-muted' }}"></small>
+                                        <small class="{{ $ratingOutOf5 >= 2 ? 'fas fa-star' : 'far fa-star text-muted' }}"></small>
+                                        <small class="{{ $ratingOutOf5 >= 3 ? 'fas fa-star' : 'far fa-star text-muted' }}"></small>
+                                        <small class="{{ $ratingOutOf5 >= 4 ? 'fas fa-star' : 'far fa-star text-muted' }}"></small>
+                                        <small class="{{ $ratingOutOf5 >= 5 ? 'fas fa-star' : 'far fa-star text-muted' }}"></small>
                                     </div>
-                                    <span class="text-secondary font-size-13">(3 customer reviews)</span>
+                                    <span class="text-secondary font-size-13">({{ $ratingsCount->totalReviews }} customer reviews)</span>
                                 </a>
                             </div>
                             <p><strong>Product Code</strong>: {{ $product->product_code }}</p>
@@ -171,7 +190,8 @@
 
 
                                 <div class="flex-content-center flex-wrap">
-                                    <a href="{{ route('wishlist.store', ['shopUrl' => $shop->url, 'product_id' => $product->id]) }}" class="text-gray-6 font-size-13 mr-2"><i
+                                    <a href="{{ route('wishlist.store', ['shopUrl' => $shop->url, 'product_id' => $product->id]) }}"
+                                        class="text-gray-6 font-size-13 mr-2"><i
                                             class="ec ec-favorites mr-1 font-size-15"></i> Wishlist</a>
 
                                 </div>
@@ -211,9 +231,9 @@
                                 <div class="row mb-8">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <h3 class="font-size-18 mb-6">Based on 3 reviews</h3>
-                                            <h2 class="font-size-30 font-weight-bold text-lh-1 mb-0">4.3</h2>
-                                            <div class="text-lh-1">overall</div>
+                                            <h3 class="font-size-18 mb-6">Based on {{ $ratingsCount->totalReviews }} reviews</h3>
+                                            <h2 class="font-size-30 font-weight-bold text-lh-1 mb-0">  {{ number_format($ratingOutOf10, 1) }}</h2>
+                                            <div class="text-lh-1">overall out of 10</div>
                                         </div>
 
                                         <!-- Ratings -->
@@ -234,12 +254,16 @@
                                                     <div class="col-auto mb-2 mb-md-0">
                                                         <div class="progress ml-xl-5" style="height: 10px; width: 200px;">
                                                             <div class="progress-bar" role="progressbar"
-                                                                style="width: 100%;" aria-valuenow="100"
-                                                                aria-valuemin="0" aria-valuemax="100"></div>
+                                                                style="width: {{ $ratingsCount->totalReviews > 0 ? ($ratingsCount->fiveStarReviews * 100) / $ratingsCount->totalReviews : 0 }}%;"
+                                                                aria-valuenow="{{ $ratingsCount->fiveStarReviews }}"
+                                                                aria-valuemin="0"
+                                                                aria-valuemax="{{ $ratingsCount->totalReviews }}">
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-auto text-right">
-                                                        <span class="text-gray-90">205</span>
+                                                        <span
+                                                            class="text-gray-90">{{ $ratingsCount->fiveStarReviews > 0 ? $ratingsCount->fiveStarReviews : 0 }}</span>
                                                     </div>
                                                 </a>
                                             </li>
@@ -259,12 +283,16 @@
                                                     <div class="col-auto mb-2 mb-md-0">
                                                         <div class="progress ml-xl-5" style="height: 10px; width: 200px;">
                                                             <div class="progress-bar" role="progressbar"
-                                                                style="width: 53%;" aria-valuenow="53" aria-valuemin="0"
-                                                                aria-valuemax="100"></div>
+                                                                style="width: {{ $ratingsCount->totalReviews > 0 ? ($ratingsCount->fourStarReviews * 100) / $ratingsCount->totalReviews : 0 }}%;"
+                                                                aria-valuenow="{{ $ratingsCount->fourStarReviews }}"
+                                                                aria-valuemin="0"
+                                                                aria-valuemax="{{ $ratingsCount->totalReviews }}">
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-auto text-right">
-                                                        <span class="text-gray-90">55</span>
+                                                        <span
+                                                            class="text-gray-90">{{ $ratingsCount->fourStarReviews > 0 ? $ratingsCount->fourStarReviews : 0 }}</span>
                                                     </div>
                                                 </a>
                                             </li>
@@ -284,12 +312,16 @@
                                                     <div class="col-auto mb-2 mb-md-0">
                                                         <div class="progress ml-xl-5" style="height: 10px; width: 200px;">
                                                             <div class="progress-bar" role="progressbar"
-                                                                style="width: 20%;" aria-valuenow="20" aria-valuemin="0"
-                                                                aria-valuemax="100"></div>
+                                                                style="width: {{ $ratingsCount->totalReviews > 0 ? ($ratingsCount->threeStarReviews * 100) / $ratingsCount->totalReviews : 0 }}%;"
+                                                                aria-valuenow="{{ $ratingsCount->threeStarReviews }}"
+                                                                aria-valuemin="0"
+                                                                aria-valuemax="{{ $ratingsCount->totalReviews }}">
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-auto text-right">
-                                                        <span class="text-gray-90">23</span>
+                                                        <span
+                                                            class="text-gray-90">{{ $ratingsCount->threeStarReviews > 0 ? $ratingsCount->threeStarReviews : 0 }}</span>
                                                     </div>
                                                 </a>
                                             </li>
@@ -309,12 +341,16 @@
                                                     <div class="col-auto mb-2 mb-md-0">
                                                         <div class="progress ml-xl-5" style="height: 10px; width: 200px;">
                                                             <div class="progress-bar" role="progressbar"
-                                                                style="width: 0%;" aria-valuenow="0" aria-valuemin="0"
-                                                                aria-valuemax="100"></div>
+                                                                style="width: {{ $ratingsCount->totalReviews > 0 ? ($ratingsCount->twoStarReviews * 100) / $ratingsCount->totalReviews : 0 }}%;"
+                                                                aria-valuenow="{{ $ratingsCount->twoStarReviews }}"
+                                                                aria-valuemin="0"
+                                                                aria-valuemax="{{ $ratingsCount->totalReviews }}">
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-auto text-right">
-                                                        <span class="text-muted">0</span>
+                                                        <span
+                                                            class="text-gray-90">{{ $ratingsCount->twoStarReviews > 0 ? $ratingsCount->twoStarReviews : 0 }}</span>
                                                     </div>
                                                 </a>
                                             </li>
@@ -334,12 +370,16 @@
                                                     <div class="col-auto mb-2 mb-md-0">
                                                         <div class="progress ml-xl-5" style="height: 10px; width: 200px;">
                                                             <div class="progress-bar" role="progressbar"
-                                                                style="width: 1%;" aria-valuenow="1" aria-valuemin="0"
-                                                                aria-valuemax="100"></div>
+                                                                style="width: {{ $ratingsCount->totalReviews > 0 ? ($ratingsCount->oneStarReviews * 100) / $ratingsCount->totalReviews : 0 }}%;"
+                                                                aria-valuenow="{{ $ratingsCount->oneStarReviews }}"
+                                                                aria-valuemin="0"
+                                                                aria-valuemax="{{ $ratingsCount->totalReviews }}">
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-auto text-right">
-                                                        <span class="text-gray-90">4</span>
+                                                        <span
+                                                            class="text-gray-90">{{ $ratingsCount->oneStarReviews > 0 ? $ratingsCount->oneStarReviews : 0 }}</span>
                                                     </div>
                                                 </a>
                                             </li>
@@ -349,31 +389,60 @@
                                     <div class="col-md-6">
                                         <h3 class="font-size-18 mb-5">Add a review</h3>
                                         <!-- Form -->
-                                        <form class="js-validate">
+                                        <form class="js-validate" method="POST"
+                                            action="{{ route('customer.review', $shop->url) }}">
+                                            @csrf
                                             <div class="row align-items-center mb-4">
                                                 <div class="col-md-4 col-lg-3">
-                                                    <label for="rating" class="form-label mb-0">Your Review</label>
+                                                    <label for="rating" class="form-label mb-0">Your Rating <span
+                                                            class="text-danger">*</span></label>
                                                 </div>
                                                 <div class="col-md-8 col-lg-9">
-                                                    <a href="#" class="d-block">
-                                                        <div class="text-warning text-ls-n2 font-size-16">
-                                                            <small class="far fa-star text-muted"></small>
-                                                            <small class="far fa-star text-muted"></small>
-                                                            <small class="far fa-star text-muted"></small>
-                                                            <small class="far fa-star text-muted"></small>
-                                                            <small class="far fa-star text-muted"></small>
+                                                    <div href="#" class="d-block">
+                                                        <div class="text-warning text-ls-n2 font-size-16"
+                                                            id="rating-stars">
+                                                            <small class="far fa-star text-muted fs_20 cursor-pointer"
+                                                                data-value="1" data-toggle="tooltip" data-placement="top"
+                                                                title="Bad">
+                                                                <input type="radio" id="star1" value="1"
+                                                                    name="rating" hidden>
+                                                            </small>
+                                                            <small class="far fa-star text-muted fs_20 cursor-pointer"
+                                                                data-value="2" data-toggle="tooltip" data-placement="top"
+                                                                title="Average">
+                                                                <input type="radio" id="star2" value="2"
+                                                                    name="rating" hidden>
+                                                            </small>
+                                                            <small class="far fa-star text-muted fs_20 cursor-pointer"
+                                                                data-value="3" data-toggle="tooltip" data-placement="top"
+                                                                title="Good">
+                                                                <input type="radio" id="star3" value="3"
+                                                                    name="rating" hidden>
+                                                            </small>
+                                                            <small class="far fa-star text-muted fs_20 cursor-pointer"
+                                                                data-value="4" data-toggle="tooltip" data-placement="top"
+                                                                title="Very Good">
+                                                                <input type="radio" id="star4" value="4"
+                                                                    name="rating" hidden>
+                                                            </small>
+                                                            <small class="far fa-star text-muted fs_20 cursor-pointer"
+                                                                data-value="5" data-toggle="tooltip" data-placement="top"
+                                                                title="Excellent">
+                                                                <input type="radio" id="star5" value="5"
+                                                                    name="rating" hidden>
+                                                            </small>
                                                         </div>
-                                                    </a>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="js-form-message form-group mb-3 row">
                                                 <div class="col-md-4 col-lg-3">
                                                     <label for="descriptionTextarea" class="form-label">Your
-                                                        Review</label>
+                                                        Review <span class="text-danger">*</span></label>
                                                 </div>
                                                 <div class="col-md-8 col-lg-9">
-                                                    <textarea class="form-control" rows="3" id="descriptionTextarea" data-msg="Please enter your message."
-                                                        data-error-class="u-has-error" data-success-class="u-has-success"></textarea>
+                                                    <textarea class="form-control" name="review" rows="3" id="descriptionTextarea"
+                                                        data-msg="Please enter your message." data-error-class="u-has-error" data-success-class="u-has-success">{{ old('review') }}</textarea>
                                                 </div>
                                             </div>
                                             <div class="js-form-message form-group mb-3 row">
@@ -385,7 +454,7 @@
                                                     <input type="text" class="form-control" name="name"
                                                         id="inputName" aria-label="Alex Hecker" required=""
                                                         data-msg="Please enter your name." data-error-class="u-has-error"
-                                                        data-success-class="u-has-success">
+                                                        data-success-class="u-has-success" value="{{ old('name') }}">
                                                 </div>
                                             </div>
                                             <div class="js-form-message form-group mb-3 row">
@@ -394,10 +463,12 @@
                                                             class="text-danger">*</span></label>
                                                 </div>
                                                 <div class="col-md-8 col-lg-9">
-                                                    <input type="email" class="form-control" name="emailAddress"
+                                                    <input type="email" class="form-control" name="email"
                                                         id="emailAddress" aria-label="alexhecker@pixeel.com"
                                                         required="" data-msg="Please enter a valid email address."
-                                                        data-error-class="u-has-error" data-success-class="u-has-success">
+                                                        data-error-class="u-has-error" data-success-class="u-has-success" value="{{ old('email') }}">
+                                                    <input type="text" name="product_id" value="{{ $product->id }}"
+                                                        hidden>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -411,88 +482,41 @@
                                         <!-- End Form -->
                                     </div>
                                 </div>
-                                <!-- Review -->
-                                <div class="border-bottom border-color-1 pb-4 mb-4">
-                                    <!-- Review Rating -->
-                                    <div
-                                        class="d-flex justify-content-between align-items-center text-secondary font-size-1 mb-2">
-                                        <div class="text-warning text-ls-n2 font-size-16" style="width: 80px;">
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
-                                            <small class="far fa-star text-muted"></small>
-                                            <small class="far fa-star text-muted"></small>
+
+                                @foreach ($reviews as $review)
+                                    <!-- Review -->
+                                    <div class="border-bottom border-color-1 pb-4 mb-4">
+                                        <!-- Review Rating -->
+                                        <div
+                                            class="d-flex justify-content-between align-items-center text-secondary font-size-1 mb-2">
+                                            <div class="text-warning text-ls-n2 font-size-16" style="width: 80px;">
+                                                <small
+                                                    class="{{ $review->rating >= 1 ? 'fas fa-star' : 'far fa-star text-muted' }}"></small>
+                                                <small
+                                                    class="{{ $review->rating >= 2 ? 'fas fa-star' : 'far fa-star text-muted' }}"></small>
+                                                <small
+                                                    class="{{ $review->rating >= 3 ? 'fas fa-star' : 'far fa-star text-muted' }}"></small>
+                                                <small
+                                                    class="{{ $review->rating >= 4 ? 'fas fa-star' : 'far fa-star text-muted' }}"></small>
+                                                <small
+                                                    class="{{ $review->rating >= 5 ? 'fas fa-star' : 'far fa-star text-muted' }}"></small>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <!-- End Review Rating -->
+                                        <!-- End Review Rating -->
 
-                                    <p class="text-gray-90">Fusce vitae nibh mi. Integer posuere, libero et ullamcorper
-                                        facilisis, enim eros tincidunt orci, eget vestibulum sapien nisi ut leo. Cras
-                                        finibus vel est ut mollis. Donec luctus condimentum ante et euismod.</p>
+                                        <p class="text-gray-90">{{ $review->review }}.</p>
 
-                                    <!-- Reviewer -->
-                                    <div class="mb-2">
-                                        <strong>John Doe</strong>
-                                        <span class="font-size-13 text-gray-23">- April 3, 2019</span>
-                                    </div>
-                                    <!-- End Reviewer -->
-                                </div>
-                                <!-- End Review -->
-                                <!-- Review -->
-                                <div class="border-bottom border-color-1 pb-4 mb-4">
-                                    <!-- Review Rating -->
-                                    <div
-                                        class="d-flex justify-content-between align-items-center text-secondary font-size-1 mb-2">
-                                        <div class="text-warning text-ls-n2 font-size-16" style="width: 80px;">
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
+                                        <!-- Reviewer -->
+                                        <div class="mb-2">
+                                            <strong>{{ $review->name }}</strong>
+                                            <span class="font-size-13 text-gray-23">-
+                                                {{ $review->created_at->format('M d, Y') }}</span>
                                         </div>
+                                        <!-- End Reviewer -->
                                     </div>
-                                    <!-- End Review Rating -->
+                                    <!-- End Review -->
+                                @endforeach
 
-                                    <p class="text-gray-90">Pellentesque habitant morbi tristique senectus et netus et
-                                        malesuada fames ac turpis egestas. Suspendisse eget facilisis odio. Duis sodales
-                                        augue eu tincidunt faucibus. Etiam justo ligula, placerat ac augue id, volutpat
-                                        porta dui.</p>
-
-                                    <!-- Reviewer -->
-                                    <div class="mb-2">
-                                        <strong>Anna Kowalsky</strong>
-                                        <span class="font-size-13 text-gray-23">- April 3, 2019</span>
-                                    </div>
-                                    <!-- End Reviewer -->
-                                </div>
-                                <!-- End Review -->
-                                <!-- Review -->
-                                <div class="pb-4">
-                                    <!-- Review Rating -->
-                                    <div
-                                        class="d-flex justify-content-between align-items-center text-secondary font-size-1 mb-2">
-                                        <div class="text-warning text-ls-n2 font-size-16" style="width: 80px;">
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
-                                            <small class="far fa-star text-muted"></small>
-                                        </div>
-                                    </div>
-                                    <!-- End Review Rating -->
-
-                                    <p class="text-gray-90">Sed id tincidunt sapien. Pellentesque cursus accumsan tellus,
-                                        nec ultricies nulla sollicitudin eget. Donec feugiat orci vestibulum porttitor
-                                        sagittis.</p>
-
-                                    <!-- Reviewer -->
-                                    <div class="mb-2">
-                                        <strong>Peter Wargner</strong>
-                                        <span class="font-size-13 text-gray-23">- April 3, 2019</span>
-                                    </div>
-                                    <!-- End Reviewer -->
-                                </div>
-                                <!-- End Review -->
                             </div>
                         </div>
                     </div>
@@ -901,9 +925,8 @@
                                 $('.availability')
                                     .removeClass('text-green')
                                     .addClass('text-red')
-                                    .text('Out of Stock'); // Change availability text to 'Out of Stock'
+                                    .text('Out of Stock');
 
-                                // Disable the submit button when out of stock
                                 $('.submit_btn').prop('disabled', true);
                             } else {
                                 $('.availability')
@@ -933,14 +956,6 @@
                 });
             }
 
-
-
-
-
-
-
-
-
             $(document).ready(function() {
                 // Get the availability value
                 var availabilityText = $('.availability').text().trim(); // Get the text
@@ -960,13 +975,45 @@
                 }
             });
 
-
-
-
-
-
-
-
         });
     </script>
+    <script>
+        // Add click event to the parent container
+        document.getElementById('rating-stars').addEventListener('click', function(e) {
+            // Check if the clicked element is a small tag or its child
+            const clickedElement = e.target.closest('small');
+            if (clickedElement) {
+                const selectedRating = parseInt(clickedElement.getAttribute('data-value')); // Get the star value
+
+                // Get all the stars
+                const stars = this.querySelectorAll('small');
+
+                // Update classes for stars
+                stars.forEach((star, index) => {
+                    if (index < selectedRating) {
+                        // Add selected star class
+                        star.classList.remove('far', 'text-muted');
+                        star.classList.add('fas', 'text-warning');
+                    } else {
+                        // Add unselected star class
+                        star.classList.remove('fas', 'text-warning');
+                        star.classList.add('far', 'text-muted');
+                    }
+                });
+
+                // Check the corresponding radio button
+                const radioInput = clickedElement.querySelector('input');
+                if (radioInput) {
+                    radioInput.checked = true;
+                }
+            }
+        });
+    </script>
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <script>
+                showToast('{{ $error }}', 'error');
+            </script>
+        @endforeach
+    @endif
 @endpush

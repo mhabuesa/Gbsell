@@ -62,11 +62,18 @@ class PaymentGatewayController extends Controller
             $status = 0;
         }
 
+        if($request->sendbox_status == 'on'){
+            $sendbox_status = 0;
+        }else{
+            $sendbox_status = 1;
+        }
+
         if ($payment_check) {
             PaymentGateway::where('shop_id', $id)->where('method', $method)->update([
                 'store_id' => $request->input('store_id'),
                 'store_password' => $request->input('store_password'),
                 'status' => $status,
+                'sendbox_status' => $sendbox_status
             ]);
             return redirect()->back()->with('success', 'Payment Method Updated Successfully');
         } else {
@@ -76,6 +83,7 @@ class PaymentGatewayController extends Controller
                 'store_id' => $request->input('store_id'),
                 'store_password' => $request->input('store_password'),
                 'status' => $status,
+                'sendbox_status' => $sendbox_status
             ]);
             return redirect()->back()->with('success', 'Payment Method Created Successfully');
         }

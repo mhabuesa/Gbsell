@@ -9,7 +9,11 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CustomerAuthController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SslCommerzPaymentController;
 use App\Http\Controllers\WishlistController;
 
@@ -39,14 +43,46 @@ Route::prefix('{shopUrl}')
         Route::post('/setShipping', [CartController::class, 'setShipping'])->name('setShipping');
 
 
-        Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+        Route::get('/checkout/{coupon_code}', [CheckoutController::class, 'checkout'])->name('checkout');
         Route::post('/order/store', [OrderController::class, 'order_store'])->name('order.store');
         Route::get('/pay', [SslCommerzPaymentController::class, 'index'])->name('sslpay');
         Route::get('/order/placed', [OrderController::class, 'order_placed'])->name('order.placed');
 
-        Route::get('/wishlist', [WishlistController::class, 'wishlist'])->name('wishlist');
-        Route::get('/wishlist/store/{product_id}', [WishlistController::class, 'wishlist_store'])->name('wishlist.store');
-        Route::get('/wishlist/remove/{product_id}', [WishlistController::class, 'wishlist_remove'])->name('wishlist.remove');
+
+        Route::get('/wishlist', [CustomerController::class, 'wishlist'])->name('wishlist');
+        Route::get('/wishlist/store/{product_id}', [CustomerController::class, 'wishlist_store'])->name('wishlist.store');
+        Route::get('/wishlist/remove/{product_id}', [CustomerController::class, 'wishlist_remove'])->name('wishlist.remove');
+
+        Route::get('/customer/auth', [CustomerAuthController::class, 'customer_auth'])->name('customer.auth');
+        Route::post('/customer/register', [CustomerAuthController::class, 'customer_register'])->name('customer.register');
+        Route::get('/customer/verify/{phone}', [CustomerAuthController::class, 'customer_verify'])->name('customer.verify');
+        Route::post('/customer/verified/{phone}', [CustomerAuthController::class, 'customer_verified'])->name('customer.verified');
+        Route::get('/customer/resend_otp/{phone}', [CustomerAuthController::class, 'resend_otp'])->name('resend.otp');
+        Route::post('/customer/logedin', [CustomerAuthController::class, 'customer_logedin'])->name('customer.logedin');
+        Route::get('/customer/logout', [CustomerAuthController::class, 'customer_logout'])->name('customer.logout');
+        Route::get('/forgot/password', [CustomerAuthController::class, 'forgot_password'])->name('forgot.password');
+        Route::post('/forgot/otp', [CustomerAuthController::class, 'forgot_otp'])->name('forgot.otp');
+        Route::get('/otp/verify/{phone}', [CustomerAuthController::class, 'forgot_otp_verify'])->name('forgot.otp.verify');
+        Route::post('/forget/new/password/{phone}', [CustomerAuthController::class, 'forget_new_password'])->name('forget.new.password');
+        Route::post('/forget/password/update/{phone}', [CustomerAuthController::class, 'forget_password_update'])->name('forget.password.update');
+
+
+        Route::middleware('customer')->group(function () {
+            Route::controller(CustomerController::class)->group(function () {
+                Route::get('/account', 'account')->name('account');
+                Route::get('/account/setting', 'account_setting')->name('account.setting');
+                Route::post('/account/update', 'account_update')->name('account.update');
+                Route::get('/ordered/list', 'ordered_list')->name('ordered.list');
+                Route::post('/order/cancel/{id}', 'order_cancel')->name('order.cancel');
+                Route::post('/cart/coupon', 'cart_coupon')->name('cart.coupon');
+                Route::post('/coupon/remove', 'coupon_remove')->name('coupon.remove');
+            });
+        });
+
+        Route::get('/invoice/{order_id}', [InvoiceController::class, 'invoice'])->name('invoice');
+        Route::post('/customer/review', [ReviewController::class, 'customer_review'])->name('customer.review');
+
+
     });
 
     //SSLCOMMERZ START

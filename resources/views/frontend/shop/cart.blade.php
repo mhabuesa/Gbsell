@@ -9,7 +9,8 @@
                 <div class="my-md-3">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-3 flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visble">
-                            <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a href="../home/index.html">Home</a>
+                            <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a
+                                    href="{{ route('home', ['shopUrl' => $shop->url]) }}">Home</a>
                             </li>
                             <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1 active" aria-current="page">Cart</li>
                         </ol>
@@ -117,13 +118,48 @@
                                 <div class="pt-md-3">
                                     <div class="d-block d-md-flex flex-center-between">
                                         <div class="mb-3 mb-md-0 w-xl-40">
-
+                                            <!-- Apply coupon Form -->
+                                            @if (count($data ?? []) > 0)
+                                                <form class="js-focus-state"
+                                                    action="{{ route('cart.coupon', $shop->url) }}" method="post">
+                                                    @csrf
+                                                    <label class="sr-only" for="coupon_code">Coupon code</label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" name="coupon_code"
+                                                            id="coupon_code" placeholder="Coupon code"
+                                                            aria-label="Coupon code"
+                                                            aria-describedby="subscribeButtonExample2" required="">
+                                                        <input type="text" name="subtotal"
+                                                            value="{{ $totalPrice ?? '' }}" hidden>
+                                                        <div class="input-group-append">
+                                                            <button class="btn btn-block btn-dark px-4" type="submit"
+                                                                id="subscribeButtonExample2"><i
+                                                                    class="fas fa-tags d-md-none"></i><span
+                                                                    class="d-none d-md-inline">Apply coupon</span></button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <div class="d-none">
+                                                    @if (Session::has('discount'))
+                                                        <p class="text-danger" id="min_amount">
+                                                            {{ Session::get('min_amount') }}</p>
+                                                        <p class="text-danger" id="discount_type">
+                                                            {{ Session::get('discount_type') }}</p>
+                                                        <p class="text-danger" id="coupon_discount">
+                                                            {{ Session::get('discount') }}</p>
+                                                    @endif
+                                                </div>
+                                                <!-- End Apply coupon Form -->
+                                            @endif
                                         </div>
-                                        <div class="d-md-flex">
-                                            <a href="{{ route('checkout', $shop->url) }}"
-                                                class="btn btn-primary-dark-w ml-md-2 px-5 px-md-4 px-lg-5 w-100 w-md-auto d-none d-md-inline-block">Proceed
-                                                to checkout</a>
-                                        </div>
+                                        @if (count($data ?? []) > 0)
+                                            <div class="d-md-flex">
+                                                <a href="{{ route('checkout', ['shopUrl' => $shop->url, 'coupon_code' => Session::get('coupon_code') ?? 0]) }}"
+                                                    class="btn btn-primary-dark-w ml-md-2 px-5 px-md-4 px-lg-5 w-100 w-md-auto d-none d-md-inline-block">
+                                                    Proceed to checkout
+                                                </a>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </td>
@@ -131,69 +167,71 @@
                     </tbody>
                 </table>
             </div>
-            <div class="mb-8 cart-total">
-                <div class="row">
-                    <div class="col-xl-5 col-lg-6 offset-lg-6 offset-xl-7 col-md-8 offset-md-4">
-                        <div class="border-bottom border-color-1 mb-3">
-                            <h3 class="d-inline-block section-title mb-0 pb-2 font-size-26">Cart totals</h3>
-                        </div>
-                        <table class="table mb-3 mb-md-0">
-                            <tbody>
-                                <tr class="cart-subtotal">
-                                    <th>Subtotal</th>
-                                    <td data-title="Subtotal">
-                                        <span class="amount subtotal">৳ </span>
-                                    </td>
-                                </tr>
-                                <tr class="shipping">
-                                    <th>Shipping</th>
-                                    <td data-title="Shipping">
-                                        <span class="amount" id="shipping_charge">Flat Rate: ৳100</span>
-                                        <div class="mt-1">
-                                            <a class="font-size-12 text-gray-90 text-decoration-on underline-on-hover font-weight-bold mb-3 d-inline-block"
-                                                data-toggle="collapse" href="#collapseExample" role="button"
-                                                aria-expanded="false" aria-controls="collapseExample">
-                                                Shipping Destination
-                                            </a>
-                                            <div class="collapse mb-3" id="collapseExample">
-                                                <div class="form-group mb-4">
-                                                    <select
-                                                        class="js-select selectpicker dropdown-select right-dropdown-0-all w-100"
-                                                        data-style="bg-white font-weight-normal border border-color-1 text-gray-20"
-                                                        id="shipping_option" onchange="updateShipping(this.value)">
-                                                        <option selected value="inter">Inter City</option>
-                                                        <option value="outside">Outside City</option>
-                                                    </select>
+            @if (count($data ?? []) > 0)
+                <div class="mb-8 cart-total">
+                    <div class="row">
+                        <div class="col-xl-5 col-lg-6 offset-lg-6 offset-xl-7 col-md-8 offset-md-4">
+                            <div class="border-bottom border-color-1 mb-3">
+                                <h3 class="d-inline-block section-title mb-0 pb-2 font-size-26">Cart totals</h3>
+                            </div>
+                            <table class="table mb-3 mb-md-0">
+                                <tbody>
+                                    <tr class="cart-subtotal">
+                                        <th>Subtotal</th>
+                                        <td data-title="Subtotal">
+                                            <span class="amount subtotal">৳ </span>
+                                        </td>
+                                    </tr>
+                                    <tr class="shipping">
+                                        <th>Shipping</th>
+                                        <td data-title="Shipping">
+                                            <span class="amount" id="shipping_charge">Flat Rate: ৳100</span>
+                                            <div class="mt-1">
+                                                <a class="font-size-12 text-gray-90 text-decoration-on underline-on-hover font-weight-bold mb-3 d-inline-block"
+                                                    data-toggle="collapse" href="#collapseExample" role="button"
+                                                    aria-expanded="false" aria-controls="collapseExample">
+                                                    Shipping Destination
+                                                </a>
+                                                <div class="collapse mb-3" id="collapseExample">
+                                                    <div class="form-group mb-4">
+                                                        <select
+                                                            class="js-select selectpicker dropdown-select right-dropdown-0-all w-100"
+                                                            data-style="bg-white font-weight-normal border border-color-1 text-gray-20"
+                                                            id="shipping_option" onchange="updateShipping(this.value)">
+                                                            <option selected value="inter">Inter City</option>
+                                                            <option value="outside">Outside City</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="cart-subtotal">
-                                    <th>Discount</th>
-                                    @if(session('discount'))
-                                        <td data-title="Subtotal">
-                                            <span class="amount" id="discount">৳ -{{ session('discount') }} ({{ session('discount') > 0 ? 'Applied' : 'No discount' }})</span>
                                         </td>
-                                    @else
-                                    <td data-title="Subtotal">
-                                        <span class="amount" id="discount">৳ 0</span>
-                                    </td>
-                                    @endif
-                                </tr>
-                                <tr class="order-total">
-                                    <th>Total</th>
-                                    <td data-title="Total"><strong><span class="amount" id="total"></span></strong>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <button type="button"
-                            class="btn btn-primary-dark-w ml-md-2 px-5 px-md-4 px-lg-5 w-100 w-md-auto d-md-none">Proceed
-                            to checkout</button>
+                                    </tr>
+                                    <tr class="cart-subtotal">
+                                        <th>Discount</th>
+                                        <td data-title="Subtotal">
+                                            <span class="amount" id="discount">৳ 0</span> <br>
+                                            <form action="{{ route('coupon.remove', $shop->url) }}" method="POST"
+                                                style="display:inline;">
+                                                @csrf
+                                                <button type="submit" class="badge badge-danger btn-sm">Remove</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <tr class="order-total">
+                                        <th>Total</th>
+                                        <td data-title="Total"><strong><span class="amount"
+                                                    id="total"></span></strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button type="button"
+                                class="btn btn-primary-dark-w ml-md-2 px-5 px-md-4 px-lg-5 w-100 w-md-auto d-md-none">Proceed
+                                to checkout</button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
         </div>
     </main>
     <!-- ========== END MAIN CONTENT ========== -->
@@ -333,7 +371,7 @@
                             // Find the row and hide it
                             const row = document.querySelector(
                                 `[data-product-id="${productId}"][data-shop-url="${shopUrl}"][data-attribute-id="${attributeId}"][data-color-id="${colorId}"]`
-                                ).closest('tr');
+                            ).closest('tr');
                             row.style.display = 'none';
 
                             // Update the subtotal after deletion
@@ -411,6 +449,59 @@
         });
     </script>
 
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get elements
+            const subtotalElement = document.querySelector('.amount.subtotal');
+            const minAmountElement = document.getElementById('min_amount');
+            const discountTypeElement = document.getElementById('discount_type');
+            const couponDiscountElement = document.getElementById('coupon_discount');
+            const discountElement = document.getElementById('discount');
+
+            function calculateDiscount() {
+                // Get dynamic values
+                const subtotal = parseFloat(subtotalElement.textContent.replace('৳', '').trim()) || 0;
+                const minAmount = parseFloat(minAmountElement?.textContent.trim()) || 0;
+                const discountType = discountTypeElement?.textContent.trim();
+                const couponDiscount = parseFloat(couponDiscountElement?.textContent.trim()) || 0;
+
+                // Condition check
+                if (subtotal < minAmount) {
+                    // Minimum amount not met, no discount
+                    discountElement.textContent = '৳ 0';
+                    console.log('Minimum amount not met. Discount not applied.');
+                } else {
+                    // Apply discount
+                    let discountValue = 0;
+
+                    if (discountType === 'percentage') {
+                        discountValue = (subtotal * couponDiscount) / 100; // Calculate percentage discount
+                    } else {
+                        discountValue = couponDiscount; // Flat discount
+                    }
+
+                    // Set calculated discount value
+                    discountElement.textContent = `৳ ${discountValue.toFixed(2)}`;
+                    console.log('Discount applied:', discountValue);
+                }
+            }
+
+            // Initial calculation
+            calculateDiscount();
+
+            // Recalculate whenever subtotal changes
+            const observer = new MutationObserver(() => {
+                calculateDiscount();
+            });
+
+            observer.observe(subtotalElement, {
+                childList: true,
+                characterData: true
+            });
+        });
+    </script> j,
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Function to calculate and update the total amount
@@ -479,97 +570,4 @@
             calculateTotal();
         });
     </script>
-
-
-
-    <script>
-        $('#applyCouponButton').on('click', function() {
-            let couponCode = $('#couponCodeInput').val();
-            let shopUrl = $('#shopUrlInput').val(); // Shop URL as input
-
-            $.ajax({
-                url: '/' + shopUrl + '/applyCoupon', // Dynamic URL
-                type: 'POST',
-                data: {
-                    coupon_code: couponCode,
-                    shop_url: shopUrl,
-                    _token: $('meta[name="csrf-token"]').attr('content') // CSRF token
-                },
-                success: function(response) {
-                    if (response.status === 'success') {
-                        $('#couponMessage').html(
-                            `<span class="text-center alert alert-success form-control rounded">${response.message}</span>`
-                            );
-                        alert(response.message);
-                    } else {
-                        $('#couponMessage').html(
-                            `<span class="text-center alert alert-danger form-control rounded">${response.message}</span>`
-                            );
-                        alert(response.message);
-                    }
-                },
-                error: function(xhr) {
-                    console.log(xhr.responseText); // Log error details
-                    $('#couponMessage').html(
-                        '<span class="text-center alert alert-danger form-control rounded">Something went wrong!</span>'
-                        );
-                }
-            });
-        });
-    </script>
-
-    {{-- <script>
-    $(document).ready(function() {
-        // Check if the coupon cookie exists
-        var couponData = JSON.parse(Cookies.get('coupon')); // Assuming you're using js-cookie for cookies
-
-        console.log('Coupon data:', couponData); // Log coupon data to confirm it's present
-
-        if (couponData) {
-            alert('Coupon code applied successfully!');
-
-            // Get the subtotal from the page
-            var subtotal = parseFloat($('.subtotal').text().replace('৳', '').trim()); // Adjust as needed for your format
-            console.log('Subtotal:', subtotal); // Log subtotal value to verify
-
-            // Get the min_amount from the coupon
-            var minAmount = parseFloat(couponData.min_amount);
-            console.log('Minimum Amount:', minAmount); // Log the minimum amount
-
-            // Check if the subtotal is less than the min_amount
-            if (subtotal < minAmount) {
-                alert('Your subtotal is less than the minimum amount required for the coupon.');
-                $('#couponMessage').html(`<span class="text-center alert alert-warning form-control rounded">Your subtotal is less than the minimum amount required for the coupon.</span>`);
-                return; // Stop further execution if the subtotal is too low
-            }
-
-            // Check the coupon type and apply the discount
-            var discountAmount = 0;
-
-            if (couponData.type === 'flat') {
-                alert('Flat discount applied: ' + couponData.discount);
-                // Flat discount: subtract the discount value from subtotal
-                discountAmount = parseFloat(couponData.discount);
-            } else if (couponData.type === 'percentage') {
-                alert('Percentage discount applied: ' + couponData.discount);
-                // Percentage discount: calculate the percentage of the subtotal
-                discountAmount = (subtotal * parseFloat(couponData.discount) / 100);
-            }
-
-            console.log('Discount Amount:', discountAmount); // Log the discount amount
-
-            // Apply the discount to the subtotal
-            var discountedTotal = subtotal - discountAmount;
-            console.log('Discounted Total:', discountedTotal); // Log the discounted total
-
-            // Update the discount row with the discount value
-            $('#discount').text('৳ ' + discountAmount.toFixed(2));
-
-            // Optionally, update the total after applying the discount
-            $('.total').text('৳ ' + discountedTotal.toFixed(2)); // Update the total amount
-        } else {
-            console.log('No coupon found in cookies');
-        }
-    });
-</script> --}}
 @endpush

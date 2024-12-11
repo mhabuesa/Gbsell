@@ -155,7 +155,7 @@
                                     <div class="row">
                                         <div class="mb-3">
                                             <label class="form-label d-block mb-0">Configure <strong>Pathao</strong> Delivery</label>
-                                            <small>To get easy delivery system,  please configure Pathao Courier. Dont't have Pathao Merchant account? <span class="text-primary text-decoration-underline fs-6"><a href="https://redx.com.bd/registration/" target="_blank">Apply Now</a></span></small>
+                                            <small>To get easy delivery system,  please configure Pathao Courier. Dont't have Pathao Merchant account? <span class="text-primary text-decoration-underline fs-6"><a href="https://merchant.pathao.com/login" target="_blank">Apply Now</a></span></small>
                                         </div>
                                         <div class="col-lg-12">
                                             <div class="mb-2">

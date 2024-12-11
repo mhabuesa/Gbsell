@@ -50,7 +50,7 @@ class CouponController extends Controller
         $expire_date = Carbon::createFromFormat('d/m/Y', $request->expire_date)->format('Y-m-d');
 
         $couponCode = str_replace(' ', '_', $request->coupon_code);
-        
+
         Coupon::create([
             'shop_id' => Auth::guard('merchant')->user()->shop_id,
             'coupon_code' => $couponCode,
@@ -102,6 +102,8 @@ class CouponController extends Controller
             $status = 0;
         }
 
+        $expireDate = Carbon::createFromFormat('d/m/Y', $request->expire_date)->format('Y-m-d');
+
         $coupon = Coupon::find($id);
         $coupon->update([
             'coupon_code' => $request->coupon_code,
@@ -109,7 +111,7 @@ class CouponController extends Controller
             'discount' => $request->discount,
             'min_amount' => $request->min_amount,
             'quantity' => $request->quantity,
-            'expire_date' => $request->expire_date,
+            'expire_date' => $expireDate,
             'status' => $status,
         ]);
 

@@ -8,7 +8,7 @@
                 <div class="my-md-3">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-3 flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visble">
-                            <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a href="../home/index.html">Home</a>
+                            <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a href="{{route('home', ['shopUrl' => $shop->url])}}">Home</a>
                             </li>
                             <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1 active" aria-current="page">Checkout
                             </li>
@@ -83,7 +83,11 @@
                                             </tr>
                                             <tr>
                                                 <th>Shipping</th>
-                                                <td>Flat rate ৳ <span id="shipping">30.00</span></td>
+                                                <td>Flat rate ৳ <span id="shipping"></span></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Disocunt</th>
+                                                <td>৳<span id="discount">{{$discount ?? ''}}</span></td>
                                             </tr>
                                             <tr>
                                                 <th>Total</th>
@@ -159,7 +163,7 @@
                                                             id="thirdstylishRadio1" name="payment" value="cod" checked="">
                                                         <label class="custom-control-label form-label"
                                                             for="thirdstylishRadio1" data-toggle="collapse"
-                                                            data-target="#basicsCollapseThree" aria-expanded="false"
+                                                            {{ $codMessage?->note != null ? 'data-target=#basicsCollapseThree' : '' }} aria-expanded="false"
                                                             aria-controls="basicsCollapseThree">
                                                             Cash on delivery
                                                         </label>
@@ -167,7 +171,7 @@
                                                     </div>
                                                 </div>
                                                 <div id="basicsCollapseThree"
-                                                    class="collapse show border-top border-color-1 border-dotted-top bg-dark-lighter"
+                                                    class="collapse {{ $codMessage?->note != null ? 'show' : '' }}  border-top border-color-1 border-dotted-top bg-dark-lighter"
                                                     aria-labelledby="basicsHeadingThree" data-parent="#basicsAccordion1">
                                                     <div class="p-4">
                                                        {{$codMessage?->note}}
@@ -177,6 +181,11 @@
                                             <!-- End Card -->
                                         </div>
                                         <!-- End Basics Accordion -->
+                                    </div>
+
+                                    <div class="d-none">
+                                        <input type="text" id="couponDiscount" name="discount" value="{{$discount ?? ''}}">
+                                        <input type="text" id="couponCode" name="coupon_code" value="{{ $coupon_code ?? ''}}">
                                     </div>
                                     <button type="submit"
                                         class="btn btn-primary-dark-w btn-block btn-pill font-size-20 mb-3 py-3">Place
@@ -207,7 +216,8 @@
                                         <input type="text" class="form-control" name="name" placeholder="Please enter your Full name"
                                             aria-label="Please enter your Full name" required="" data-msg="Please enter your Full name."
                                             data-error-class="u-has-error" data-success-class="u-has-success"
-                                            autocomplete="off">
+                                            autocomplete="off" value="{{Auth::guard('customer')->user()?->name}}">
+
                                     </div>
                                     <!-- End Input -->
                                 </div>
@@ -242,9 +252,9 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <input type="address" class="form-control" name="address"
-                                            placeholder="470 Lucy Forks" aria-label="470 Lucy Forks" required=""
+                                            placeholder="Enter your address" aria-label="Enter your address" required=""
                                             data-msg="Please enter a valid address." data-error-class="u-has-error"
-                                            data-success-class="u-has-success">
+                                            data-success-class="u-has-success" value="{{Auth::guard('customer')->user()?->address}}">
                                     </div>
                                     <!-- End Input -->
                                 </div>
@@ -260,7 +270,7 @@
                                         <input type="email" class="form-control" name="email"
                                             placeholder="gmail@gmail.com" aria-label="gmail@gmail.com"
                                             required="" data-msg="Please enter a valid email address."
-                                            data-error-class="u-has-error" data-success-class="u-has-success">
+                                            data-error-class="u-has-error" data-success-class="u-has-success" value="{{Auth::guard('customer')->user()?->email}}">
                                     </div>
                                     <!-- End Input -->
                                 </div>
@@ -274,7 +284,10 @@
                                         </label>
                                         <input type="phone" name="phone" required class="form-control" placeholder="+8801712345678"
                                             aria-label="+8801712345678" data-msg="Please enter your last name."
-                                            data-error-class="u-has-error" data-success-class="u-has-success">
+                                            data-error-class="u-has-error" data-success-class="u-has-success" value="{{Auth::guard('customer')->user()?->phone}}">
+                                            @error('phone')
+                                                <span class="text-danger mx-3 text-capitalize">Enter a valid Phone number</span>
+                                            @enderror
                                     </div>
                                     <!-- End Input -->
                                 </div>
@@ -421,6 +434,7 @@
         const outSide = document.getElementById('outSide');
         const shipping = document.getElementById('shipping');
         const subtotal = document.getElementById('subtotal-value');
+        const discount = document.getElementById('discount');
         const total = document.getElementById('total-value');
 
         function updateShipping() {
@@ -435,17 +449,21 @@
         function updateTotal() {
             const subtotalValue = parseFloat(subtotal.textContent || 0);
             const shippingValue = parseFloat(shipping.textContent || 0);
-            const totalValue = subtotalValue + shippingValue;
+            const discountValue = parseFloat(discount.textContent || 0);
+            const totalValue = subtotalValue + shippingValue - discountValue;
             total.textContent = totalValue.toFixed(2);
         }
 
+        // Update shipping when the selection changes
         interCity.addEventListener('change', updateShipping);
         outSide.addEventListener('change', updateShipping);
+
+        // Ensure the shipping is set correctly on page load
         updateShipping();
     });
 </script>
 
-@if ($errors->any())
+@if ($errors->has('ship_name') || $errors->has('ship_city') || $errors->has('ship_address') || $errors->has('ship_email') || $errors->has('ship_phone'))
     <script>
         showToast('Please fill in all required shipping details correctly.', 'error');
     </script>

@@ -32,7 +32,7 @@ class SslCommerzNotification extends AbstractSslCommerz
             return false;
         }
 
-        $sendbox_enabled = true;
+        $sendbox_enabled = $paymentGatewaInfo->sendbox_status == 1 ? true : false;
 
         $this->apiDomain = $sendbox_enabled ? "https://sandbox.sslcommerz.com" : "https://securepay.sslcommerz.com";
 

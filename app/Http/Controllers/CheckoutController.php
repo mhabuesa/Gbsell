@@ -4,20 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Shop;
 use App\Models\Color;
+use App\Models\Coupon;
 use App\Models\Product;
+use App\Models\Upazila;
 use App\Models\Variant;
-use App\Models\Attribute;
 use App\Models\District;
+use App\Models\Attribute;
 use Illuminate\Http\Request;
 use App\Models\PaymentGateway;
-use App\Models\Upazila;
 use Illuminate\Support\Facades\Cookie;
 
 class CheckoutController extends Controller
 {
-    public function checkout($shopUrl)
+    public function checkout($shopUrl, $coupon_code)
     {
-
         $shop = Shop::where('url', $shopUrl)->first();
 
         if (!$shop) {
@@ -58,6 +58,17 @@ class CheckoutController extends Controller
             }
         }
 
+        $discount = 0;
+        $coupon = Coupon::where('coupon_code', $coupon_code)->where('shop_id', $shop->shop_id)->where('status', 1)->where('expire_date', '>=', date('Y-m-d'))->where('quantity', '>', '0')->first();
+        if ($coupon) {
+            if($coupon->discount_type == 'percentage') {
+                $discount = $totalPrice * ($coupon->discount / 100);
+            }else{
+                $discount = $coupon->discount;
+            }
+        }
+
+
 
         $hasSslPayment = PaymentGateway::where('shop_id', $shop->shop_id)
         ->where('method', 'ssl')
@@ -83,8 +94,10 @@ class CheckoutController extends Controller
             'hasBkashPayment' => $hasBkashPayment,
             'codMessage' => $codMessage,
             'cities' => $cities,
+            'discount' => $discount,
+            'coupon_code' => $coupon_code,
         ]);
     }
 
-    
+
 }

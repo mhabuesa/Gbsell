@@ -335,7 +335,7 @@ class ProductController extends Controller
     {
         $product = Product::where('slug', $slug)->first();
         $variants = Variant::where('product_id', $product->id)->get();
-        $colors = Color::all();
+        $colors = Color::where('shop_id', $product->shop_id)->get();
         $attributes = Attribute::where('category_id', $product->category_id)->get();
         return view('merchant.product.inventory', compact('variants', 'product', 'colors', 'attributes'));
     }

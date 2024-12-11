@@ -4,6 +4,16 @@
 @push('style')
     <link rel="stylesheet" href="{{ asset('assets') }}/js/plugins/select2/css/select2.min.css">
     <link rel="stylesheet" href="{{ asset('assets') }}/js/plugins/dropzone/min/dropzone.min.css">
+    <style>
+        .danger_inpit:checked {
+            background-color: #00ff4c !important;
+            border-color: #00ff22 !important;
+        }
+        .danger_inpit {
+            background-color: #ff0000 !important;
+            border-color: #ff0000 !important;
+        }
+    </style>
 @endpush
 @extends('merchant.layout.app')
 @section('content')
@@ -42,7 +52,7 @@
                                 </label>
                               </div>
                             </div>
-                            <div class="col-md-4">
+                            {{-- <div class="col-md-4">
                               <div class="form-check form-block">
                                 <input class="form-check-input" {{ $bkash && $bkash->status == 1 ? 'checked' : '' }} type="checkbox" value="" id="bkash_input" name="bkash_input">
                                 <label class="form-check-label" for="bkash_input">
@@ -54,7 +64,7 @@
                                   </span>
                                 </label>
                               </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -126,6 +136,10 @@
                                             <input class="form-check-input" type="checkbox" {{ $ssl && $ssl->status == 1 ? 'checked' : '' }} id="status" name="status">
                                             <label class="form-check-label" for="status">Availability</label>
                                         </div>
+                                        <div class="form-check form-switch form-check-inline">
+                                            <input class="form-check-input danger_inpit" type="checkbox" {{ $ssl && $ssl->sendbox_status == 1 ?  ' ': 'checked' }} id="status" name="sendbox_status">
+                                            <label class="form-check-label" for="status">Live Credentials</label>
+                                        </div>
                                     </div>
                                     <div class="mb-2">
                                         <button type="submit" class="btn btn-alt-primary">{{ $ssl ? 'Update' : 'Submit' }}</button>
@@ -136,7 +150,7 @@
                     </div>
                 </div>
 
-                <div id="bkash_field" class="row justify-content-center mt-3">
+                {{-- <div id="bkash_field" class="row justify-content-center mt-3">
                     <div class="col-md-10 col-lg-8">
                         <div class="card mb-5">
                             <div class="card-body">
@@ -180,7 +194,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </main>

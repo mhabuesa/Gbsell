@@ -1,5 +1,5 @@
 <div class="col-md-5 col-xl-3">
-    <div id="one-inbox-side-nav" class="d-none d-md-block push">
+    <div id="one-inbox-side-nav" class="d-md-block push">
       <div class="block block-rounded">
         <div class="block-header block-header-default">
           <h6 class="block-title">Frontend Customize</h6>

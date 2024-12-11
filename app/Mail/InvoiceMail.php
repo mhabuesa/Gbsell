@@ -39,7 +39,7 @@ class InvoiceMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'frontend.shop.invoice',
+            view: 'frontend.shop.invoice_mail',
         );
     }
 

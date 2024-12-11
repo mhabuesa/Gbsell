@@ -120,9 +120,21 @@
                     </ul>
                 </li>
                 <li class="nav-main-item">
+                    <a class="nav-main-link {{Route::is('order.*') ? 'active': ''}}" href="{{route('order.index')}}">
+                        <i class="nav-main-link-icon fa-solid fa-cart-flatbed-suitcase"></i>
+                        <span class="nav-main-link-name">Order</span>
+                    </a>
+                </li>
+                <li class="nav-main-item">
                     <a class="nav-main-link {{Route::is('coupon.*') ? 'active': ''}}" href="{{route('coupon.index')}}">
                         <i class="nav-main-link-icon fa-solid fa-ticket"></i>
                         <span class="nav-main-link-name">Coupon</span>
+                    </a>
+                </li>
+                <li class="nav-main-item">
+                    <a class="nav-main-link {{Route::is('review.*') ? 'active': ''}}" href="{{route('review.list')}}">
+                        <i class="nav-main-link-icon fa-solid fa-star"></i>
+                        <span class="nav-main-link-name">Review</span>
                     </a>
                 </li>
                 <li class="nav-main-item">

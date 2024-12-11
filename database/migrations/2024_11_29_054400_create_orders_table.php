@@ -18,17 +18,13 @@ return new class extends Migration
             $table->string('customer_id')->nullable();
             $table->string('subtotal')->nullable();
             $table->string('charge')->nullable();
+            $table->string('coupon_code')->nullable();
+            $table->string('discount')->nullable();
             $table->string('total')->nullable();
             $table->string('payment_method')->nullable();
-
-            $table->string('name')->nullable(); // Name column
-            $table->string('email')->nullable(); // Email column
-            $table->string('phone')->nullable(); // Phone column
-            $table->double('amount')->nullable(); // Amount column
-            $table->text('address')->nullable(); // Address column
+            $table->string('dalivery_status')->nullable(); // Dalivery Status column
+            $table->string('dalivery_method')->nullable(); // Dalivery Method column
             $table->string('status')->nullable(); // Status column
-            $table->string('transaction_id')->nullable(); // Transaction ID column
-            $table->string('currency')->nullable(); // Currency column
             $table->timestamps();
         });
 

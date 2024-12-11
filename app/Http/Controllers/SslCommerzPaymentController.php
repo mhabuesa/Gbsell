@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DB;
 use App\Models\Shop;
 use App\Models\Order;
+use App\Models\Coupon;
 use App\Models\Billing;
 use App\Models\Variant;
 use App\Models\Customer;
@@ -18,6 +19,7 @@ use App\Events\InvoiceGenerated;
 use App\Models\CartVariantProduct;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Session;
 use App\Library\SslCommerz\SslCommerzNotification;
 
 class SslCommerzPaymentController extends Controller
@@ -52,7 +54,7 @@ class SslCommerzPaymentController extends Controller
             $ship_check = 1;
         }
 
-        $order_id = '#cod'.uniqid().'_'. now()->format('dm');
+        $order_id = 'ssl'. random_int(10000, 99999) .now()->format('dm');
         $subtotal = 0;
 
         foreach ($data as $value) {
@@ -86,7 +88,7 @@ class SslCommerzPaymentController extends Controller
                 'cus_country' => 'Bangladesh',
                 'cus_phone' => $requestData['phone'],
                 'cus_fax' => '',
-                'total_amount' => $charge + $subtotal,
+                'total_amount' => $charge + $subtotal - $requestData['discount'],
                 'tran_id' => uniqid(),
 
                 // SHIPMENT INFORMATION
@@ -114,6 +116,8 @@ class SslCommerzPaymentController extends Controller
                 'email' => $requestData['email'],
                 'phone' => $requestData['phone'],
                 'amount' => $charge + $subtotal,
+                'coupon_code' => $requestData['coupon_code'],
+                'discount' => $requestData['discount'],
                 'address' => $requestData['address'],
                 'transaction_id' => $post_data['tran_id'],
                 'currency' => 'BDT',
@@ -145,86 +149,22 @@ class SslCommerzPaymentController extends Controller
 
     }
 
-    public function payViaAjax(Request $request)
-    {
-
-        # Here you have to receive all the order data to initate the payment.
-        # Lets your oder trnsaction informations are saving in a table called "orders"
-        # In orders table order uniq identity is "transaction_id","status" field contain status of the transaction, "amount" is the order amount to be paid and "currency" is for storing Site Currency which will be checked with paid currency.
-
-        $post_data = array();
-        $post_data['total_amount'] = '10'; # You cant not pay less than 10
-        $post_data['currency'] = "BDT";
-        $post_data['tran_id'] = uniqid(); // tran_id must be unique
-
-        # CUSTOMER INFORMATION
-        $post_data['cus_name'] = 'Customer Name';
-        $post_data['cus_email'] = 'customer@mail.com';
-        $post_data['cus_add1'] = 'Customer Address';
-        $post_data['cus_add2'] = "";
-        $post_data['cus_city'] = "";
-        $post_data['cus_state'] = "";
-        $post_data['cus_postcode'] = "";
-        $post_data['cus_country'] = "Bangladesh";
-        $post_data['cus_phone'] = '8801XXXXXXXXX';
-        $post_data['cus_fax'] = "";
-
-        # SHIPMENT INFORMATION
-        $post_data['ship_name'] = "Store Test";
-        $post_data['ship_add1'] = "Dhaka";
-        $post_data['ship_add2'] = "Dhaka";
-        $post_data['ship_city'] = "Dhaka";
-        $post_data['ship_state'] = "Dhaka";
-        $post_data['ship_postcode'] = "1000";
-        $post_data['ship_phone'] = "";
-        $post_data['ship_country'] = "Bangladesh";
-
-        $post_data['shipping_method'] = "NO";
-        $post_data['product_name'] = "Computer";
-        $post_data['product_category'] = "Goods";
-        $post_data['product_profile'] = "physical-goods";
-
-        # OPTIONAL PARAMETERS
-        $post_data['value_a'] = "ref001";
-        $post_data['value_b'] = "ref002";
-        $post_data['value_c'] = "ref003";
-        $post_data['value_d'] = "ref004";
-
-
-        #Before  going to initiate the payment order status need to update as Pending.
-        $update_product = DB::table('ssl_orders')
-            ->where('transaction_id', $post_data['tran_id'])
-            ->updateOrInsert([
-                'name' => $post_data['cus_name'],
-                'email' => $post_data['cus_email'],
-                'phone' => $post_data['cus_phone'],
-                'amount' => $post_data['total_amount'],
-                'status' => 'Pending',
-                'address' => $post_data['cus_add1'],
-                'transaction_id' => $post_data['tran_id'],
-                'currency' => $post_data['currency']
-            ]);
-
-        $sslc = new SslCommerzNotification();
-        # initiate(Transaction Data , false: Redirect to SSLCOMMERZ gateway/ true: Show all the Payement gateway here )
-        $payment_options = $sslc->makePayment($post_data, 'checkout', 'json');
-
-        if (!is_array($payment_options)) {
-            print_r($payment_options);
-            $payment_options = array();
-        }
-
-    }
 
     public function success(Request $request, )
     {
         $info = SslOrder::where('transaction_id', $request->tran_id)->first();
-
         $cartData = CartVariantProduct::where('order_id', $info->order_id)->get();
+
+         // Get the input phone number
+         $phone = $info->phone;
+
+         // Check if the phone number starts with +88
+         if (str_starts_with($phone, '+88')) {
+             $phone = substr($phone, 3); // Remove +88 from the phone number
+         }
         $customer = Customer::firstOrCreate(
             [
-                'shop_id' => $info->shop_id,
-                'phone' => $info->phone,
+                'phone' => $phone,
             ],
             [
                 'name' => $info->name,
@@ -239,7 +179,9 @@ class SslCommerzPaymentController extends Controller
             'customer_id' => $customer->id,
             'subtotal' => $info->amount - $info->delivery_charge,
             'charge' => $info->delivery_charge,
-            'total' => $info->amount,
+            'coupon_code' => $info->coupon_code,
+            'discount' => $info->discount,
+            'total' => $info->amount - $info->discount,
             'payment_method' => 'ssl',
         ]);
 
@@ -320,7 +262,7 @@ class SslCommerzPaymentController extends Controller
             $api_key = "$sslSmsApi->api_key";
             $senderid = "$sslSmsApi->sender_id";
             $number = "$customer->phone";
-            $message = "Thank you for your purchase at {$shop->name}!\n Your order {$info->order_id} has been successfully placed. We will notify you once your order is shipped.\n\n{$shop->name} Team";
+            $message = "Your order {$info->order_id} has been successfully placed. We will notify you once your order is shipped.\n\n{$shop->name} Team";
 
             $data = [
                 "api_key" => $api_key,
@@ -347,6 +289,14 @@ class SslCommerzPaymentController extends Controller
                 ->decrement('quantity', $product->quantity);
         }
         CartVariantProduct::where('order_id', $info->order_id)->delete();
+
+        $coupon = Coupon::where('coupon_code', $info->coupon_code)->first();
+
+        if ($coupon) {
+            $coupon->quantity = $coupon->quantity - 1;
+            $coupon->save();
+        }
+        Session::forget(['min_amount', 'discount_type', 'discount', 'coupon_code']);
 
         event(new InvoiceGenerated($info->order_id));
 

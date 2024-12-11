@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DB;
 use App\Models\Shop;
 use App\Models\Order;
+use App\Models\Coupon;
 use App\Models\Billing;
 use App\Models\Variant;
 use App\Models\Customer;
@@ -14,8 +15,11 @@ use App\Models\OrderProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Events\InvoiceGenerated;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Session;
 use App\Library\SslCommerz\SslCommerzNotification;
+use App\Models\DeliverySystem;
 
 class OrderController extends Controller
 {
@@ -27,7 +31,7 @@ class OrderController extends Controller
             'city' => 'required',
             'address' => 'required',
             'email' => 'required|email',
-            'phone' => 'required',
+            'phone' => ['required', 'regex:/^(?:\+8801|01)[3-9]\d{8}$/'],
             'payment' => 'required',
         ]);
 
@@ -42,7 +46,7 @@ class OrderController extends Controller
             $charge = 150;
         }
 
-        $order_id = '#cod'.uniqid().'_'. now()->format('dm');
+        $order_id = 'cod'. random_int(10000, 99999) .now()->format('dm');
         $subtotal = 0;
 
         foreach ($data as $value) {
@@ -51,14 +55,20 @@ class OrderController extends Controller
          }
 
 
+         // Get the input phone number
+         $phone = $request->input('phone');
+
+         // Check if the phone number starts with +88
+         if (str_starts_with($phone, '+88')) {
+             $phone = substr($phone, 3); // Remove +88 from the phone number
+         }
+
 
         // if selected payment method is Cash On Delivery
-
         if($request->payment == 'cod'){
             $customer = Customer::firstOrCreate(
                 [
-                    'shop_id' => $shop->shop_id,
-                    'phone' => $request->phone,
+                    'phone' => $phone,
                 ],
                 [
                     'name' => $request->name,
@@ -67,13 +77,17 @@ class OrderController extends Controller
                 ]
             );
 
+            $total = $subtotal + $charge - $request->discount;
+
             Order::create([
                 'shop_id' => $shop->shop_id,
                 'order_id' => $order_id,
                 'customer_id' => $customer->id,
                 'subtotal' => $subtotal,
                 'charge' => $charge,
-                'total' => $charge + $subtotal,
+                'coupon_code' => $request->coupon_code,
+                'discount' => $request->discount,
+                'total' => $total,
                 'payment_method' => 'cod',
             ]);
 
@@ -174,7 +188,7 @@ class OrderController extends Controller
                 $api_key = "$sslSmsApi->api_key";
                 $senderid = "$sslSmsApi->sender_id";
                 $number = "$customer->phone";
-                $message = "Thank you for your purchase at {$shop->name}!\n Your order {$order_id} has been successfully placed. We will notify you once your order is shipped.\n\n{$shop->name} Team";
+                $message = "Your order {$order_id} has been successfully placed. We will notify you once your order is shipped.\n\n{$shop->name} Team";
 
                 $data = [
                     "api_key" => $api_key,
@@ -192,111 +206,20 @@ class OrderController extends Controller
                 curl_close($ch);
             }
 
+            $coupon = Coupon::where('coupon_code', $request->coupon_code)->first();
+
+            if ($coupon) {
+                $coupon->quantity = $coupon->quantity - 1;
+                $coupon->save();
+            }
+
+            Session::forget(['min_amount', 'discount_type', 'discount', 'coupon_code']);
 
             event(new InvoiceGenerated($order_id));
 
             return redirect()->route('order.placed', $shopUrl)->with(['order_id' => $order_id, 'success' => 'Order Placed Successfully']);
 
 
-
-        // if selected payment method is bkash
-        }elseif($request->payment == 'bkash'){
-
-            $customer = Customer::firstOrCreate(
-                [
-                    'shop_id' => $shop->shop_id,
-                    'phone' => $request->phone,
-                ],
-                [
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'address' => $request->address,
-                ]
-            );
-            Order::create([
-                'shop_id' => $shop->shop_id,
-                'order_id' => $order_id,
-                'customer_id' => $customer->id,
-                'subtotal' => $subtotal,
-                'charge' => $charge,
-                'total' => $charge + $subtotal,
-                'payment_method' => 'bkash',
-            ]);
-
-            foreach ($data as $order) {
-
-                OrderProduct::create([
-                    'shop_id' => $shop->shop_id,
-                    'order_id' => $order_id,
-                    'customer_id' => $customer->id,
-                    'product_id' => $order['product_id'],
-                    'attribute_id' => $order['attribute_id'],
-                    'color_id' => $order['color_id'],
-                    'quantity' => $order['quantity'],
-                    'price' => $order['current_price'],
-                ]);
-            }
-
-            if($request->shipCheck == 'on'){
-
-                $request->validate([
-                    'ship_name' => 'required',
-                    'ship_city' => 'required',
-                    'ship_address' => 'required',
-                    'ship_email' => 'required|email',
-                    'ship_phone' => 'required',
-                ]);
-
-                Billing::create([
-                    'shop_id' => $shop->shop_id,
-                    'order_id' => $order_id,
-                    'customer_id' => $customer->id,
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'city' => $request->city,
-                    'address' => $request->address,
-                    'note' => $request->note,
-                ]);
-
-                Shipping::create([
-                    'shop_id' => $shop->shop_id,
-                    'order_id' => $order_id,
-                    'ship_name' => $request->ship_name,
-                    'ship_email' => $request->ship_email,
-                    'ship_phone' => $request->ship_phone,
-                    'ship_city' => $request->ship_city,
-                    'ship_address' => $request->ship_address,
-                ]);
-            }else{
-                Billing::create([
-                    'shop_id' => $shop->shop_id,
-                    'order_id' => $order_id,
-                    'customer_id' => $customer->id,
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'city' => $request->city,
-                    'address' => $request->address,
-                    'note' => $request->note,
-                ]);
-
-                Shipping::create([
-                    'shop_id' => $shop->shop_id,
-                    'order_id' => $order_id,
-                    'ship_name' => $request->name,
-                    'ship_email' => $request->email,
-                    'ship_phone' => $request->phone,
-                    'ship_city' => $request->city,
-                    'ship_address' => $request->address,
-                ]);
-
-            }
-
-            if (isset($cartData[$shopUrl])) {
-                unset($cartData[$shopUrl]);
-                Cookie::queue('cart', json_encode($cartData), 60 * 24 * 30);
-            }
 
         // if selected payment method is ssl
         }elseif($request->payment == 'ssl'){
@@ -343,6 +266,72 @@ class OrderController extends Controller
 
 
         return $response->cookie('cart', json_encode($cartData), 60 * 24 * 30);
+    }
+
+
+    // Customer Order Controller
+    public function index(){
+        $merchant = Auth::guard('merchant')->user();
+        $orders = Order::where('shop_id', $merchant->shop_id)->where('delivery_status', null )->whereIn('status', ['pending', 'processing'])->latest()->get();
+        return view('merchant.order.index', compact('orders'));
+    }
+    public function deliver(){
+        $merchant = Auth::guard('merchant')->user();
+        $orders = Order::where('shop_id', $merchant->shop_id)->where('delivery_status', 'sended')->where('status', 'delivering')->latest()->get();
+        return view('merchant.order.deliver', compact('orders'));
+    }
+    public function complate(){
+        $merchant = Auth::guard('merchant')->user();
+        $orders = Order::where('shop_id', $merchant->shop_id)->where('status', 'delivered')->latest()->get();
+        return view('merchant.order.complate', compact('orders'));
+    }
+
+    public function cancel(){
+        $merchant = Auth::guard('merchant')->user();
+        $orders = Order::where('shop_id', $merchant->shop_id)->whereIn('status', ['cancelled', 'cancel'])->latest()->get();
+        return view('merchant.order.cancel', compact('orders'));
+    }
+    public function details($order_id){
+        $merchant = Auth::guard('merchant')->user();
+        $products = OrderProduct::where('order_id', $order_id)->get();
+        $shop = Shop::where('shop_id', $merchant->shop_id)->first();
+        $order = Order::where('order_id', $order_id)->first();
+        $redx = DeliverySystem::where('shop_id', $shop->shop_id)->where('method', 'redx')->where('status', '1')->first();
+        $steadfast = DeliverySystem::where('shop_id', $shop->shop_id)->where('method', 'steadfast')->where('status', '1')->first();
+        $pathao = DeliverySystem::where('shop_id', $shop->shop_id)->where('method', 'pathao')->where('status', '1')->first();
+        $shipping = Shipping::where('order_id', $order_id)->first();
+        return view('merchant.order.details', [
+            'products' => $products,
+            'order_id' => $order_id,
+            'shopUrl' => $shop->url,
+            'order' => $order,
+            'redx' => $redx,
+            'steadfast' => $steadfast,
+            'pathao' => $pathao,
+            'shipping' => $shipping,
+        ]);
+    }
+
+    function order_status_update(Request $request, $id)
+    {
+        if ($request->status == 'pending') {
+            Order::find($id)->update([
+                'status' => 'pending',
+            ]);
+        }elseif ($request->status == 'processing') {
+            Order::find($id)->update([
+                'status' => 'processing',
+            ]);
+        }elseif ($request->status == 'delivered') {
+            Order::find($id)->update([
+                'status' => 'delivered',
+            ]);
+        }elseif ($request->status == 'cancel') {
+            Order::find($id)->update([
+                'status' => 'cancel',
+            ]);
+        }
+        return redirect()->back()->with('success', 'Order Status Updated Successfully!');
     }
 
 
