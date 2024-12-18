@@ -10,8 +10,8 @@
                         <ol class="breadcrumb mb-3 flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visble">
                             <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a
                                     href="{{ route('home', ['shopUrl' => $shop->url]) }}">Home</a></li>
-                            <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1 active" aria-current="page">Category
-                            </li>
+                            <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1 active" aria-current="page">Search
+                                Result</li>
                         </ol>
                     </nav>
                 </div>
@@ -26,8 +26,7 @@
                 <div class="mb-6 d-xl-block">
                     <div class="position-relative">
                         <div class="border-bottom border-color-1 mb-2">
-                            <h3 class="d-inline-block section-title section-title__full mb-0 pb-2 font-size-22">
-                                {{ $category->name }}</h3>
+                            <h3 class="d-inline-block section-title section-title__full mb-0 pb-2 font-size-22"></h3>
                         </div>
 
                         <!-- Products Body -->
@@ -97,7 +96,7 @@
                                         </li>
                                     @empty
                                         <li class="col-12 col-md-12 col-wd-12 product-item bg-secondary rounded my-5">
-                                            <h2 class="text-center m-auto text-white">No Products</h2>
+                                            <h2 class="text-center m-auto text-white">No Products Found</h2>
                                         </li>
                                     @endforelse
 
@@ -116,11 +115,12 @@
                 </div>
                 <!-- End Category Products -->
 
-                <!-- Recommended Products -->
+                <!-- Recent Products -->
                 <div class="mb-6 d-xl-block">
                     <div class="position-relative">
                         <div class="border-bottom border-color-1 mb-2">
-                            <h3 class="d-inline-block section-title section-title__full mb-0 pb-2 font-size-22">Recent Products</h3>
+                            <h3 class="d-inline-block section-title section-title__full mb-0 pb-2 font-size-22">Recent
+                                Products</h3>
                         </div>
                         <div class="js-slick-carousel u-slick position-static overflow-hidden u-slick-overflow-visble pb-7 pt-2 px-1"
                             data-pagi-classes="text-center right-0 bottom-1 left-0 u-slick__pagination u-slick__pagination--long mb-0 z-index-n1 mt-3 mt-md-0"
@@ -154,6 +154,7 @@
                             "slidesToShow": 2
                           }
                         }]'>
+
                             @forelse ($recent_products as $key => $product)
                                 <div class="js-slide products-group">
                                     <div class="product-item">
@@ -173,7 +174,7 @@
                                                         <a href="{{ route('shop.product', ['slug' => $product->slug, 'shopUrl' => $shop->url]) }}"
                                                             class="d-block text-center"><img class="img-fluid"
                                                                 src="{{ asset($product->preview) }}"
-                                                                alt="{{ $product->name }}"></a>
+                                                                alt="{{$product->name}}"></a>
                                                     </div>
                                                     <div class="flex-center-between mb-1">
                                                         <div class="prodcut-price">
@@ -216,8 +217,9 @@
                                     </div>
                                 </div>
                             @empty
-
+                                
                             @endforelse
+
                         </div>
                     </div>
                 </div>

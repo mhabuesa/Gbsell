@@ -16,6 +16,9 @@ class CouponController extends Controller
      */
     public function index()
     {
+        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2'])) {
+            return redirect()->route('accessDeny');
+        }
         $shop_id = Auth::guard('merchant')->user()->shop_id;
         $coupons = Coupon::where('shop_id', $shop_id)->get();
         return view('merchant.coupon.index', compact('coupons'));
@@ -26,6 +29,9 @@ class CouponController extends Controller
      */
     public function create()
     {
+        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2'])) {
+            return redirect()->route('accessDeny');
+        }
         return view('merchant.coupon.create');
     }
 
@@ -79,6 +85,9 @@ class CouponController extends Controller
      */
     public function edit(string $id)
     {
+        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2'])) {
+            return redirect()->route('accessDeny');
+        }
         $coupon = Coupon::find($id);
         return view('merchant.coupon.edit', compact('coupon'));
     }

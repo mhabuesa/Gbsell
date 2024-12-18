@@ -16,6 +16,9 @@ class FrontCustomizeController extends Controller
 
     public function banner_image()
     {
+        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '4'])) {
+            return redirect()->route('accessDeny');
+        }
         $shop_id = Auth::guard('merchant')->user()->shop_id;
         $banner = BannerImage::where('shop_id', $shop_id)->first();
         return view('merchant.frontend_customize.banner_image', [
@@ -56,6 +59,9 @@ class FrontCustomizeController extends Controller
 
     function banner_item()
     {
+        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '4'])) {
+            return redirect()->route('accessDeny');
+        }
         $products = Product::where('shop_id', Auth::guard('merchant')->user()->shop_id)->where('status', 1)->get();
         $banners = BannerItem::where('shop_id', Auth::guard('merchant')->user()->shop_id)->get();
         return view('merchant.frontend_customize.banner_item', [
@@ -84,6 +90,9 @@ class FrontCustomizeController extends Controller
 
     function banner_item_edit($id)
     {
+        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2'])) {
+            return redirect()->route('accessDeny');
+        }
         $products = Product::where('shop_id', Auth::guard('merchant')->user()->shop_id)->where('status', 1)->get();
         $banner = BannerItem::find($id);
         return view('merchant.frontend_customize.banner_item_edit', [

@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     @stack('title')
     <meta name="description"
@@ -31,6 +32,7 @@
         @yield('content')
     </div>
 
+    
     <script src="{{ asset('assets') }}/js/oneui.app.min-5.9.js"></script>
     <script src="{{ asset('assets') }}/js/lib/jquery.min.js"></script>
     <script src="{{ asset('assets') }}/js/plugins/jquery-validation/jquery.validate.min.js"></script>

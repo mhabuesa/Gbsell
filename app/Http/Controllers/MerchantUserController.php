@@ -14,10 +14,14 @@ class MerchantUserController extends Controller
     use ImageSaveTrait;
     function index()
     {
-        $currentMerchant = Auth::guard('merchant')->user();
+        $auth = Auth::guard('merchant')->user();
 
-        $users = Merchant::where('shop_id', $currentMerchant->shop_id)
-                        ->where('id', '!=', $currentMerchant->id)
+        if($auth->permission != 1){
+            return redirect()->route('accessDeny');
+        }
+
+        $users = Merchant::where('shop_id', $auth->shop_id)
+                        ->where('id', '!=', $auth->id)
                         ->where('permission', '!=', '1')
                         ->get();
         return view('merchant.user.index', compact('users'));

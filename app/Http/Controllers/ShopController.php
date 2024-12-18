@@ -3,18 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Shop;
+use App\Models\Order;
+use BaconQrCode\Writer;
 use App\Models\District;
 use App\Models\Merchant;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+
+
 use App\Traits\ImageSaveTrait;
-
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
-use BaconQrCode\Writer;
 
 
 
@@ -25,41 +28,41 @@ class ShopController extends Controller
 
     public function index()
     {
-        $id = Auth::guard('merchant')->user()->shop->id;
+        $auth = Auth::guard('merchant')->user();
+
+        if ($auth->permission != 1) {
+            return redirect()->route('accessDeny');
+        }
+        $id = $auth->shop->id;
 
         $shop = Shop::find($id);
 
         $cities = District::all();
         return view('merchant.shop.index', [
-            'cities'=>$cities,
+            'cities' => $cities,
             // 'qr_image'=>$qr_image,
-            'shop'=>$shop
+            'shop' => $shop
         ]);
     }
 
     public function create()
     {
-
         $merchant = Auth::guard('merchant')->user();
-
-        if($merchant){
-            if($merchant->shop_status == 0){
-                if($merchant->verification == 1){
+        if ($merchant) {
+            if ($merchant->shop_status == 0) {
+                if ($merchant->verification == 1) {
                     $cities = District::all();
                     return view('merchant.shop.shop_create', [
-                        'id'=>$merchant->id,
-                        'cities'=>$cities,
+                        'id' => $merchant->id,
+                        'cities' => $cities,
                     ]);
-                }
-                else{
+                } else {
                     return redirect()->route('merchant.verify', $merchant->email);
                 }
-            }
-            else{
+            } else {
                 return redirect()->route('signup.view');
             }
-        }
-        else{
+        } else {
             return redirect()->route('signin.view');
         }
     }
@@ -69,9 +72,6 @@ class ShopController extends Controller
      */
     public function store(Request $request)
     {
-
-
-
         $request->validate([
             'shop_name' => ['required', 'string', 'max:255'],
             'shop_phone' => 'required|numeric|digits:11',
@@ -80,14 +80,11 @@ class ShopController extends Controller
             'shop_address' => ['required', 'string', 'max:255'],
         ]);
 
-
-
         $merchant = Auth::guard('merchant')->user();
-
 
         $shop_name = strtolower($request->shop_name);
         $shop_name = str_replace(' ', '_', $shop_name);
-        $shopUrl = $merchant->shop_id . '_' . $shop_name;
+        $shop_url = str_replace(' ', '_', strtolower(trim($request->shop_url)));
 
         Shop::create([
             'shop_id' => $merchant->shop_id,
@@ -97,7 +94,7 @@ class ShopController extends Controller
             'type' => $request->shop_type,
             'city' => $request->shop_city,
             'address' => $request->shop_address,
-            'url' => $shopUrl,
+            'url' => $shop_url,
         ]);
 
         Merchant::where('id', $merchant->id)->update([
@@ -105,8 +102,6 @@ class ShopController extends Controller
         ]);
 
         return redirect()->route('dashboard')->with('success', 'Shop Created Successfully');
-
-
     }
 
     /**
@@ -120,10 +115,7 @@ class ShopController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit()
-    {
-
-    }
+    public function edit() {}
 
     public function getQrCode(string $id)
     {
@@ -159,8 +151,8 @@ class ShopController extends Controller
 
             $shop_logo = $this->saveImage('shop', $request->file('logo'));
 
-             // Update shop details
-             Shop::find($id)->update([
+            // Update shop details
+            Shop::find($id)->update([
                 'name' => $request->shop_name,
                 'phone' => $request->shop_phone,
                 'type' => $request->shop_type,
@@ -169,10 +161,9 @@ class ShopController extends Controller
                 'description' => $request->description,
                 'logo' => $shop_logo,
             ]);
-        }
-        else{
-             // Update shop details
-             Shop::find($id)->update([
+        } else {
+            // Update shop details
+            Shop::find($id)->update([
                 'name' => $request->shop_name,
                 'phone' => $request->shop_phone,
                 'type' => $request->shop_type,
@@ -183,23 +174,19 @@ class ShopController extends Controller
         }
 
         return redirect()->route('shop.index')->with('success', 'Shop Updated Successfully');
-
     }
 
 
     public function checkShopUrl(Request $request)
     {
-        $userShopUrl = Auth::guard('merchant')->user()->shop->url;
-
-        if ($request->shop_url != $userShopUrl) {
-            $shopUrl = $request->input('shop_url');
-            $exists = Shop::where('url', $shopUrl)->exists();
-
-            return response()->json(['exists' => $exists]);
-        } else {
-            return response()->json(['available' => true]);
-        }
+        $shop_url = str_replace(' ', '_', strtolower(trim($request->shop_url)));
+        $exists = Shop::where('url', $shop_url)->exists();
+        return response()->json([
+            'exists' => $exists,
+        ]);
     }
+
+
 
 
 
@@ -218,22 +205,29 @@ class ShopController extends Controller
 
         if ($shopUrl != $userShopUrl) {
 
-            if(Shop::where('url', $shopUrl)->exists()){
+            if (Shop::where('url', $shopUrl)->exists()) {
                 return redirect()->route('shop.index', $id)->with('error', 'Shop Url Already Exists');
-            }
-            else{
+            } else {
                 Shop::find($id)->update([
                     'url' => $shopUrl
                 ]);
                 return redirect()->route('shop.index', $id)->with('success', 'Shop Url Updated Successfully');
             }
-
-
         } else {
             return redirect()->route('shop.index');
         }
-
     }
 
+    function customer_list()
+    {
 
+        $shop_id = Auth::guard('merchant')->user()->shop_id;
+        $customers = Order::select('customer_id', DB::raw('COUNT(*) as total_orders'))
+            ->where('shop_id', $shop_id)
+            ->groupBy('customer_id')
+            ->get();
+
+
+        return view('merchant.shop.customer', compact('customers'));
+    }
 }

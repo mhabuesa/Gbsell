@@ -26,7 +26,11 @@ class Order extends Model
     }
     public function shipping()
     {
-        return $this->belongsTo(Shipping::class, 'order_id', 'order_id');
+        return $this->hasOne(Shipping::class, 'order_id', 'order_id');
+    }
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class, 'shop_id', 'shop_id');
     }
 
 }

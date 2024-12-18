@@ -3,11 +3,17 @@
 @endpush
 @push('style')
     <style>
-        .pagination {
-            display: flex;
-            justify-content: end;
+        .dt-length,
+        .dt-info {
+            display: none;
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('assets') }}/js/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="{{ asset('assets') }}/js/plugins/dropzone/min/dropzone.min.css">
+    <link rel="stylesheet" href="{{ asset('assets') }}/js/plugins/datatables-bs5/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="{{ asset('assets') }}/js/plugins/datatables-buttons-bs5/css/buttons.bootstrap5.min.css">
+    <link rel="stylesheet"
+        href="{{ asset('assets') }}/js/plugins/datatables-responsive-bs5/css/responsive.bootstrap5.min.css">
 @endpush
 @extends('merchant.layout.app')
 @section('content')
@@ -24,9 +30,9 @@
                                     data-action="fullscreen_toggle"></button>
                             </div>
                         </div>
-                        <div class="block-content">
+                        <div class="block-content block-content-full overflow-x-auto">
                             <div class="table-responsive">
-                                <table class="table table-vcenter table-hover table-sm table-vcenter" id="userTable">
+                                <table class="table table-bordered table-vcenter table-hover table-sm js-dataTable-responsive">
                                     <thead>
                                         <tr>
                                             <th class="text-center" style="width: 50px;">#</th>
@@ -41,7 +47,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($orders as $key => $order)
+                                        @foreach ($orders as $key => $order)
                                             <tr class="hover_tr">
                                                 <th class="text-center" scope="row">{{ $key + 1 }}.</th>
                                                 <td class="fs-sm text-center">
@@ -73,20 +79,28 @@
                                                         </button>
                                                         <div class="dropdown-menu fs-sm"
                                                             aria-labelledby="dropdown-dropright-alt-primary" style="">
-                                                        <form action="{{ route('order.status.update', $order->id) }}" method="POST" >
-                                                            @csrf
+                                                            <form action="{{ route('order.status.update', $order->id) }}"
+                                                                method="POST">
+                                                                @csrf
 
-                                                            <button type="submit" name="status" value="pending" class="dropdown-item" href="javascript:void(0)">Pending</button>
+                                                                <button type="submit" name="status" value="pending"
+                                                                    class="dropdown-item"
+                                                                    href="javascript:void(0)">Pending</button>
 
-                                                            <button type="submit" name="status" value="processing" class="dropdown-item"
-                                                            href="javascript:void(0)">Processing</button>
+                                                                <button type="submit" name="status" value="processing"
+                                                                    class="dropdown-item"
+                                                                    href="javascript:void(0)">Processing</button>
 
-                                                            <button type="submit" name="status" value="delivered" class="dropdown-item" href="javascript:void(0)">Delivered</button>
+                                                                <button type="submit" name="status" value="delivered"
+                                                                    class="dropdown-item"
+                                                                    href="javascript:void(0)">Delivered</button>
 
-                                                            <div class="dropdown-divider"></div>
-                                                            <button type="submit" name="status" value="cancel" class="dropdown-item" href="javascript:void(0)">Cancel</button>
+                                                                <div class="dropdown-divider"></div>
+                                                                <button type="submit" name="status" value="cancel"
+                                                                    class="dropdown-item"
+                                                                    href="javascript:void(0)">Cancel</button>
 
-                                                        </form>
+                                                            </form>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -97,14 +111,7 @@
                                                     </a>
                                                 </td>
                                             </tr>
-
-
-
-                                        @empty
-                                            <tr>
-                                                <td colspan="9" class="text-center">No Data Found</td>
-                                            </tr>
-                                        @endforelse
+                                        @endforeach
 
                                     </tbody>
                                 </table>
@@ -117,21 +124,8 @@
     </main>
 @endsection
 @push('script')
-    <script>
-        function redirectTo(url) {
-            document.querySelectorAll('.hover_tr').forEach(row => {
-                row.addEventListener('click', function(event) {
-                    if (event.target.closest('.no-click')) {
-                        event.stopPropagation();
-                        return;
-                    }
-                    window.location.href = url;
-                });
-            });
-        }
-
-        function redirectTo(url) {
-            window.location.href = url;
-        }
-    </script>
+    <script src="{{ asset('assets') }}/js/plugins/datatables/dataTables.min.js"></script>
+    <script src="{{ asset('assets') }}/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="{{ asset('assets') }}/js/plugins/datatables-buttons/dataTables.buttons.min.js"></script>
+    <script src="{{ asset('assets') }}/js/pages/be_tables_datatables.min.js"></script>
 @endpush

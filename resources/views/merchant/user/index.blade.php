@@ -34,15 +34,16 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($users as $key => $user )
-
+                                @forelse ($users as $key => $user)
                                     <tr>
-                                        <th class="text-center" scope="row">{{$key+1}}</th>
+                                        <th class="text-center" scope="row">{{ $key + 1 }}</th>
                                         <td class="fw-semibold fs-sm">
                                             @if ($user->photo == null)
-                                                <img src="{{asset('assets')}}/media/photos/img.png" width="40" alt="">
+                                                <img src="{{ asset('assets') }}/media/photos/img.png" width="40"
+                                                    alt="">
                                             @else
-                                                <img src="{{asset($user->photo)}}" width="40" class="img-avatar" style="width: 40px; height: 40px"  alt="Photo">
+                                                <img src="{{ asset($user->photo) }}" width="40" class="img-avatar"
+                                                    style="width: 40px; height: 40px" alt="Photo">
                                             @endif
                                         </td>
                                         <td class="fw-semibold fs-sm">
@@ -52,7 +53,8 @@
                                             {{ $user->email }}
                                         </td>
                                         <td class="d-none d-sm-table-cell">
-                                            <span class="fs-xs fw-semibold d-inline-block py-1 px-3 rounded-pill bg-info-light text-info">
+                                            <span
+                                                class="fs-xs fw-semibold d-inline-block py-1 px-3 rounded-pill bg-info-light text-info">
                                                 @if ($user->permission == '2')
                                                     Admin
                                                 @elseif ($user->permission == '3')
@@ -72,10 +74,12 @@
                                         </td>
                                         <td class="text-center">
                                             <div class="btn-group">
-                                                <a class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" href="{{ route('user.edit', $user->id) }}" >
+                                                <a class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                    href="{{ route('user.edit', $user->id) }}">
                                                     <i class="fa fa-fw fa-pencil-alt"></i>
                                                 </a>
-                                                <button type="button" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                <button type="button"
+                                                    class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
                                                     data-bs-toggle="tooltip" aria-label="Remove Client"
                                                     data-bs-original-title="Remove Client" onclick="deleteUser(this)"
                                                     data-id="{{ $user->id }}">
@@ -98,57 +102,210 @@
                     </div>
                 </div>
             </div>
+            <div class="block block-rounded">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">Permission Table Summary:</h3>
+                </div>
+                <div class="block-content">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-vcenter">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Feature</th>
+                                    <th>Admin</th>
+                                    <th>Moderator</th>
+                                    <th>Editor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Product List</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                    <td>✅</td>
+                                </tr>
+                                <tr>
+                                    <td>Add New Product</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                    <td>✅</td>
+                                </tr>
+                                <tr>
+                                    <td>Edit Product</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                    <td>✅</td>
+                                </tr>
+                                <tr>
+                                    <td>Delete Product</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td>Add Variant</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td>Product Status</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td>New Order List</td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td>Order In Deliver</td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td>Order Complete</td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td>Order Cancel</td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td>Order Status</td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td>Order Details</td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td>Coupon List</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td>Add New Coupon</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td>Edit Coupon</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td>Delete Coupon</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td>Coupon Status</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td>Review List</td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td>Approval</td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td>Delete Review</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td>Banner Image Customize</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                    <td>✅</td>
+                                </tr>
+                                <tr>
+                                    <td>Banner Item Customize</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                    <td>✅</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 @endsection
 
 @push('script')
+    <script>
+        $('#userTable').DataTable();
 
-<script>
-    $('#userTable').DataTable();
+        function deleteUser(button) {
+            const id = $(button).data('id');
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
 
-    function deleteUser(button) {
-        const id = $(button).data('id');
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
-        }).then((result) => {
-            if (result.isConfirmed) {
+                    let url = "{{ route('user.delete', ':id') }}";
+                    url = url.replace(':id', id);
+                    let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-                let url = "{{ route('user.delete', ':id') }}";
-                url = url.replace(':id', id);
-                let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-                $.ajax({
-                    url: url,
-                    type: 'get',
-                    dataType: 'json',
-                    headers: {
-                        'X-CSRF-TOKEN': token
-                    },
-                    success: function(data) {
-                        if (data.success) {
-                            showToast(data.message, "success");
-                            $(button).closest('tr').remove();
-                        } else {
-                            showToast(data.message, "error");
+                    $.ajax({
+                        url: url,
+                        type: 'get',
+                        dataType: 'json',
+                        headers: {
+                            'X-CSRF-TOKEN': token
+                        },
+                        success: function(data) {
+                            if (data.success) {
+                                showToast(data.message, "success");
+                                $(button).closest('tr').remove();
+                            } else {
+                                showToast(data.message, "error");
+                            }
+                        },
+                        error: function(xhr) {
+                            showToast("An error occurred: " + xhr.responseJSON.message, "error");
                         }
-                    },
-                    error: function(xhr) {
-                        showToast("An error occurred: " + xhr.responseJSON.message, "error");
-                    }
-                });
+                    });
 
-            }
-        });
-    }
+                }
+            });
+        }
 
-    function updateUserStatus(element) {
+        function updateUserStatus(element) {
             Swal.fire({
                 title: "Are you sure?",
                 text: "Will you change user status?",
@@ -191,5 +348,5 @@
                 }
             });
         }
-</script>
+    </script>
 @endpush

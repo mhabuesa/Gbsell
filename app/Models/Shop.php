@@ -21,5 +21,10 @@ class Shop extends Model
         return $this->hasMany(PaymentGateway::class);
     }
 
+    public function social()
+    {
+        return $this->hasMany(SocialMedia::class, 'shop_id', 'shop_id');
+    }
+
 
 }

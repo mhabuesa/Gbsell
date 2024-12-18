@@ -292,7 +292,7 @@ footer {
           <tr>
             <td colspan="2"></td>
             <td colspan="2">Discount</td>
-            <td>- 0</td>
+            <td>- {{ $order->discount }}</td>
           </tr>
           <tr>
             <td colspan="2"></td>

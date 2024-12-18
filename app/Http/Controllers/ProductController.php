@@ -24,6 +24,16 @@ class ProductController extends Controller
      */
     public function index()
     {
+        // $auth = Auth::guard('merchant')->user();
+
+        // if($auth->permission != 1){
+        //     return redirect()->route('accessDeny');
+        // }
+
+        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '4'])) {
+            return redirect()->route('accessDeny');
+        }
+
         $products = Product::where('shop_id', Auth::guard('merchant')->user()->shop_id)->get();
         return view('merchant.product.index', compact('products'));
     }
@@ -33,6 +43,10 @@ class ProductController extends Controller
      */
     public function create()
     {
+        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '4'])) {
+            return redirect()->route('accessDeny');
+        }
+
         $categories = Category::where('shop_id', Auth::guard('merchant')->user()->shop_id)->get();
         $attributes = Attribute::where('shop_id', Auth::guard('merchant')->user()->shop_id)->get();
         $colors = Color::where('shop_id', Auth::guard('merchant')->user()->shop_id)->get();
@@ -171,7 +185,9 @@ class ProductController extends Controller
      */
     public function edit(string $slug)
     {
-
+        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '4'])) {
+            return redirect()->route('accessDeny');
+        }
 
         $categories = Category::where('shop_id', Auth::guard('merchant')->user()->shop_id)->get();
         $attributes = Attribute::where('shop_id', Auth::guard('merchant')->user()->shop_id)->get();
@@ -333,6 +349,10 @@ class ProductController extends Controller
 
     public function inventory($slug)
     {
+        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2'])) {
+            return redirect()->route('accessDeny');
+        }
+
         $product = Product::where('slug', $slug)->first();
         $variants = Variant::where('product_id', $product->id)->get();
         $colors = Color::where('shop_id', $product->shop_id)->get();

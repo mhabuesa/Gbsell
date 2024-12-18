@@ -4,6 +4,15 @@
 @push('style')
     <link rel="stylesheet" href="{{ asset('assets') }}/js/plugins/select2/css/select2.min.css">
     <link rel="stylesheet" href="{{ asset('assets') }}/js/plugins/dropzone/min/dropzone.min.css">
+    <link rel="stylesheet" href="{{ asset('assets') }}/js/plugins/datatables-bs5/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="{{ asset('assets') }}/js/plugins/datatables-buttons-bs5/css/buttons.bootstrap5.min.css">
+    <link rel="stylesheet" href="{{ asset('assets') }}/js/plugins/datatables-responsive-bs5/css/responsive.bootstrap5.min.css">
+    <style>
+        .dt-length,
+        .dt-info {
+            display: none;
+        }
+    </style>
 @endpush
 @extends('merchant.layout.app')
 @section('content')
@@ -28,7 +37,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($new_reviews as $key => $review)
+                                @foreach ($new_reviews as $key => $review)
                                     <tr>
                                         <th class="text-center" scope="row">{{ $key + 1 }}</th>
                                         <td class="fw-semibold fs-sm">
@@ -71,13 +80,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
-
-                                @empty
-                                    <tr>
-                                        <td colspan="9" class="text-center">No Data Found</td>
-                                    </tr>
-                                @endforelse
+                                @endforeach
 
                             </tbody>
                         </table>
@@ -92,7 +95,7 @@
                 </div>
                 <div class="block-content">
                     <div class="table-responsive">
-                        <table class="table table-sm table-vcenter table-bordered table-striped" id="reviewTable">
+                        <table class="table table-sm table-vcenter table-bordered table-striped js-dataTable-responsive" id="reviewTable">
                             <thead>
                                 <tr>
                                     <th class="text-center" style="width: 50px;">#</th>
@@ -101,11 +104,13 @@
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th class="d-none d-sm-table-cell" style="width: 15%;">Review</th>
+                                    @if (in_array(Auth::guard('merchant')->user()->permission, ['1', '2']))
                                     <th class="text-center" style="width: 100px;">Actions</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($approved_reviews as $key => $review)
+                                @foreach ($approved_reviews as $key => $review)
                                     <tr>
                                         <th class="text-center" scope="row">{{ $key + 1 }}</th>
                                         <td class="fw-semibold fs-sm">
@@ -126,6 +131,7 @@
                                         <td class="fw-semibold fs-sm">
                                             {{ $review->review }}
                                         </td>
+                                        @if (in_array(Auth::guard('merchant')->user()->permission, ['1', '2']))
                                         <td class="text-center">
                                             <div class="btn-group">
                                                 <button type="button"
@@ -136,15 +142,9 @@
 
                                             </div>
                                         </td>
+                                        @endif
                                     </tr>
-
-
-                                @empty
-                                    <tr>
-                                        <td colspan="9" class="text-center">No Data Found</td>
-                                    </tr>
-                                @endforelse
-
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -155,6 +155,12 @@
 @endsection
 
 @push('script')
+<script src="{{ asset('assets') }}/js/plugins/datatables/dataTables.min.js"></script>
+<script src="{{ asset('assets') }}/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
+<script src="{{ asset('assets') }}/js/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="{{ asset('assets') }}/js/plugins/datatables-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
+<script src="{{ asset('assets') }}/js/plugins/datatables-buttons/dataTables.buttons.min.js"></script>
+<script src="{{ asset('assets') }}/js/plugins/datatables-buttons-bs5/js/buttons.bootstrap5.min.js"></script>
     <script>
         $('#newReviewTable').DataTable();
 

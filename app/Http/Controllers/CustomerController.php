@@ -173,8 +173,8 @@ class CustomerController extends Controller
         $customerId = Auth::guard('customer')->user()->id;
 
         // Count orders for the customer
-        $pending_order = Order::where('customer_id', $customerId)->where('shop_id', $shop->shop_id)->where('status', 'pending')->count();
-        $completed_order = Order::where('customer_id', $customerId)->where('shop_id', $shop->shop_id)->where('status', 'complete')->count();
+        $pending_order = Order::where('customer_id', $customerId)->where('shop_id', $shop->shop_id)->whereIn('status', ['pending', 'delivering', 'processing'])->count();
+        $completed_order = Order::where('customer_id', $customerId)->where('shop_id', $shop->shop_id)->where('status', 'delivered')->count();
         $cancelled_order = Order::where('customer_id', $customerId)->where('shop_id', $shop->shop_id)->where('status', 'cancelled')->count();
         return view('frontend.customer.account',[
             'shop' => $shop,

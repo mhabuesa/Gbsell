@@ -12,7 +12,13 @@ class PaymentGatewayController extends Controller
 
     public function index()
     {
-        $shop_id = Auth::guard('merchant')->user()->shop_id;
+        $auth = Auth::guard('merchant')->user();
+
+        if($auth->permission != 1){
+            return redirect()->route('accessDeny');
+        }
+
+        $shop_id = $auth->shop_id;
 
         // Fetch all required payment methods in a single query
         $payment_methods = PaymentGateway::where('shop_id', $shop_id)

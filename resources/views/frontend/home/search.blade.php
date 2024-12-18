@@ -1,4 +1,4 @@
-@extends('layouts.frontend')
+@extends('frontend.home.app')
 @section('content')
     <main id="content" role="main">
         <!-- breadcrumb -->
@@ -8,10 +8,10 @@
                 <div class="my-md-3">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-3 flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visble">
-                            <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a
-                                    href="{{ route('home', ['shopUrl' => $shop->url]) }}">Home</a></li>
-                            <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1 active" aria-current="page">Category
+                            <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a href="{{ route('index') }}">Home</a>
                             </li>
+                            <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1 active" aria-current="page">Search
+                                Result</li>
                         </ol>
                     </nav>
                 </div>
@@ -22,12 +22,94 @@
 
         <div class="container">
             <div class="mb-8">
-                <!-- Category Products -->
+                @if ($shops->count() > 0)
+                    <!-- Search Products -->
+                    <div class="d-xl-block">
+                        <div class="position-relative">
+                            <div class="border-bottom border-color-1 mb-2">
+                                <h3 class="d-inline-block section-title section-title__full mb-0 pb-2 font-size-22">Shops</h3>
+                            </div>
+                            <div class="js-slick-carousel u-slick position-static overflow-hidden u-slick-overflow-visble pt-2 px-1"
+                                data-pagi-classes="text-center right-0 bottom-1 left-0 u-slick__pagination u-slick__pagination--long mb-0 z-index-n1 mt-3 mt-md-0"
+                                data-slides-show="5" data-slides-scroll="1"
+                                data-arrows-classes="position-absolute top-0 font-size-17 u-slick__arrow-normal top-10"
+                                data-arrow-left-classes="fa fa-angle-left right-1"
+                                data-arrow-right-classes="fa fa-angle-right right-0"
+                                data-responsive='[{
+                          "breakpoint": 1400,
+                          "settings": {
+                            "slidesToShow": 5
+                          }
+                        }, {
+                            "breakpoint": 1200,
+                            "settings": {
+                              "slidesToShow": 4
+                            }
+                        }, {
+                          "breakpoint": 992,
+                          "settings": {
+                            "slidesToShow": 3
+                          }
+                        }, {
+                          "breakpoint": 768,
+                          "settings": {
+                            "slidesToShow": 2
+                          }
+                        }, {
+                          "breakpoint": 554,
+                          "settings": {
+                            "slidesToShow": 2
+                          }
+                        }]'>
+
+                                @forelse ($shops as $key => $shop)
+                                    <div class="js-slide products-group mx-1">
+                                        <div class="product-item">
+                                            <div class="product-item__outer mb-3">
+                                                <a href="{{ route('home', ['shopUrl' => $shop->url]) }}"
+                                                    class="min-height-146 py-1 py-xl-2 py-wd-1 banner-bg d-flex align-items-center text-gray-90">
+                                                    <div class="col-6 col-xl-7 col-wd-6 pr-0">
+                                                        @if ($shop->logo)
+                                                            <img class="img-fluid" src="{{ asset($shop->logo) }}"
+                                                                alt="{{ $shop->name }}">
+                                                        @else
+                                                            <img class="img-fluid"
+                                                                src="{{ asset('frontend') }}/assets/images/shop.png"
+                                                                alt="{{ $shop->name }}">
+                                                        @endif
+                                                    </div>
+                                                    <div class="col-6 col-xl-5 col-wd-6 pr-xl-4 pr-wd-3">
+                                                        <div
+                                                            class="mb-2 pb-1 font-size-15 font-weight-light text-ls-n1 text-lh-23">
+                                                            <strong>{{ $shop->name }}</strong>
+                                                        </div>
+                                                        <div class="link text-gray-90 font-weight-bold">
+                                                            Visit Shop
+                                                            <span class="link__icon ml-1">
+                                                                <span class="link__icon-inner"><i
+                                                                        class="ec ec-arrow-right-categproes"></i></span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @empty
+                                @endforelse
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Search Products -->
+                @endif
+
+                <!-- Search Products -->
                 <div class="mb-6 d-xl-block">
                     <div class="position-relative">
                         <div class="border-bottom border-color-1 mb-2">
-                            <h3 class="d-inline-block section-title section-title__full mb-0 pb-2 font-size-22">
-                                {{ $category->name }}</h3>
+                            <h3 class="d-inline-block section-title section-title__full mb-0 pb-2 font-size-22">Products
+                            </h3>
                         </div>
 
                         <!-- Products Body -->
@@ -43,15 +125,15 @@
                                                     class="product-item__inner {{ $products->count() == 1 ? 'remove-prodcut-hover' : '' }} px-xl-4 p-3">
                                                     <div class="product-item__body pb-xl-2">
                                                         <div class="mb-2"><a
-                                                                href="{{ route('category.product', ['slug' => $product->category->slug, 'shopUrl' => $shop->url]) }}"
+                                                                href="{{ route('category.product', ['slug' => $product->category->slug, 'shopUrl' => $product->shop->url]) }}"
                                                                 class="font-size-12 text-gray-5">{{ $product->category->name }}</a>
                                                         </div>
                                                         <h5 class="mb-1 product-item__title"><a
-                                                                href="{{ route('shop.product', ['slug' => $product->slug, 'shopUrl' => $shop->url]) }}"
+                                                                href="{{ route('shop.product', ['slug' => $product->slug, 'shopUrl' => $product->shop->url]) }}"
                                                                 class="text-blue font-weight-bold">{{ $product->name }}</a>
                                                         </h5>
                                                         <div class="mb-2">
-                                                            <a href="{{ route('shop.product', ['slug' => $product->slug, 'shopUrl' => $shop->url]) }}"
+                                                            <a href="{{ route('shop.product', ['slug' => $product->slug, 'shopUrl' => $product->shop->url]) }}"
                                                                 class="d-block text-center"><img class="img-fluid"
                                                                     src="{{ asset($product->preview) }}"
                                                                     alt="Image Description"></a>
@@ -67,7 +149,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="d-none d-xl-block prodcut-add-cart">
-                                                                <a href="{{ route('shop.product', ['slug' => $product->slug, 'shopUrl' => $shop->url]) }}"
+                                                                <a href="{{ route('shop.product', ['slug' => $product->slug, 'shopUrl' => $product->shop->url]) }}"
                                                                     class="btn-add-cart btn-primary transition-3d-hover"><i
                                                                         class="ec ec-add-to-cart"></i></a>
                                                             </div>
@@ -77,7 +159,7 @@
                                                         @if ($product->variant->sortBy('current_price')->first()->regular_price != null)
                                                             <div
                                                                 class="border-top pt-2 flex-center-between flex-wrap d-flex justify-content-center">
-                                                                <a href="{{ route('wishlist.store', ['shopUrl' => $shop->url, 'product_id' => $product->id]) }}"
+                                                                <a href="{{ route('wishlist.store', ['shopUrl' => $product->shop->url, 'product_id' => $product->id]) }}"
                                                                     class="text-gray-6 font-size-13 mr-2"><i
                                                                         class="ec ec-favorites mr-1 font-size-15"></i>
                                                                     Wishlist</a>
@@ -85,7 +167,7 @@
                                                         @else
                                                             <div
                                                                 class="border-top pt-2 flex-center-between flex-wrap d-flex justify-content-center mt-4">
-                                                                <a href="{{ route('wishlist.store', ['shopUrl' => $shop->url, 'product_id' => $product->id]) }}"
+                                                                <a href="{{ route('wishlist.store', ['shopUrl' => $product->shop->url, 'product_id' => $product->id]) }}"
                                                                     class="text-gray-6 font-size-13 mr-2"><i
                                                                         class="ec ec-favorites mr-1 font-size-15"></i>
                                                                     Wishlist</a>
@@ -96,8 +178,8 @@
                                             </div>
                                         </li>
                                     @empty
-                                        <li class="col-12 col-md-12 col-wd-12 product-item bg-secondary rounded my-5">
-                                            <h2 class="text-center m-auto text-white">No Products</h2>
+                                        <li class="col-12 col-md-12 col-wd-12 product-item bg-dark rounded my-3">
+                                            <h5 class="text-center m-auto text-white">No Products Found</h5>
                                         </li>
                                     @endforelse
 
@@ -114,13 +196,14 @@
 
                     </div>
                 </div>
-                <!-- End Category Products -->
+                <!-- End Search Products -->
 
-                <!-- Recommended Products -->
+                <!-- Recent Products -->
                 <div class="mb-6 d-xl-block">
                     <div class="position-relative">
                         <div class="border-bottom border-color-1 mb-2">
-                            <h3 class="d-inline-block section-title section-title__full mb-0 pb-2 font-size-22">Recent Products</h3>
+                            <h3 class="d-inline-block section-title section-title__full mb-0 pb-2 font-size-22">Recent
+                                Products</h3>
                         </div>
                         <div class="js-slick-carousel u-slick position-static overflow-hidden u-slick-overflow-visble pb-7 pt-2 px-1"
                             data-pagi-classes="text-center right-0 bottom-1 left-0 u-slick__pagination u-slick__pagination--long mb-0 z-index-n1 mt-3 mt-md-0"
@@ -154,6 +237,7 @@
                             "slidesToShow": 2
                           }
                         }]'>
+
                             @forelse ($recent_products as $key => $product)
                                 <div class="js-slide products-group">
                                     <div class="product-item">
@@ -162,15 +246,15 @@
                                                 class="product-item__inner {{ $products->count() == 1 ? 'remove-prodcut-hover' : '' }} px-xl-4 p-3">
                                                 <div class="product-item__body pb-xl-2">
                                                     <div class="mb-2"><a
-                                                            href="{{ route('category.product', ['slug' => $product->category->slug, 'shopUrl' => $shop->url]) }}"
+                                                            href="{{ route('category.product', ['slug' => $product->category->slug, 'shopUrl' => $product->shop->url]) }}"
                                                             class="font-size-12 text-gray-5">{{ $product->category->name }}</a>
                                                     </div>
                                                     <h5 class="mb-1 product-item__title"><a
-                                                            href="{{ route('shop.product', ['slug' => $product->slug, 'shopUrl' => $shop->url]) }}"
+                                                            href="{{ route('shop.product', ['slug' => $product->slug, 'shopUrl' => $product->shop->url]) }}"
                                                             class="text-blue font-weight-bold">{{ $product->name }}</a>
                                                     </h5>
                                                     <div class="mb-2">
-                                                        <a href="{{ route('shop.product', ['slug' => $product->slug, 'shopUrl' => $shop->url]) }}"
+                                                        <a href="{{ route('shop.product', ['slug' => $product->slug, 'shopUrl' => $product->shop->url]) }}"
                                                             class="d-block text-center"><img class="img-fluid"
                                                                 src="{{ asset($product->preview) }}"
                                                                 alt="{{ $product->name }}"></a>
@@ -186,7 +270,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="d-none d-xl-block prodcut-add-cart">
-                                                            <a href="{{ route('shop.product', ['slug' => $product->slug, 'shopUrl' => $shop->url]) }}"
+                                                            <a href="{{ route('shop.product', ['slug' => $product->slug, 'shopUrl' => $product->shop->url]) }}"
                                                                 class="btn-add-cart btn-primary transition-3d-hover"><i
                                                                     class="ec ec-add-to-cart"></i></a>
                                                         </div>
@@ -196,7 +280,7 @@
                                                     @if ($product->variant->sortBy('current_price')->first()->regular_price != null)
                                                         <div
                                                             class="border-top pt-2 flex-center-between flex-wrap d-flex justify-content-center">
-                                                            <a href="{{ route('wishlist.store', ['shopUrl' => $shop->url, 'product_id' => $product->id]) }}"
+                                                            <a href="{{ route('wishlist.store', ['shopUrl' => $product->shop->url, 'product_id' => $product->id]) }}"
                                                                 class="text-gray-6 font-size-13 mr-2"><i
                                                                     class="ec ec-favorites mr-1 font-size-15"></i>
                                                                 Wishlist</a>
@@ -204,7 +288,7 @@
                                                     @else
                                                         <div
                                                             class="border-top pt-2 flex-center-between flex-wrap d-flex justify-content-center mt-4">
-                                                            <a href="{{ route('wishlist.store', ['shopUrl' => $shop->url, 'product_id' => $product->id]) }}"
+                                                            <a href="{{ route('wishlist.store', ['shopUrl' => $product->shop->url, 'product_id' => $product->id]) }}"
                                                                 class="text-gray-6 font-size-13 mr-2"><i
                                                                     class="ec ec-favorites mr-1 font-size-15"></i>
                                                                 Wishlist</a>
@@ -216,8 +300,8 @@
                                     </div>
                                 </div>
                             @empty
-
                             @endforelse
+
                         </div>
                     </div>
                 </div>

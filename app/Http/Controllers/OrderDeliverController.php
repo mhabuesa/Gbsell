@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\SmsConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use SteadFast\SteadFastCourierLaravelPackage\Facades\SteadfastCourier;
@@ -10,6 +11,8 @@ use SteadFast\SteadFastCourierLaravelPackage\Facades\SteadfastCourier;
 class OrderDeliverController extends Controller
 {
 
+
+    // Steadfast Delivery
     public function steadfast_delivery(Request $request)
     {
         $shop_id = Auth::guard('merchant')->user()->shop_id;
@@ -66,8 +69,7 @@ class OrderDeliverController extends Controller
         return back()->with('error', 'Failed to place the order.');
     }
 
-
-
+    //Pathao Delivery
 
 
 }

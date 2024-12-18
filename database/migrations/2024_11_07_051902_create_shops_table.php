@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('logo')->nullable();
             $table->string('description')->nullable();
             $table->string('status')->default(0);
+            $table->date('expiry_date')->nullable();
             $table->timestamps();
         });
     }

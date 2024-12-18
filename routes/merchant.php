@@ -20,7 +20,8 @@ use App\Http\Controllers\MerchantUserController;
 use App\Http\Controllers\OrderDeliverController;
 use App\Http\Controllers\FrontCustomizeController;
 use App\Http\Controllers\PaymentGatewayController;
-use App\Http\Controllers\SslCommerzPaymentController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\SocialMediaController;
 
 // Signin & Signup
 Route::get('/signin', [MerchantAuthController::class, 'signin_view'])->name('signin.view');
@@ -40,6 +41,7 @@ Route::post('/changed/email/{id}', [MerchantAuthController::class, 'changed_emai
 // Shop Create
 Route::get('/shop/create', [ShopController::class, 'create'])->name('shop.create');
 Route::post('/shop/store', [ShopController::class, 'store'])->name('shop.store');
+Route::post('/check-shop-url', [ShopController::class, 'checkShopUrl'])->name('check.shop.url');
 
 
 
@@ -60,7 +62,9 @@ Route::middleware('merchant')->group(function () {
     Route::get('/shop/{id}/qr-code', [ShopController::class, 'getQrCode']);
     Route::post('/shop/update/{id}', [ShopController::class, 'update'])->middleware('merchant')->name('shop.update');
     Route::post('/shop/url/update/{id}', [ShopController::class, 'url_update'])->middleware('merchant')->name('shop.url.update');
-    Route::get('/check-shop-url', [ShopController::class, 'checkShopUrl']);
+
+    Route::get('/customer/list', [ShopController::class, 'customer_list'])->name('customer.list');
+
 
     // PaymentGateway Controller
     Route::get('/payment', [PaymentGatewayController::class, 'index'])->middleware('merchant')->name('payment.index');
@@ -91,19 +95,15 @@ Route::middleware('merchant')->group(function () {
     Route::get('/user/delete/{id}', [MerchantUserController::class, 'delete'])->name('user.delete');
     Route::post('/user/status/update/{id}', [MerchantUserController::class, 'user_status_update'])->name('user.status.update');
 
-
     // Front Customize Controller
     Route::get('/banner/image', [FrontCustomizeController::class, 'banner_image'])->name('front.banner.image');
     Route::post('/banner/image/update', [FrontCustomizeController::class, 'banner_image_update'])->name('banner.image.update');
-
     Route::get('/banner/item', [FrontCustomizeController::class, 'banner_item'])->name('front.banner.item');
     Route::post('/banner/item/create', [FrontCustomizeController::class, 'banner_item_create'])->name('banner.item.create');
     Route::get('/banner/item/edit/{id}', [FrontCustomizeController::class, 'banner_item_edit'])->name('front.banner.item.edit');
     Route::post('/banner/item/update/{id}', [FrontCustomizeController::class, 'banner_item_update'])->name('banner.item.update');
     Route::post('/banner/status/update/{id}', [FrontCustomizeController::class, 'banner_status_update'])->name('banner.status.update');
     Route::delete('/banner/item/delete/{id}', [FrontCustomizeController::class, 'banner_item_delete'])->name('front.banner.item.delete');
-
-
 
     //Extra Route Controller
     Route::controller(CategoryController::class)->name('category.')->prefix('category')->group(function () {
@@ -145,7 +145,22 @@ Route::middleware('merchant')->group(function () {
 
     Route::controller(OrderDeliverController::class)->group(function () {
         Route::post('/steadfast/delivery', 'steadfast_delivery')->name('steadfast.delivery');
+        Route::post('/redx/delivery', 'redx_delivery')->name('redx.delivery');
     });
+    Route::controller(SocialMediaController::class)->group(function () {
+        Route::get('/socialMedia', 'index')->name('socialMedia.index');
+        Route::post('/socialMedia/store', 'store')->name('socialMedia.store');
+        Route::post('/socialMedia/update/{id}', 'update')->name('socialMedia.update');
+        Route::get('/socialMedia/delete/{id}', 'delete')->name('socialMedia.delete');
+    });
+
+
+    // Permission Controller
+    Route::controller(PermissionController::class)->group(function () {
+        Route::get('/accessDeny', 'accessDeny')->name('accessDeny');
+    });
+
+
 
      // Resource Controller
     Route::resource('/category', CategoryController::class);

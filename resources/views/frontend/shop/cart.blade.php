@@ -210,11 +210,14 @@
                                         <th>Discount</th>
                                         <td data-title="Subtotal">
                                             <span class="amount" id="discount">৳ 0</span> <br>
-                                            <form action="{{ route('coupon.remove', $shop->url) }}" method="POST"
-                                                style="display:inline;">
-                                                @csrf
-                                                <button type="submit" class="badge badge-danger btn-sm">Remove</button>
-                                            </form>
+                                            @if (Session::has('coupon_code'))
+                                                <form action="{{ route('coupon.remove', $shop->url) }}" method="POST"
+                                                    style="display:inline;">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="badge badge-danger btn-sm">Remove</button>
+                                                </form>
+                                            @endif
                                         </td>
                                     </tr>
                                     <tr class="order-total">

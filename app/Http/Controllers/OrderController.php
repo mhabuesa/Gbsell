@@ -271,27 +271,43 @@ class OrderController extends Controller
 
     // Customer Order Controller
     public function index(){
+        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '3'])) {
+            return redirect()->route('accessDeny');
+        }
+
         $merchant = Auth::guard('merchant')->user();
-        $orders = Order::where('shop_id', $merchant->shop_id)->where('delivery_status', null )->whereIn('status', ['pending', 'processing'])->latest()->get();
+        $orders = Order::where('shop_id', $merchant->shop_id)->whereIn('status', ['pending', 'processing'])->latest()->get();
         return view('merchant.order.index', compact('orders'));
     }
     public function deliver(){
+        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '3'])) {
+            return redirect()->route('accessDeny');
+        }
         $merchant = Auth::guard('merchant')->user();
         $orders = Order::where('shop_id', $merchant->shop_id)->where('delivery_status', 'sended')->where('status', 'delivering')->latest()->get();
         return view('merchant.order.deliver', compact('orders'));
     }
     public function complate(){
+        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '3'])) {
+            return redirect()->route('accessDeny');
+        }
         $merchant = Auth::guard('merchant')->user();
         $orders = Order::where('shop_id', $merchant->shop_id)->where('status', 'delivered')->latest()->get();
         return view('merchant.order.complate', compact('orders'));
     }
 
     public function cancel(){
+        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '3'])) {
+            return redirect()->route('accessDeny');
+        }
         $merchant = Auth::guard('merchant')->user();
         $orders = Order::where('shop_id', $merchant->shop_id)->whereIn('status', ['cancelled', 'cancel'])->latest()->get();
         return view('merchant.order.cancel', compact('orders'));
     }
     public function details($order_id){
+        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '3'])) {
+            return redirect()->route('accessDeny');
+        }
         $merchant = Auth::guard('merchant')->user();
         $products = OrderProduct::where('order_id', $order_id)->get();
         $shop = Shop::where('shop_id', $merchant->shop_id)->first();
@@ -299,7 +315,6 @@ class OrderController extends Controller
         $redx = DeliverySystem::where('shop_id', $shop->shop_id)->where('method', 'redx')->where('status', '1')->first();
         $steadfast = DeliverySystem::where('shop_id', $shop->shop_id)->where('method', 'steadfast')->where('status', '1')->first();
         $pathao = DeliverySystem::where('shop_id', $shop->shop_id)->where('method', 'pathao')->where('status', '1')->first();
-        $shipping = Shipping::where('order_id', $order_id)->first();
         return view('merchant.order.details', [
             'products' => $products,
             'order_id' => $order_id,
@@ -308,7 +323,6 @@ class OrderController extends Controller
             'redx' => $redx,
             'steadfast' => $steadfast,
             'pathao' => $pathao,
-            'shipping' => $shipping,
         ]);
     }
 

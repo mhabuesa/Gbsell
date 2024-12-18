@@ -11,7 +11,12 @@ class ChatController extends Controller
 
     public function index()
     {
-        $shop_id = Auth::guard('merchant')->user()->shop_id;
+        $auth = Auth::guard('merchant')->user();
+
+        if($auth->permission != 1){
+            return redirect()->route('accessDeny');
+        }
+        $shop_id = $auth->shop_id;
         $chat = ChatConfig::where('shop_id', $shop_id)->first();
         return view('merchant.chat.index', [
             'shop_id' => $shop_id,

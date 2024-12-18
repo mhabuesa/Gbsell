@@ -50,7 +50,7 @@
                                                             </div>
                                                             <div class="mb-2 border border-color-1 rounded bg-danger d-inline-block">
                                                                 <a href="{{route('customer.logout', ['shopUrl' => $shop->url])}}" class="text-light">
-                                                                    <h3 class="mb-0 p-1 font-size-14"><i class="fas fa-sign-out-alt mx-1 "></i><span class="mr-1">Logout</span></h3>
+                                                                    <h3 class="mb-0 p-1 font-size-14"><i class="fas fa-sign-out-alt mx-1 "></i><span class="mr-1">Sign Out</span></h3>
                                                                 </a>
                                                             </div>
                                                         </div>

@@ -11,11 +11,11 @@
         <div class="content content-boxed">
             <div class="block block-rounded">
                 <div class="block-header block-header-default">
-                    <h3 class="block-title">Payment Gateway Setup</h3>
+                    <h3 class="block-title">SMS System Setup</h3>
                 </div>
                 <div class="block-content">
                     <div class="col-lg-8 m-auto ">
-                        <div class="row items-push">
+                        <div class="row items-push d-flex justify-content-between">
                             <div class="col-md-4">
                               <div class="form-check form-block">
                                 <input class="form-check-input" checked type="checkbox" id="cod_input" name="cod" onclick="return false;">
@@ -29,6 +29,18 @@
                                   </label>
                               </div>
                             </div>
+                            @if ($balance)
+                            <div class="col-md-4">
+                                <div class="form-check form-block">
+                                    <label class="form-check-label text-center">
+                                        <div class="">
+                                            Current Balance: <span class="fw-bold" id="balance">{{$balance}}</span> <br>
+                                        </div>
+                                        <small><a href="https://bulksmsbd.net/bkash/newindex" target="_blank">Top Up Now</a></small>
+                                    </label>
+                                </div>
+                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -85,6 +97,5 @@
 @endsection
 
 @push('script')
-
 @endpush
 

@@ -76,6 +76,7 @@
                                                             <tr>
                                                                 <th>#</th>
                                                                 <th>Order ID</th>
+                                                                <th>Tracking ID</th>
                                                                 <th>Total Price</th>
                                                                 <th>Status</th>
                                                                 <th>Date</th>
@@ -88,9 +89,12 @@
                                                                 <tr class="view-details">
                                                                     <td>{{ $key + 1 }}</td>
                                                                     <td>{{ $order->order_id }}</td>
-                                                                    <td>৳ {{ $order->total + $order->charge }}</td>
+                                                                    <td><a href="https://steadfast.com.bd/t/{{ $order->tracking_code }}"
+                                                                            target="_blank">{{ $order->tracking_code }}</a>
+                                                                    </td>
+                                                                    <td>৳ {{ $order->total }}</td>
                                                                     <td
-                                                                        class="text-capitalize {{ $order->status == 'cancelled' ? 'text-danger' : '' }}">
+                                                                        class="text-capitalize {{ $order->status == 'cancel' ? 'text-danger' : '' }}">
                                                                         {{ $order->status }}</td>
                                                                     <td>{{ $order->created_at->format('d-m-Y') }}</td>
                                                                     <td>
@@ -102,26 +106,28 @@
                                                                     <td>
                                                                         <div class="btn-group">
                                                                             <button type="button"
-                                                                                class="badge badge-{{ $order->status != 'cancelled' ? 'dark' : 'secondary' }} dropdown-toggle"
+                                                                                class="badge badge-{{ $order->status != 'cancel' ? 'dark' : 'secondary' }} dropdown-toggle"
                                                                                 data-toggle="dropdown" aria-haspopup="true"
                                                                                 aria-expanded="false">Action</button>
-                                                                            @if ($order->status != 'cancelled')
+                                                                            @if ($order->status != 'cancel')
                                                                                 <div class="dropdown-menu z-5"
                                                                                     x-placement="bottom-start"
                                                                                     style="position: absolute; transform: translate3d(0px, 75px, 0px); top: 0px; left: 0px; will-change: transform;">
                                                                                     <a class="dropdown-item" target="_blank"
                                                                                         href="{{ route('invoice', ['shopUrl' => $shop->url, 'order_id' => $order->order_id]) }}">Invoice</a>
-                                                                                    <div class="dropdown-divider"></div>
-                                                                                    <form
-                                                                                        id="orderCancel{{ $order->id }}"
-                                                                                        method="POST"
-                                                                                        action="{{ route('order.cancel', ['shopUrl' => $shop->url, 'id' => $order->id]) }}">
-                                                                                        @csrf
-                                                                                        <button type="button"
-                                                                                            class="text-danger dropdown-item"
-                                                                                            data-id="{{ $order->id }}"
-                                                                                            onclick="confirmCancel(this)">Cancel</button>
-                                                                                    </form>
+                                                                                        @if ($order->status != 'delivered' && $order->status != 'delivering')
+                                                                                        <div class="dropdown-divider"></div>
+                                                                                        <form
+                                                                                            id="orderCancel{{ $order->id }}"
+                                                                                            method="POST"
+                                                                                            action="{{ route('order.cancel', ['shopUrl' => $shop->url, 'id' => $order->id]) }}">
+                                                                                            @csrf
+                                                                                            <button type="button"
+                                                                                                class="text-danger dropdown-item"
+                                                                                                data-id="{{ $order->id }}"
+                                                                                                onclick="confirmCancel(this)">Cancel</button>
+                                                                                        </form>
+                                                                                    @endif
                                                                                 </div>
                                                                             @endif
                                                                         </div>
@@ -163,7 +169,8 @@
                                                                 </tr>
                                                             @empty
                                                                 <tr>
-                                                                    <td colspan="7" class="text-center">No data found</td>
+                                                                    <td colspan="7" class="text-center">No data found
+                                                                    </td>
                                                                 </tr>
                                                             @endforelse
 
@@ -193,6 +200,7 @@
 @endsection
 
 @push('script')
+
     <script>
         $(document).ready(function() {
             let activeRow = null;

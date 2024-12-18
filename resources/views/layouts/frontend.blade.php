@@ -21,6 +21,9 @@
 
     <!-- CSS Implementing Plugins -->
     <link rel="stylesheet" href="{{ asset('frontend') }}/assets/vendor/font-awesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+        integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="{{ asset('frontend') }}/assets/css/font-electro.css">
 
     <link rel="stylesheet" href="{{ asset('frontend') }}/assets/vendor/animate.css/animate.min.css">
@@ -46,6 +49,35 @@
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 
     @stack('style')
+    <style>
+        @media (min-width: 1200px) {
+            .hide-on-large {
+                display: none !important;
+            }
+        }
+
+        .whatsapp {
+            display: inline-block;
+            position: fixed;
+            bottom: 65px;
+            right: 12px;
+            z-index: 100;
+            transition: 0.3s ease-out;
+            cursor: pointer;
+        }
+
+        @media (max-width: 1200px) {
+            .whatsapp {
+                display: inline-block;
+                position: fixed;
+                bottom: 130px;
+                right: 12px;
+                z-index: 100;
+                transition: 0.3s ease-out;
+                cursor: pointer;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -78,7 +110,7 @@
 
                                 <!-- Fullscreen Toggle Button -->
                                 <button id="sidebarHeaderInvokerMenu" type="button"
-                                    class="border-0 navbar-toggler d-block btn u-hamburger mr-3 mr-xl-0 target-of-invoker-has-unfolds"
+                                    class="border-0 navbar-toggler d-block btn u-hamburger mr-3 mr-xl-0 target-of-invoker-has-unfolds hide-on-large"
                                     aria-controls="sidebarHeader" aria-haspopup="true" aria-expanded="false"
                                     data-unfold-event="click" data-unfold-hide-on-scroll="false"
                                     data-unfold-target="#sidebarHeader1" data-unfold-type="css-animation"
@@ -132,387 +164,35 @@
 
                                                     <!-- List -->
                                                     <ul id="headerSidebarList" class="u-header-collapse__nav">
-                                                        <!-- Home Section -->
-                                                        <li class="u-has-submenu u-header-collapse__submenu">
-                                                            <a class="u-header-collapse__nav-link u-header-collapse__nav-pointer"
-                                                                href="javascript:;" role="button"
-                                                                data-toggle="collapse" aria-expanded="false"
-                                                                aria-controls="headerSidebarHomeCollapse"
-                                                                data-target="#headerSidebarHomeCollapse">
-                                                                Home & Static Pages
+                                                        <li class="u-has-submenu u-header-collapse__submenu mb-2">
+                                                            <a class="nav-link u-header__nav-link border p-2 font-weight-bold rounded coursor-pointer"
+                                                                href="{{ route('track', $shop->url) }}">
+                                                                Track Orders
                                                             </a>
-
-                                                            <div id="headerSidebarHomeCollapse" class="collapse"
-                                                                data-parent="#headerSidebarContent">
-                                                                <ul id="headerSidebarHomeMenu"
-                                                                    class="u-header-collapse__nav-list">
-                                                                    <!-- Home - v1 -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="index.html">Home v1</a></li>
-                                                                    <!-- End Home - v1 -->
-                                                                    <!-- Home - v2 -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="home-v2.html">Home v2</a></li>
-                                                                    <!-- End Home - v2 -->
-                                                                    <!-- Home - v3 -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="home-v3.html">Home v3</a></li>
-                                                                    <!-- End Home - v3 -->
-                                                                    <!-- Home - v3-full-color-bg -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="home-v3-full-color-bg.html">Home
-                                                                            v3.1</a></li>
-                                                                    <!-- End Home - v3-full-color-bg -->
-                                                                    <!-- Home - v4 -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="home-v4.html">Home v4</a></li>
-                                                                    <!-- End Home - v4 -->
-                                                                    <!-- Home - v5 -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="home-v5.html">Home v5</a></li>
-                                                                    <!-- End Home - v5 -->
-                                                                    <!-- Home - v6 -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="home-v6.html">Home v6</a></li>
-                                                                    <!-- End Home - v6 -->
-                                                                    <!-- Home - v7 -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="home-v7.html">Home v7</a></li>
-                                                                    <!-- End Home - v7 -->
-                                                                    <!-- About -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="about.html">About</a></li>
-                                                                    <!-- End About -->
-                                                                    <!-- Contact v1 -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="contact-v1.html">Contact v1</a></li>
-                                                                    <!-- End Contact v1 -->
-                                                                    <!-- Contact v2 -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="contact-v2.html">Contact v2</a></li>
-                                                                    <!-- End Contact v2 -->
-                                                                    <!-- FAQ -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="faq.html">FAQ</a></li>
-                                                                    <!-- End FAQ -->
-                                                                    <!-- Store Directory -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="store-directory.html">Store
-                                                                            Directory</a></li>
-                                                                    <!-- End Store Directory -->
-                                                                    <!-- Terms and Conditions -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="terms-and-conditions.html">Terms and
-                                                                            Conditions</a></li>
-                                                                    <!-- End Terms and Conditions -->
-                                                                    <!-- 404 -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="404.html">404</a></li>
-                                                                    <!-- End 404 -->
-                                                                </ul>
-                                                            </div>
                                                         </li>
-                                                        <!-- End Home Section -->
 
-                                                        <!-- Shop Pages -->
-                                                        <li class="u-has-submenu u-header-collapse__submenu">
-                                                            <a class="u-header-collapse__nav-link u-header-collapse__nav-pointer"
-                                                                href="javascript:;"
-                                                                data-target="#headerSidebarPagesCollapse"
-                                                                role="button" data-toggle="collapse"
-                                                                aria-expanded="false"
-                                                                aria-controls="headerSidebarPagesCollapse">
-                                                                Shop Pages
+                                                        <li class="u-has-submenu u-header-collapse__submenu mb-2">
+                                                            <a class="nav-link u-header__nav-link bg-success text-white p-2 font-weight-bold rounded coursor-pointer"
+                                                                href="{{ route('signup') }}">
+                                                                Become a Seller
                                                             </a>
-
-                                                            <div id="headerSidebarPagesCollapse" class="collapse"
-                                                                data-parent="#headerSidebarContent">
-                                                                <ul id="headerSidebarPagesMenu"
-                                                                    class="u-header-collapse__nav-list">
-                                                                    <!-- Shop Grid -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/shop-grid.html">Shop
-                                                                            Grid</a></li>
-                                                                    <!-- End Shop Grid -->
-
-                                                                    <!-- Shop Grid Extended -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/shop-grid-extended.html">Shop
-                                                                            Grid Extended</a></li>
-                                                                    <!-- End Shop Grid Extended -->
-
-                                                                    <!-- Shop List View -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/shop-list-view.html">Shop
-                                                                            List View</a></li>
-                                                                    <!-- End Shop List View -->
-
-                                                                    <!-- Shop List View Small -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/shop-list-view-small.html">Shop
-                                                                            List View Small</a></li>
-                                                                    <!-- End Shop List View Small -->
-
-                                                                    <!-- Shop Left Sidebar -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/shop-left-sidebar.html">Shop
-                                                                            Left Sidebar</a></li>
-                                                                    <!-- End Shop Left Sidebar -->
-
-                                                                    <!-- Shop Full width -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/shop-full-width.html">Shop
-                                                                            Full width</a></li>
-                                                                    <!-- End Shop Full width -->
-
-                                                                    <!-- Shop Right Sidebar -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/shop-right-sidebar.html">Shop
-                                                                            Right Sidebar</a></li>
-                                                                    <!-- End Shop Right Sidebar -->
-                                                                </ul>
-                                                            </div>
                                                         </li>
-                                                        <!-- End Shop Pages -->
 
-                                                        <!-- Product Categories -->
-                                                        <li class="u-has-submenu u-header-collapse__submenu">
-                                                            <a class="u-header-collapse__nav-link u-header-collapse__nav-pointer"
-                                                                href="javascript:;"
-                                                                data-target="#headerSidebarBlogCollapse"
-                                                                role="button" data-toggle="collapse"
-                                                                aria-expanded="false"
-                                                                aria-controls="headerSidebarBlogCollapse">
-                                                                Product Categories
-                                                            </a>
-
-                                                            <div id="headerSidebarBlogCollapse" class="collapse"
-                                                                data-parent="#headerSidebarContent">
-                                                                <ul id="headerSidebarBlogMenu"
-                                                                    class="u-header-collapse__nav-list">
-                                                                    <!-- 4 Column Sidebar -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/product-categories-4-column-sidebar.html">4
-                                                                            Column Sidebar</a></li>
-                                                                    <!-- End 4 Column Sidebar -->
-
-                                                                    <!-- 5 Column Sidebar -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/product-categories-5-column-sidebar.html">5
-                                                                            Column Sidebar</a></li>
-                                                                    <!-- End 5 Column Sidebar -->
-
-                                                                    <!-- 6 Column Full width -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/product-categories-6-column-full-width.html">6
-                                                                            Column Full width</a></li>
-                                                                    <!-- End 6 Column Full width -->
-
-                                                                    <!-- 7 Column Full width -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/product-categories-7-column-full-width.html">7
-                                                                            Column Full width</a></li>
-                                                                    <!-- End 7 Column Full width -->
-                                                                </ul>
-                                                            </div>
-                                                        </li>
-                                                        <!-- End Product Categories -->
-
-                                                        <!-- Single Product Pages -->
-                                                        <li class="u-has-submenu u-header-collapse__submenu">
-                                                            <a class="u-header-collapse__nav-link u-header-collapse__nav-pointer"
-                                                                href="javascript:;"
-                                                                data-target="#headerSidebarShopCollapse"
-                                                                role="button" data-toggle="collapse"
-                                                                aria-expanded="false"
-                                                                aria-controls="headerSidebarShopCollapse">
-                                                                Single Product Pages
-                                                            </a>
-
-                                                            <div id="headerSidebarShopCollapse" class="collapse"
-                                                                data-parent="#headerSidebarContent">
-                                                                <ul id="headerSidebarShopMenu"
-                                                                    class="u-header-collapse__nav-list">
-                                                                    <!-- Single Product Extended -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/single-product-extended.html">Single
-                                                                            Product Extended</a></li>
-                                                                    <!-- End Single Product Extended -->
-
-                                                                    <!-- Single Product Fullwidth -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/single-product-fullwidth.html">Single
-                                                                            Product Fullwidth</a></li>
-                                                                    <!-- End Single Product Fullwidth -->
-
-                                                                    <!-- Single Product Sidebar -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/single-product-sidebar.html">Single
-                                                                            Product Sidebar</a></li>
-                                                                    <!-- End Single Product Sidebar -->
-                                                                </ul>
-                                                            </div>
-                                                        </li>
-                                                        <!-- End Single Product Pages -->
-
-                                                        <!-- Ecommerce Pages -->
-                                                        <li class="u-has-submenu u-header-collapse__submenu">
-                                                            <a class="u-header-collapse__nav-link u-header-collapse__nav-pointer"
-                                                                href="javascript:;"
-                                                                data-target="#headerSidebarDemosCollapse"
-                                                                role="button" data-toggle="collapse"
-                                                                aria-expanded="false"
-                                                                aria-controls="headerSidebarDemosCollapse">
-                                                                Ecommerce Pages
-                                                            </a>
-
-                                                            <div id="headerSidebarDemosCollapse" class="collapse"
-                                                                data-parent="#headerSidebarContent">
-                                                                <ul id="headerSidebarDemosMenu"
-                                                                    class="u-header-collapse__nav-list">
-                                                                    <!-- Shop -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/shop.html">Shop</a>
-                                                                    </li>
-                                                                    <!-- End Shop -->
-
-                                                                    <!-- Cart -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/cart.html">Cart</a>
-                                                                    </li>
-                                                                    <!-- End Cart -->
-
-                                                                    <!-- Checkout -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/checkout.html">Checkout</a>
-                                                                    </li>
-                                                                    <!-- End Checkout -->
-
-                                                                    <!-- My Account -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/my-account.html">My
-                                                                            Account</a></li>
-                                                                    <!-- End My Account -->
-
-                                                                    <!-- Track your Order -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/track-your-order.html">Track
-                                                                            your Order</a></li>
-                                                                    <!-- End Track your Order -->
-
-                                                                    <!-- Compare -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/compare.html">Compare</a>
-                                                                    </li>
-                                                                    <!-- End Compare -->
-
-                                                                    <!-- wishlist -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/wishlist.html">wishlist</a>
-                                                                    </li>
-                                                                    <!-- End wishlist -->
-                                                                </ul>
-                                                            </div>
-                                                        </li>
-                                                        <!-- End Ecommerce Pages -->
-
-                                                        <!-- Shop Columns -->
-                                                        <li class="u-has-submenu u-header-collapse__submenu">
-                                                            <a class="u-header-collapse__nav-link u-header-collapse__nav-pointer"
-                                                                href="javascript:;"
-                                                                data-target="#headerSidebardocsCollapse"
-                                                                role="button" data-toggle="collapse"
-                                                                aria-expanded="false"
-                                                                aria-controls="headerSidebardocsCollapse">
-                                                                Shop Columns
-                                                            </a>
-
-                                                            <div id="headerSidebardocsCollapse" class="collapse"
-                                                                data-parent="#headerSidebarContent">
-                                                                <ul id="headerSidebardocsMenu"
-                                                                    class="u-header-collapse__nav-list">
-                                                                    <!-- 7 Column Full width -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/shop-7-columns-full-width.html">7
-                                                                            Column Full width</a></li>
-                                                                    <!-- End 7 Column Full width -->
-
-                                                                    <!-- 6 Column Full width -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/shop-6-columns-full-width.html">6
-                                                                            Column Full width</a></li>
-                                                                    <!-- End 6 Column Full width -->
-
-                                                                    <!-- 5 Column Sidebar -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/shop-5-columns-sidebar.html">5
-                                                                            Column Sidebar</a></li>
-                                                                    <!-- End 5 Column Sidebar -->
-
-                                                                    <!-- 4 Column Sidebar -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/shop-4-columns-sidebar.html">4
-                                                                            Column Sidebar</a></li>
-                                                                    <!-- End 4 Column Sidebar -->
-
-                                                                    <!-- 3 Column Sidebar -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/shop-3-columns-sidebar.html">3
-                                                                            Column Sidebar</a></li>
-                                                                    <!-- End 3 Column Sidebar -->
-                                                                </ul>
-                                                            </div>
-                                                        </li>
-                                                        <!-- End Shop Columns -->
-
-                                                        <!-- Blog Pages -->
-                                                        <li class="u-has-submenu u-header-collapse__submenu">
-                                                            <a class="u-header-collapse__nav-link u-header-collapse__nav-pointer"
-                                                                href="javascript:;"
-                                                                data-target="#headerSidebarblogsCollapse"
-                                                                role="button" data-toggle="collapse"
-                                                                aria-expanded="false"
-                                                                aria-controls="headerSidebarblogsCollapse">
-                                                                Blog Pages
-                                                            </a>
-
-                                                            <div id="headerSidebarblogsCollapse" class="collapse"
-                                                                data-parent="#headerSidebarContent">
-                                                                <ul id="headerSidebarblogsMenu"
-                                                                    class="u-header-collapse__nav-list">
-                                                                    <!-- Blog v1 -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/blog/blog-v1.html">Blog
-                                                                            v1</a></li>
-                                                                    <!-- End Blog v1 -->
-
-                                                                    <!-- Blog v2 -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/blog/blog-v2.html">Blog
-                                                                            v2</a></li>
-                                                                    <!-- End Blog v2 -->
-
-                                                                    <!-- Blog v3 -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/blog/blog-v3.html">Blog
-                                                                            v3</a></li>
-                                                                    <!-- End Blog v3 -->
-
-                                                                    <!-- Blog Full Width -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/blog/blog-full-width.html">Blog
-                                                                            Full Width</a></li>
-                                                                    <!-- End Blog Full Width -->
-
-                                                                    <!-- Single Blog Post -->
-                                                                    <li><a class="u-header-collapse__submenu-nav-link"
-                                                                            href="https://transvelo.github.io/electro-html/2.0/html/blog/single-blog-post.html">Single
-                                                                            Blog Post</a></li>
-                                                                    <!-- End Single Blog Post -->
-                                                                </ul>
-                                                            </div>
-                                                        </li>
-                                                        <!-- End Blog Pages -->
+                                                        @if (Auth::guard('customer')->check())
+                                                            <li class="u-has-submenu u-header-collapse__submenu mb-2">
+                                                                <a class="nav-link u-header__nav-link bg-danger text-white p-2 font-weight-bold rounded coursor-pointer"
+                                                                    href="{{ route('customer.logout', ['shopUrl' => $shop->url]) }}">
+                                                                    Sign Out
+                                                                </a>
+                                                            </li>
+                                                        @else
+                                                            <li class="u-has-submenu u-header-collapse__submenu mb-2">
+                                                                <a class="nav-link u-header__nav-link bg-primary p-2 font-weight-bold rounded coursor-pointer"
+                                                                    href="{{ route('customer.auth', $shop->url) }}">
+                                                                    Sign In
+                                                                </a>
+                                                            </li>
+                                                        @endif
                                                     </ul>
                                                     <!-- End List -->
                                                 </div>
@@ -527,17 +207,17 @@
                         <!-- End Logo-offcanvas-menu -->
                         <!-- Search Bar -->
                         <div class="mx-3 col d-none d-xl-block">
-                            <form class="js-focus-state">
+                            <form class="js-focus-state" action="{{ route('search', $shop->url) }}" method="GET">
                                 <label class="sr-only" for="searchproduct">Search</label>
                                 <div class="input-group">
-                                    <input type="email"
+                                    <input type="text"
                                         class="form-control py-2 pl-5 font-size-15 border-right-0 height-42 border-width-0 rounded-left-pill border-primary"
-                                        name="email" id="searchproduct-item" placeholder="Search for Products"
-                                        aria-label="Search for Products" aria-describedby="searchProduct1" required>
+                                        name="q" id="searchproduct-item" placeholder="Search for Products"
+                                        aria-label="Search for Products" aria-describedby="searchProduct"
+                                        value="{{ request()->q }}" required>
                                     <div class="input-group-append">
-
                                         <button class="btn btn-dark height-42 py-2 px-3 rounded-right-pill"
-                                            type="button" id="searchProduct1">
+                                            type="submit" id="searchProduct">
                                             <span class="ec ec-search font-size-20"></span>
                                         </button>
                                     </div>
@@ -567,11 +247,13 @@
                                         <div id="searchClassic"
                                             class="dropdown-menu dropdown-unfold dropdown-menu-right left-0 mx-2"
                                             aria-labelledby="searchClassicInvoker">
-                                            <form class="js-focus-state input-group px-3">
+                                            <form class="js-focus-state input-group px-3"
+                                                action="{{ route('search', $shop->url) }}" method="GET">
                                                 <input class="form-control" type="search"
-                                                    placeholder="Search Product">
+                                                    placeholder="Search Product" name="q"
+                                                    value="{{ request()->q }}" required>
                                                 <div class="input-group-append">
-                                                    <button class="btn btn-primary px-3" type="button"><i
+                                                    <button class="btn btn-primary px-3" type="submit"><i
                                                             class="font-size-18 ec ec-search"></i></button>
                                                 </div>
                                             </form>
@@ -622,7 +304,7 @@
                 <div class="container">
                     <div class="row">
                         <!-- Vertical Menu -->
-                        <div class="col-md-auto d-none d-xl-block align-self-center">
+                        <div class="col-md-1 d-none d-xl-block align-self-center me-4">
                             <div class="max-width-200 min-width-200">
                                 <!-- Basics Accordion -->
                                 <div id="basicsAccordion">
@@ -648,13 +330,19 @@
                                                     <div id="navBar"
                                                         class="collapse navbar-collapse u-header__navbar-collapse">
                                                         <ul class="navbar-nav u-header__navbar-nav border-top-primary">
-                                                            @foreach ($categories as $category)
+                                                            @forelse ($categories as $category)
                                                                 <li class="nav-item u-header__nav-item"
                                                                     data-event="hover" data-position="left">
                                                                     <a href="{{ route('category.product', ['slug' => $category->slug, 'shopUrl' => $shop->url]) }}"
                                                                         class="nav-link u-header__nav-link font-weight-bold">{{ $category->name }}</a>
                                                                 </li>
-                                                            @endforeach
+                                                            @empty
+                                                                <li class="nav-item u-header__nav-item"
+                                                                    data-event="hover" data-position="left">
+                                                                    <a href="javascript:void(0)"
+                                                                        class="nav-link u-header__nav-link font-weight-bold">No Category</a>
+                                                                </li>
+                                                            @endforelse
                                                         </ul>
                                                     </div>
                                                 </nav>
@@ -671,26 +359,25 @@
                         <div class="col secondary-menu">
 
                             <!-- Nav -->
-
                             <nav
                                 class="js-mega-menu navbar navbar-expand-md u-header__navbar u-header__navbar--no-space">
                                 <div id="navBar" class="collapse navbar-collapse u-header__navbar-collapse">
                                     <ul class="navbar-nav u-header__navbar-nav">
-                                        <li class="nav-item u-header__nav-item">
-                                            <a class="nav-link u-header__nav-link" href="#"
-                                                aria-haspopup="true" aria-expanded="false"
-                                                aria-labelledby="pagesSubMenu">Featured Brands</a>
+                                        <li class="nav-item u-header__nav-item mr-1 my-1">
+                                            <a class="nav-link u-header__nav-link border p-2 font-weight-bold rounded coursor-pointer"
+                                                href="{{ route('track', $shop->url) }}" aria-haspopup="true"
+                                                aria-expanded="false" aria-labelledby="pagesSubMenu">Track Orders</a>
                                         </li>
-                                        <li class="nav-item u-header__nav-last-item">
-                                            <a class="text-gray-90 bg-dark text-white p-2 font-weight-bold rounded coursor-pointer"
-                                                href="{{ route('signup') }}" target="_blank">
-                                                Become a Seller
-                                            </a>
+
+                                        <li class="nav-item u-header__nav-last-item mr-1 my-1">
+                                            <a class="nav-link u-header__nav-link bg-success text-white p-2 font-weight-bold rounded coursor-pointer"
+                                                href="{{ route('signup') }}" aria-haspopup="true"
+                                                aria-expanded="false" aria-labelledby="pagesSubMenu">Become a
+                                                Seller</a>
                                         </li>
                                     </ul>
                                 </div>
                             </nav>
-
                             <!-- End Nav -->
                         </div>
                         <!-- End Secondary Menu -->
@@ -706,6 +393,9 @@
     @yield('content')
     <!-- ========== END MAIN CONTENT ========== -->
 
+    {{-- @php
+        $social = $shop->social()->firstOrget();
+    @endphp --}}
     <!-- ========== FOOTER ========== -->
     <footer>
         <!-- Footer-bottom-widgets -->
@@ -716,8 +406,8 @@
                         <div class="mb-6">
                             <a href="{{ route('home', $shop->url) }}" class="d-inline-block">
                                 @if ($shop->logo)
-                                    <img class="u-header__navbar-brand-default" width="200" src="{{ asset($shop->logo) }}"
-                                        alt="Logo">
+                                    <img class="u-header__navbar-brand-default" width="200"
+                                        src="{{ asset($shop->logo) }}" alt="Logo">
                                 @else
                                     <h2 class="me-4 fw-bold fs-6">{{ $shop->name }}</h2>
                                 @endif
@@ -743,87 +433,55 @@
                         </div>
                         <div class="my-4 my-md-4">
                             <ul class="list-inline mb-0 opacity-7">
-                                <li class="list-inline-item mr-0">
-                                    <a class="btn font-size-20 btn-icon btn-soft-dark btn-bg-transparent rounded-circle"
-                                        href="#">
-                                        <span class="fab fa-facebook-f btn-icon__inner"></span>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item mr-0">
-                                    <a class="btn font-size-20 btn-icon btn-soft-dark btn-bg-transparent rounded-circle"
-                                        href="#">
-                                        <span class="fab fa-google btn-icon__inner"></span>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item mr-0">
-                                    <a class="btn font-size-20 btn-icon btn-soft-dark btn-bg-transparent rounded-circle"
-                                        href="#">
-                                        <span class="fab fa-twitter btn-icon__inner"></span>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item mr-0">
-                                    <a class="btn font-size-20 btn-icon btn-soft-dark btn-bg-transparent rounded-circle"
-                                        href="#">
-                                        <span class="fab fa-github btn-icon__inner"></span>
-                                    </a>
-                                </li>
+                                @foreach ($shop->social()->get() as $social)
+                                    <li class="list-inline-item mr-0">
+                                        <a class="btn font-size-20 btn-icon btn-soft-dark btn-bg-transparent rounded-circle"
+                                            href="{{ $social->link }}" target="_blank">
+                                            <span class="{{ $social->icon }} btn-icon__inner"></span>
+                                        </a>
+                                    </li>
+                                @endforeach
+
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-7">
                         <div class="row">
-                            <div class="col-12 col-md mb-4 mb-md-0">
-                                <h6 class="mb-3 font-weight-bold">Find it Fast</h6>
-                                <!-- List Group -->
-                                <ul
-                                    class="list-group list-group-flush list-group-borderless mb-0 list-group-transparent">
-                                    <li><a class="list-group-item list-group-item-action"
-                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/product-categories-5-column-sidebar.html">Laptops
-                                            & Computers</a></li>
-                                    <li><a class="list-group-item list-group-item-action"
-                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/product-categories-5-column-sidebar.html">Cameras
-                                            & Photography</a></li>
-                                    <li><a class="list-group-item list-group-item-action"
-                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/product-categories-5-column-sidebar.html">Smart
-                                            Phones & Tablets</a></li>
-                                    <li><a class="list-group-item list-group-item-action"
-                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/product-categories-5-column-sidebar.html">Video
-                                            Games & Consoles</a></li>
-                                    <li><a class="list-group-item list-group-item-action"
-                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/product-categories-5-column-sidebar.html">TV
-                                            & Audio</a></li>
-                                    <li><a class="list-group-item list-group-item-action"
-                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/product-categories-5-column-sidebar.html">Gadgets</a>
-                                    </li>
-                                    <li><a class="list-group-item list-group-item-action"
-                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/product-categories-5-column-sidebar.html">Car
-                                            Electronic & GPS</a></li>
-                                </ul>
-                                <!-- End List Group -->
-                            </div>
+                            @if ($categories->count() > 0)
+                                <div class="col-12 col-md mb-4 mb-md-0">
+                                    <h6 class="mb-3 font-weight-bold">Top Categories</h6>
+                                    <!-- First 6 Categories -->
+                                    <ul
+                                        class="list-group list-group-flush list-group-borderless mb-0 list-group-transparent">
+                                        @foreach ($categories->slice(0, 6) as $category)
+                                            <li>
+                                                <a class="list-group-item list-group-item-action text-capitalize"
+                                                    href="{{ route('category.product', [$shop->url, $category->slug]) }}">
+                                                    {{ $category->name }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
 
-                            <div class="col-12 col-md mb-4 mb-md-0">
-                                <!-- List Group -->
-                                <ul
-                                    class="list-group list-group-flush list-group-borderless mb-0 list-group-transparent mt-md-6">
-                                    <li><a class="list-group-item list-group-item-action"
-                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/product-categories-5-column-sidebar.html">Printers
-                                            & Ink</a></li>
-                                    <li><a class="list-group-item list-group-item-action"
-                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/product-categories-5-column-sidebar.html">Software</a>
-                                    </li>
-                                    <li><a class="list-group-item list-group-item-action"
-                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/product-categories-5-column-sidebar.html">Office
-                                            Supplies</a></li>
-                                    <li><a class="list-group-item list-group-item-action"
-                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/product-categories-5-column-sidebar.html">Computer
-                                            Components</a></li>
-                                    <li><a class="list-group-item list-group-item-action"
-                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/product-categories-5-column-sidebar.html">Accesories</a>
-                                    </li>
-                                </ul>
-                                <!-- End List Group -->
-                            </div>
+                            @if ($categories->count() > 6)
+                                <div class="col-12 col-md mb-4 mb-md-0">
+                                    <h6 class="mb-3 font-weight-bold">More Categories</h6>
+                                    <!-- Remaining Categories -->
+                                    <ul
+                                        class="list-group list-group-flush list-group-borderless mb-0 list-group-transparent">
+                                        @foreach ($categories->slice(6) as $category)
+                                            <li>
+                                                <a class="list-group-item list-group-item-action text-capitalize"
+                                                    href="{{ route('category.product', [$shop->url, $category->slug]) }}">
+                                                    {{ $category->name }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
 
                             <div class="col-12 col-md mb-4 mb-md-0">
                                 <h6 class="mb-3 font-weight-bold">Customer Care</h6>
@@ -831,22 +489,20 @@
                                 <ul
                                     class="list-group list-group-flush list-group-borderless mb-0 list-group-transparent">
                                     <li><a class="list-group-item list-group-item-action"
-                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/my-account.html">My
+                                            href="{{ route('account', $shop->url) }}">My
                                             Account</a></li>
                                     <li><a class="list-group-item list-group-item-action"
-                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/track-your-order.html">Order
+                                            href="{{ route('track', $shop->url) }}">Order
                                             Tracking</a></li>
                                     <li><a class="list-group-item list-group-item-action"
-                                            href="https://transvelo.github.io/electro-html/2.0/html/shop/wishlist.html">Wish
+                                            href="{{ route('wishlist', $shop->url) }}">Wish
                                             List</a></li>
                                     <li><a class="list-group-item list-group-item-action"
-                                            href="terms-and-conditions.html">Customer Service</a></li>
+                                            href="{{ route('cart', $shop->url) }}">Cart</a></li>
                                     <li><a class="list-group-item list-group-item-action"
-                                            href="terms-and-conditions.html">Returns / Exchange</a></li>
-                                    <li><a class="list-group-item list-group-item-action" href="faq.html">FAQs</a>
+                                            href="{{ route('checkout', ['shopUrl' => $shop->url, 'coupon_code' => Session::get('coupon_code') ?? 0]) }}">Checkout</a>
                                     </li>
-                                    <li><a class="list-group-item list-group-item-action"
-                                            href="terms-and-conditions.html">Product Support</a></li>
+
                                 </ul>
                                 <!-- End List Group -->
                             </div>
@@ -876,7 +532,8 @@
     <nav class="bottom-nav">
         <div class="d-flex justify-content-around align-items-center w-100">
             <div class="nav-item">
-                <a class="nav-link" href="#"><i class="fas fa-home fa-lg"></i><br>Home</a>
+                <a class="nav-link" href="{{ route('home', $shop->url) }}"><i
+                        class="fas fa-home fa-lg"></i><br>Home</a>
             </div>
             <div class="nav-item">
                 <a class="nav-link" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
@@ -919,8 +576,8 @@
                             <a class="d-flex ml-0 navbar-brand u-header__navbar-brand u-header__navbar-brand-vertical"
                                 href="{{ route('home', $shop->url) }}" aria-label="{{ $shop->name }}">
                                 @if ($shop->logo)
-                                    <img class="u-header__navbar-brand-default" width="100" src="{{ asset($shop->logo) }}"
-                                        alt="Logo">
+                                    <img class="u-header__navbar-brand-default" width="100"
+                                        src="{{ asset($shop->logo) }}" alt="Logo">
                                 @else
                                     <h2 class="me-4 fw-bold">{{ $shop->name }}</h2>
                                 @endif
@@ -952,6 +609,19 @@
             </div>
         </div>
     </div>
+
+    @php
+        $whatsapp = App\Models\ChatConfig::where('shop_id', $shop->shop_id)
+            ->where('status', '1')
+            ->first();
+    @endphp
+
+    @if ($whatsapp?->phone != null && $whatsapp?->message != null)
+        <a href="https://wa.me/{{ $whatsapp?->phone }}?text={{ $whatsapp?->message }}" class="whatsapp"
+            target="_blank">
+            <img src="{{ asset('frontend') }}/assets/images/whatsapp.png" width="60" alt="">
+        </a>
+    @endif
 
     <!-- Go to Top -->
     <a class="js-go-to u-go-to" href="#" data-position='{"bottom": 15, "right": 15 }' data-type="fixed"

@@ -19,6 +19,8 @@ use App\Http\Controllers\WishlistController;
 
 // Index View
 Route::get('/', [FrontendController::class, 'index'])->name('index');
+Route::get('/search', [FrontendController::class, 'searchAll'])->name('searchAll');
+Route::get('/track', [FrontendController::class, 'order_track'])->name('order.track');
 
 
 // Shop View
@@ -81,7 +83,8 @@ Route::prefix('{shopUrl}')
 
         Route::get('/invoice/{order_id}', [InvoiceController::class, 'invoice'])->name('invoice');
         Route::post('/customer/review', [ReviewController::class, 'customer_review'])->name('customer.review');
-
+        Route::get('/track', [FrontendController::class, 'track'])->name('track');
+        Route::get('/search', [FrontendController::class, 'search'])->name('search');
 
     });
 
