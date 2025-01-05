@@ -86,6 +86,7 @@ class ShopController extends Controller
         $shop_name = str_replace(' ', '_', $shop_name);
         $shop_url = str_replace(' ', '_', strtolower(trim($request->shop_url)));
 
+        $expiry_date = date('Y-m-d', strtotime('+30 days'));
         Shop::create([
             'shop_id' => $merchant->shop_id,
             'name' => $request->shop_name,
@@ -95,13 +96,15 @@ class ShopController extends Controller
             'city' => $request->shop_city,
             'address' => $request->shop_address,
             'url' => $shop_url,
+            'expiry_date' => $expiry_date,
+
         ]);
 
         Merchant::where('id', $merchant->id)->update([
             'shop_status' => 1
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Shop Created Successfully');
+        return redirect()->route('merchant.dashboard')->with('success', 'Shop Created Successfully');
     }
 
     /**
@@ -125,7 +128,7 @@ class ShopController extends Controller
             new ImagickImageBackEnd()
         );
         $writer = new Writer($renderer);
-        $qr_image = base64_encode($writer->writeString($shop->url));
+        $qr_image = base64_encode($writer->writeString(url($shop->url)));
 
         return response()->json(['qr_image' => $qr_image]);
     }

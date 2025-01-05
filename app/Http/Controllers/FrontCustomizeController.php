@@ -6,6 +6,7 @@ use App\Models\BannerContent;
 use App\Models\BannerImage;
 use App\Models\BannerItem;
 use App\Models\Product;
+use App\Models\Shop;
 use Illuminate\Http\Request;
 use App\Traits\ImageSaveTrait;
 use Illuminate\Support\Facades\Auth;
@@ -43,7 +44,6 @@ class FrontCustomizeController extends Controller
             BannerImage::where('shop_id', $shop_id)->update([
                 'image' => $image_name
             ]);
-
         } else {
 
             $image_name = $this->saveImage('banner', $request->file('banner_image'));
@@ -97,7 +97,7 @@ class FrontCustomizeController extends Controller
         $banner = BannerItem::find($id);
         return view('merchant.frontend_customize.banner_item_edit', [
             'banner' => $banner,
-            'products'=>$products,
+            'products' => $products,
         ]);
     }
     function banner_item_update(Request $request, $id)
@@ -145,5 +145,40 @@ class FrontCustomizeController extends Controller
         }
 
         return response()->json(['success' => true, 'message' => 'Banner Status Updated Successfully'], 200);
+    }
+
+
+    public function favicon(Request $request)
+    {
+        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2'])) {
+            return redirect()->route('accessDeny');
+        }
+        $favicon = Auth::guard('merchant')->user()->shop->favicon;
+        return view('merchant.frontend_customize.favicon', [
+            'favicon' => $favicon
+        ]);
+    }
+
+
+    public function favicon_update(Request $request)
+    {
+        $request->validate([
+            'favicon' => 'required|image|mimes:png,jpg,jpeg,webp',
+        ]);
+
+        $merchant = Auth::guard('merchant')->user();
+        $shop = $merchant->shop;
+
+        if ($shop->favicon) {
+            $this->deleteImage(public_path($shop->favicon));
+        }
+
+        $icon = $this->saveImage('favicon', $request->file('favicon'));
+
+        $shop->update([
+            'favicon' => $icon,
+        ]);
+
+        return redirect()->back()->with('success', 'Favicon Updated Successfully');
     }
 }

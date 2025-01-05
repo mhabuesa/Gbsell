@@ -17,7 +17,6 @@
 @endpush
 @extends('merchant.layout.app')
 @section('content')
-    <main id="main-container">
         <div class="content">
             <div class="row">
                 @include('merchant.order.menu')
@@ -115,7 +114,6 @@
                 </div>
             </div>
         </div>
-    </main>
 @endsection
 
 @push('script')

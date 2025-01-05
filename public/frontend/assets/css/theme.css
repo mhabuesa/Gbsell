@@ -20879,7 +20879,8 @@ button:focus {
 .u-header__navbar-brand > img {
   padding-top: 0;
   padding-bottom: 0;
-  width: 9.375rem;
+  /* width: 3.375rem; */
+  height: 3rem;
 }
 
 .u-header__navbar-brand-center {
@@ -33104,18 +33105,6 @@ blockquote:not(.blockquote) p {
   color: #333e48;
 }
 
-/* Navbar Brand */
-.u-header__navbar-brand,
-.u-header__navbar-brand > img {
-  width: 6.375rem;
-}
-
-@media (min-width: 1200px) {
-  .u-header__navbar-brand,
-  .u-header__navbar-brand > img {
-    width: 9.375rem;
-  }
-}
 
 /* Secondary Menu Navbar Divider */
 .u-header__navbar-nav-divider .u-header__nav-item {

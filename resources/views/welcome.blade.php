@@ -80,7 +80,7 @@
 							</li>
 							<li class="nav-item">
                                 @if (Auth::guard('merchant')->check())
-                                <a href="{{route('dashboard')}}" class="nav-link badge badge-primary rounded py-2 px-2 text-uppercase text-white bg-success fs-12">Dashboard</a>
+                                <a href="{{route('merchant.dashboard')}}" class="nav-link badge badge-primary rounded py-2 px-2 text-uppercase text-white bg-success fs-12">Dashboard</a>
                                 @else
 								<a href="{{route('signin')}}" class="nav-link badge badge-primary rounded py-2 px-2 text-uppercase text-white bg-success fs-12">Signin</a>
                                 @endif

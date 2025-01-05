@@ -21,7 +21,9 @@ use App\Http\Controllers\OrderDeliverController;
 use App\Http\Controllers\FrontCustomizeController;
 use App\Http\Controllers\PaymentGatewayController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SocialMediaController;
+use App\Http\Controllers\SubscriptionController;
 
 // Signin & Signup
 Route::get('/signin', [MerchantAuthController::class, 'signin_view'])->name('signin.view');
@@ -50,7 +52,7 @@ Route::post('/check-shop-url', [ShopController::class, 'checkShopUrl'])->name('c
 Route::middleware('merchant')->group(function () {
 
     // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('merchant.dashboard');
 
     // Profile Controller
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
@@ -62,9 +64,7 @@ Route::middleware('merchant')->group(function () {
     Route::get('/shop/{id}/qr-code', [ShopController::class, 'getQrCode']);
     Route::post('/shop/update/{id}', [ShopController::class, 'update'])->middleware('merchant')->name('shop.update');
     Route::post('/shop/url/update/{id}', [ShopController::class, 'url_update'])->middleware('merchant')->name('shop.url.update');
-
     Route::get('/customer/list', [ShopController::class, 'customer_list'])->name('customer.list');
-
 
     // PaymentGateway Controller
     Route::get('/payment', [PaymentGatewayController::class, 'index'])->middleware('merchant')->name('payment.index');
@@ -104,6 +104,8 @@ Route::middleware('merchant')->group(function () {
     Route::post('/banner/item/update/{id}', [FrontCustomizeController::class, 'banner_item_update'])->name('banner.item.update');
     Route::post('/banner/status/update/{id}', [FrontCustomizeController::class, 'banner_status_update'])->name('banner.status.update');
     Route::delete('/banner/item/delete/{id}', [FrontCustomizeController::class, 'banner_item_delete'])->name('front.banner.item.delete');
+    Route::get('/front/favicon', [FrontCustomizeController::class, 'favicon'])->name('front.favicon');
+    Route::post('/favicon/update', [FrontCustomizeController::class, 'favicon_update'])->name('favicon.update');
 
     //Extra Route Controller
     Route::controller(CategoryController::class)->name('category.')->prefix('category')->group(function () {
@@ -147,6 +149,7 @@ Route::middleware('merchant')->group(function () {
         Route::post('/steadfast/delivery', 'steadfast_delivery')->name('steadfast.delivery');
         Route::post('/redx/delivery', 'redx_delivery')->name('redx.delivery');
     });
+
     Route::controller(SocialMediaController::class)->group(function () {
         Route::get('/socialMedia', 'index')->name('socialMedia.index');
         Route::post('/socialMedia/store', 'store')->name('socialMedia.store');
@@ -154,13 +157,23 @@ Route::middleware('merchant')->group(function () {
         Route::get('/socialMedia/delete/{id}', 'delete')->name('socialMedia.delete');
     });
 
-
     // Permission Controller
     Route::controller(PermissionController::class)->group(function () {
         Route::get('/accessDeny', 'accessDeny')->name('accessDeny');
     });
 
+    // Report Controller
+    Route::controller(ReportController::class)->group(function () {
+        Route::get('/report/order/{data?}', 'order')->name('report.order');
+        Route::get('/report/product/{data?}', 'product')->name('report.product');
+    });
 
+    // Subscription Controller
+    Route::controller(SubscriptionController::class)->group(function () {
+        Route::get('/subscription', 'index')->name('subscription.index');
+        Route::post('/subscription/store', 'subscription')->name('subscription');
+        Route::get('/subscription/pay', 'pay')->name('subscription.pay');
+    });
 
      // Resource Controller
     Route::resource('/category', CategoryController::class);

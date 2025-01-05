@@ -34,10 +34,10 @@
             }
         }
 
-        $(document).ready(function () {
-    // Function to create a variant option row dynamically
-    function getVariantOptionTemplate(options = "") {
-        return `
+        $(document).ready(function() {
+            // Function to create a variant option row dynamically
+            function getVariantOptionTemplate(options = "") {
+                return `
         <div class="row variant-option border border-gray-300 p-2 mx-2 mb-3 d-flex align-items-center justify-content-between">
             <div class="col-lg-3 col-4">
                 <div class="mb-4">
@@ -90,59 +90,60 @@
             </div>
         </div>
         `;
-    }
+            }
 
-    let optionsHtml = ""; // To store attribute options globally
+            let optionsHtml = ""; // To store attribute options globally
 
-    // Fetch attributes on category selection
-    $("#category").on("change", function () {
-        const categoryId = $(this).val();
+            // Fetch attributes on category selection
+            $("#category").on("change", function() {
+                const categoryId = $(this).val();
 
-        if (categoryId) {
-            $.ajax({
-                url: `/attribute/get-attributes/${categoryId}`,
-                method: "GET",
-                success: function (response) {
-                    console.log("Attributes Response:", response); // Debugging
+                if (categoryId) {
+                    $.ajax({
+                        url: `/attribute/get-attributes/${categoryId}`,
+                        method: "GET",
+                        success: function(response) {
+                            console.log("Attributes Response:", response); // Debugging
 
-                    // Generate the attribute options
-                    optionsHtml = response
-                        .map(attr => `<option value="${attr.id}">${attr.name}</option>`)
-                        .join("");
+                            // Generate the attribute options
+                            optionsHtml = response
+                                .map(attr => `<option value="${attr.id}">${attr.name}</option>`)
+                                .join("");
 
-                    // Update all existing variant select fields
-                    $(".variant-options-container .variant-option select[name='attribute_id[]']").each(function () {
-                        $(this).html(`<option value="">Select Attribute</option>${optionsHtml}`);
+                            // Update all existing variant select fields
+                            $(".variant-options-container .variant-option select[name='attribute_id[]']")
+                                .each(function() {
+                                    $(this).html(
+                                        `<option value="">Select Attribute</option>${optionsHtml}`
+                                        );
+                                });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error fetching attributes:", error);
+                            alert("Could not fetch attributes. Please try again.");
+                        },
                     });
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error fetching attributes:", error);
-                    alert("Could not fetch attributes. Please try again.");
-                },
+                }
             });
-        }
-    });
 
-    // Add More Variant Button Click
-    $("#add-more-option").on("click", function () {
-        if (optionsHtml === "") {
-            showToast("Please select a category first to load attributes.", "error");
-            return;
-        }
+            // Add More Variant Button Click
+            $("#add-more-option").on("click", function() {
+                if (optionsHtml === "") {
+                    showToast("Please select a category first to load attributes.", "error");
+                    return;
+                }
 
-        // Append a new variant row
-        $(".variant-options-container").append(getVariantOptionTemplate(optionsHtml));
-    });
+                // Append a new variant row
+                $(".variant-options-container").append(getVariantOptionTemplate(optionsHtml));
+            });
 
-    // Remove a variant row
-    $(document).on("click", ".remove-option", function () {
-        if ($(".variant-options-container .variant-option").length > 1) {
-            $(this).closest(".variant-option").remove();
-        }
-    });
-});
-
-
+            // Remove a variant row
+            $(document).on("click", ".remove-option", function() {
+                if ($(".variant-options-container .variant-option").length > 1) {
+                    $(this).closest(".variant-option").remove();
+                }
+            });
+        });
     </script>
 
     <script>
@@ -183,73 +184,60 @@
 
 
 
-    <script>
-        jQuery(document).ready(function() {
-            ImgUpload();
+<script>
+    jQuery(document).ready(function () {
+        ImgUpload();
+    });
+
+    function ImgUpload() {
+        var imgArray = [];
+        var maxImages = 5; // Maximum upload limit set to 5
+
+        $('.upload__inputfile').on('change', function (e) {
+            var imgWrap = $(this).closest('.upload__box').find('.upload__img-wrap');
+
+            var files = e.target.files;
+            var filesArr = Array.from(files);
+
+            filesArr.some(function (file) { // Use `some` to break the loop when limit is reached
+                if (!file.type.match('image.*')) {
+                    return false; // Skip non-image files
+                }
+
+                if (imgArray.length >= maxImages) {
+                    return true; // Stop processing further files when limit is reached
+                }
+
+                imgArray.push(file); // Add file to the array
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var imgHTML = `
+                        <div class='upload__img-box'>
+                            <div style='background-image: url(${e.target.result})'
+                                data-file='${file.name}' class='img-bg'>
+                                <div class='upload__img-close'></div>
+                            </div>
+                        </div>`;
+                    imgWrap.append(imgHTML);
+                };
+                reader.readAsDataURL(file);
+            });
         });
 
-        function ImgUpload() {
-            var imgWrap = "";
-            var imgArray = [];
+        $('body').on('click', ".upload__img-close", function () {
+            var fileName = $(this).parent().data("file");
 
-            $('.upload__inputfile').each(function() {
-                $(this).on('change', function(e) {
-                    imgWrap = $(this).closest('.upload__box').find('.upload__img-wrap');
-                    var maxLength = $(this).attr('data-max_length');
+            // Remove file from the array
+            imgArray = imgArray.filter(file => file.name !== fileName);
 
-                    var files = e.target.files;
-                    var filesArr = Array.prototype.slice.call(files);
-                    var iterator = 0;
-                    filesArr.forEach(function(f, index) {
+            // Remove image from the DOM
+            $(this).closest('.upload__img-box').remove();
+        });
+    }
+</script>
 
-                        if (!f.type.match('image.*')) {
-                            return;
-                        }
 
-                        if (imgArray.length > maxLength) {
-                            return false
-                        } else {
-                            var len = 0;
-                            for (var i = 0; i < imgArray.length; i++) {
-                                if (imgArray[i] !== undefined) {
-                                    len++;
-                                }
-                            }
-                            if (len > maxLength) {
-                                return false;
-                            } else {
-                                imgArray.push(f);
-
-                                var reader = new FileReader();
-                                reader.onload = function(e) {
-                                    var html =
-                                        "<div class='upload__img-box'><div style='background-image: url(" +
-                                        e.target.result + ")' data-number='" + $(
-                                            ".upload__img-close").length + "' data-file='" + f
-                                        .name +
-                                        "' class='img-bg'><div class='upload__img-close'></div></div></div>";
-                                    imgWrap.append(html);
-                                    iterator++;
-                                }
-                                reader.readAsDataURL(f);
-                            }
-                        }
-                    });
-                });
-            });
-
-            $('body').on('click', ".upload__img-close", function(e) {
-                var file = $(this).parent().data("file");
-                for (var i = 0; i < imgArray.length; i++) {
-                    if (imgArray[i].name === file) {
-                        imgArray.splice(i, 1);
-                        break;
-                    }
-                }
-                $(this).parent().parent().remove();
-            });
-        }
-    </script>
 
     <script>
         $(document).ready(function() {

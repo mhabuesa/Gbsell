@@ -1,6 +1,6 @@
 <nav id="sidebar" aria-label="Main Navigation">
     <div class="content-header">
-        <a class="fw-semibold text-dual" href="{{ route('dashboard') }}">
+        <a class="fw-semibold text-dual" href="{{ route('merchant.dashboard') }}">
             <span class="smini-visible">
                 <i class="fa fa-circle-notch text-primary"></i>
             </span>
@@ -47,8 +47,8 @@
         <div class="content-side">
             <ul class="nav-main">
                 <li class="nav-main-item">
-                    <a class="nav-main-link {{ Route::is('dashboard') ? 'active' : '' }}"
-                        href="{{ route('dashboard') }}">
+                    <a class="nav-main-link {{ Route::is('merchant.dashboard') ? 'active' : '' }}"
+                        href="{{ route('merchant.dashboard') }}">
                         <i class="nav-main-link-icon si si-speedometer"></i>
                         <span class="nav-main-link-name">Dashboard</span>
                     </a>
@@ -156,6 +156,15 @@
                         </a>
                     </li>
                 @endif
+                @if (in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '3']))
+                    <li class="nav-main-item">
+                        <a class="nav-main-link {{ Route::is('report.*') ? 'active' : '' }}"
+                            href="{{ route('report.order') }}">
+                            <i class="nav-main-link-icon fa-solid fa-chart-line"></i>
+                            <span class="nav-main-link-name">Report</span>
+                        </a>
+                    </li>
+                @endif
                 @if (in_array(Auth::guard('merchant')->user()->permission, ['1', '2']))
                     <li class="nav-main-item">
                         <a class="nav-main-link {{ Route::is('coupon.*') ? 'active' : '' }}"
@@ -177,11 +186,20 @@
                 @if (in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '4']))
                     <li class="nav-main-item">
                         <a class="nav-main-link {{ Route::is('front.*') ? 'active' : '' }}"
-                            href="{{ route('front.banner.image') }}">
+                            href="{{ route('front.favicon') }}">
                             <i class="nav-main-link-icon fa-solid fa-ticket"></i>
                             <span class="nav-main-link-name">Frontend Customize</span>
                         </a>
                     </li>
+                @endif
+                @if (in_array(Auth::guard('merchant')->user()->permission, ['1', '2']))
+                <li class="nav-main-item">
+                    <a class="nav-main-link {{ Route::is('subscription.*') ? 'active' : '' }}"
+                        href="{{ route('subscription.index') }}">
+                        <i class="nav-main-link-icon fa-regular fa-gem"></i>
+                        <span class="nav-main-link-name">Subscription</span>
+                    </a>
+                </li>
                 @endif
             </ul>
         </div>

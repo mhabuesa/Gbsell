@@ -14,9 +14,6 @@ class ReviewController extends Controller
     // Review store for customer
     function customer_review(Request $request, $shopUrl)
     {
-        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '3'])) {
-            return redirect()->route('accessDeny');
-        }
         $request->validate([
             'name' => 'required',
             'email' => 'required|email',
@@ -39,6 +36,10 @@ class ReviewController extends Controller
     // Review List for merchant
     function review_list()
     {
+        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '3'])) {
+            return redirect()->route('accessDeny');
+        }
+
         $shop_id = Auth::guard('merchant')->user()->shop_id;
         $new_reviews = Review::where('shop_id', $shop_id)->where('status', '0')->get();
         $approved_reviews = Review::where('shop_id', $shop_id)->where('status', '1')->latest()->get();

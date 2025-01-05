@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('status')->default(0);
             $table->date('expiry_date')->nullable();
+            $table->string('visitors')->default(0);
             $table->timestamps();
         });
     }

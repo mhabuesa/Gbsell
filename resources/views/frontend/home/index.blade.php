@@ -66,7 +66,7 @@
                                         <li
                                             class="col-md-4 col-lg-3 product-item product-item__card pb-2 mb-2 pb-md-0 mb-md-0 border-bottom border-md-bottom-0">
                                             <div class="product-item__outer h-100 w-100">
-                                                <div class="product-item__inner p-md-3 row no-gutters">
+                                                <div class="p-md-3 row no-gutters">
                                                     <a href="{{ route('home', ['shopUrl' => $shop->url]) }}"
                                                         class="min-height-146 py-1 py-xl-2 py-wd-1 banner-bg d-flex align-items-center text-gray-90">
                                                         <div class="col-6 col-xl-7 col-wd-6 pr-0">

@@ -30,7 +30,13 @@ class MerchantMiddleware
             return redirect()->route('signin.view')->with('error', 'Access Denied. Your account is deactivated by Shop Owner!');
         }
 
-        
+        if(Auth::guard('merchant')->user()->shop->status == 0){
+            Auth::guard('merchant')->logout();
+            return redirect()->route('signin.view')->with('error', 'Access Denied. Your Shop is deactivated by Author!');
+        }
+
+
+
 
         return $next($request);
     }

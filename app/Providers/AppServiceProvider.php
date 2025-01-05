@@ -37,13 +37,13 @@ class AppServiceProvider extends ServiceProvider
 
        // Globally data share for header file
        View::composer('layouts.frontend', function ($view) {
-        // URL er first segment theke shop URL ber koro
+        //Get shop url to first segment of url
         $shopUrl = request()->segment(1);
 
-        // Shop er information retrieve koro
+        // Retrieve shop data from database
         $shop = Shop::where('url', $shopUrl)->first();
 
-        // Shop er categories fetch koro
+        //Fetch category data
         $categories = $shop ? Category::where('shop_id', $shop->shop_id)->where('status', '1')->get() : collect();
 
 

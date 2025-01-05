@@ -47,17 +47,30 @@
         <div class="content-side">
             <ul class="nav-main">
                 <li class="nav-main-item">
-                    <a class="nav-main-link active" href="{{route('index')}}">
+                    <a class="nav-main-link {{ Route::is('dashboard') ? 'active' : '' }}" href="{{route('dashboard')}}">
                         <i class="nav-main-link-icon si si-speedometer"></i>
                         <span class="nav-main-link-name">Dashboard</span>
                     </a>
                 </li>
-                <li class="nav-main-heading">User Interface</li>
+                <li class="nav-main-heading">Shops</li>
+                <li class="nav-main-item">
+                    <a class="nav-main-link {{ Route::is('admin.shop') ? 'active' : '' }}" href="{{route('admin.shop')}}">
+                        <i class="nav-main-link-icon fa-solid fa-shop"></i>
+                        <span class="nav-main-link-name">Shops</span>
+                    </a>
+                </li>
+                <li class="nav-main-item">
+                    <a class="nav-main-link {{ Route::is('admin.home.*') ? 'active' : '' }}"
+                        href="{{ route('admin.home.logo') }}">
+                        <i class="nav-main-link-icon fa-solid fa-ticket"></i>
+                        <span class="nav-main-link-name">Home Page Customize</span>
+                    </a>
+                </li>
                 <li class="nav-main-item">
                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true"
                         aria-expanded="false" href="#">
                         <i class="nav-main-link-icon si si-energy"></i>
-                        <span class="nav-main-link-name">Blocks</span>
+                        <span class="nav-main-link-name">Shops</span>
                     </a>
                     <ul class="nav-main-submenu">
                         <li class="nav-main-item">

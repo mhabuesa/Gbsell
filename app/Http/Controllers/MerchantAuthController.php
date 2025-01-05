@@ -15,7 +15,7 @@ class MerchantAuthController extends Controller
     public function signup_view()
     {
         if(Auth::guard('merchant')->check()){
-            return redirect()->route('dashboard');
+            return redirect()->route('merchant.dashboard');
         }
         return view('merchant.auth.signup');
     }
@@ -101,7 +101,7 @@ class MerchantAuthController extends Controller
     public function signin_view()
     {
         if(Auth::guard('merchant')->check()){
-            return redirect()->route('dashboard');
+            return redirect()->route('merchant.dashboard');
         }
         return view('merchant.auth.signin');
     }
@@ -118,7 +118,7 @@ class MerchantAuthController extends Controller
                 return redirect()->route('shop.create');
             }
             else{
-                return redirect()->route('dashboard')->with('success', 'Welcome back!');
+                return redirect()->route('merchant.dashboard')->with('success', 'Welcome back!');
             }
         }
 

@@ -17,82 +17,83 @@
 @endpush
 @extends('merchant.layout.app')
 @section('content')
-    <main id="main-container">
-        <div class="content content-boxed">
-            <div class="block block-rounded">
-                <div class="block-header block-header-default">
-                    <h3 class="block-title">Product List </h3>
-                    @if (Auth::guard('merchant')->user()->permission == '1' ||
-                            Auth::guard('merchant')->user()->permission == '2' ||
-                            Auth::guard('merchant')->user()->permission == '4')
-                        <div class="block-options">
-                            <div class="block-options-item">
-                                <a href="{{ route('product.create') }}" class="btn btn-sm btn-primary"> <i
-                                        class="fa fa-plus"></i>
-                                    Add Product</a>
-                            </div>
+    <div class="content content-boxed">
+        <div class="block block-rounded">
+            <div class="block-header block-header-default">
+                <h3 class="block-title">Product List </h3>
+                @if ($hasPermission)
+                    <div class="block-options">
+                        <div class="block-options-item">
+                            @if ($expired)
+                                <a href="#" class="btn btn-sm btn-secondary">
+                                    <i class="fa fa-plus"></i> Add Product <small class="text-danger-light">(Expired)</small>
+                                </a>
+                            @else
+                                <a href="{{ route('product.create') }}" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-plus"></i> Add Product
+                                </a>
+                            @endif
                         </div>
-                    @endif
-                </div>
-                <div class="block-content">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-vcenter js-dataTable-responsive"
-                            id="productTable">
-                            <thead>
-                                <tr>
-                                    <th class="text-center" style="width: 50px;">#</th>
-                                    <th style="width: 150px;">Photo</th>
-                                    <th>Name</th>
-                                    <th>Product ID</th>
-                                    <th class="d-none d-sm-table-cell" style="width: 15%;">Condition</th>
-                                    <th class="d-none d-sm-table-cell" style="width: 15%;">Stock</th>
-                                    @if (Auth::guard('merchant')->user()->permission == '1' ||
-                                    Auth::guard('merchant')->user()->permission == '2')
+                    </div>
+                @endif
+            </div>
+            <div class="block-content">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-vcenter js-dataTable-responsive"
+                        id="productTable">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="width: 50px;">#</th>
+                                <th style="width: 150px;">Photo</th>
+                                <th>Name</th>
+                                <th>Product ID</th>
+                                <th class="d-none d-sm-table-cell" style="width: 15%;">Condition</th>
+                                <th class="d-none d-sm-table-cell" style="width: 15%;">Stock</th>
+                                @if (Auth::guard('merchant')->user()->permission == '1' || Auth::guard('merchant')->user()->permission == '2')
                                     <th class="d-none d-sm-table-cell" style="width: 15%;">Status</th>
-                                    @endif
-                                    @if (Auth::guard('merchant')->user()->permission == '1' ||
-                                            Auth::guard('merchant')->user()->permission == '2' ||
-                                            Auth::guard('merchant')->user()->permission == '4')
-                                        <th class="text-center" style="width: 100px;">Actions</th>
-                                    @endif
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($products as $key => $product)
-                                    @php
-                                        $class = match ($product->condition) {
-                                            'used' => 'bg-danger-light text-danger',
-                                            'new' => 'bg-success-light text-success',
-                                            'refurbished' => 'bg-warning-light text-warning',
-                                            default => '',
-                                        };
-                                    @endphp
-                                    <tr>
-                                        <th class="text-center" scope="row">{{ $key + 1 }}</th>
-                                        <td>
-                                            @if ($product->preview == null)
-                                                <img src="{{ asset('assets') }}/media/photos/img.png" width="40"
-                                                    alt="">
-                                            @else
-                                                <img src="{{ asset($product->preview) }}" class=""
-                                                    style="width: 40px;" alt="Photo">
-                                            @endif
-                                        </td>
-                                        <td class="fw-semibold fs-sm">
-                                            {{ $product->product_code }}
-                                        </td>
-                                        <td class="fw-semibold fs-sm">
-                                            {{ $product->name }}
-                                        </td>
-                                        <td class="d-none d-sm-table-cell">
-                                            <span
-                                                class="fs-xs fw-semibold d-inline-block py-1 px-3 rounded-pill {{ $class }} text-capitalize">{{ $product->condition }}</span>
-                                        </td>
-                                        <td class="fw-semibold fs-sm">
-                                            {{ $product->variant->sum('quantity') }}
-                                        </td>
-                                        @if (Auth::guard('merchant')->user()->permission == '1' ||
-                                        Auth::guard('merchant')->user()->permission == '2')
+                                @endif
+                                @if (Auth::guard('merchant')->user()->permission == '1' ||
+                                        Auth::guard('merchant')->user()->permission == '2' ||
+                                        Auth::guard('merchant')->user()->permission == '4')
+                                    <th class="text-center" style="width: 100px;">Actions</th>
+                                @endif
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($products as $key => $product)
+                                @php
+                                    $class = match ($product->condition) {
+                                        'used' => 'bg-danger-light text-danger',
+                                        'new' => 'bg-success-light text-success',
+                                        'refurbished' => 'bg-warning-light text-warning',
+                                        default => '',
+                                    };
+                                @endphp
+                                <tr>
+                                    <th class="text-center" scope="row">{{ $key + 1 }}</th>
+                                    <td>
+                                        @if ($product->preview == null)
+                                            <img src="{{ asset('assets') }}/media/photos/img.png" width="40"
+                                                alt="">
+                                        @else
+                                            <img src="{{ asset($product->preview) }}" class="" style="width: 40px;"
+                                                alt="Photo">
+                                        @endif
+                                    </td>
+                                    <td class="fw-semibold fs-sm">
+                                        {{ $product->product_code }}
+                                    </td>
+                                    <td class="fw-semibold fs-sm">
+                                        {{ $product->name }}
+                                    </td>
+                                    <td class="d-none d-sm-table-cell">
+                                        <span
+                                            class="fs-xs fw-semibold d-inline-block py-1 px-3 rounded-pill {{ $class }} text-capitalize">{{ $product->condition }}</span>
+                                    </td>
+                                    <td class="fw-semibold fs-sm">
+                                        {{ $product->variant->sum('quantity') }}
+                                    </td>
+                                    @if (Auth::guard('merchant')->user()->permission == '1' || Auth::guard('merchant')->user()->permission == '2')
                                         <td>
                                             <div class="form-check form-switch">
                                                 <input class="form-check-input" type="checkbox"
@@ -101,56 +102,54 @@
                                                     onchange="updateProductStatus(this)">
                                             </div>
                                         </td>
-                                        @endif
-                                        @if (Auth::guard('merchant')->user()->permission == '1' ||
-                                                Auth::guard('merchant')->user()->permission == '2' ||
-                                                Auth::guard('merchant')->user()->permission == '4')
-                                            <td class="text-center">
-                                                <div class="btn-group">
-                                                    @if (Auth::guard('merchant')->user()->permission == '1' || Auth::guard('merchant')->user()->permission == '2')
-                                                        <a class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                                            href="{{ route('product.inventory', $product->slug) }}"
-                                                            data-bs-toggle="popover" data-bs-placement="top"
-                                                            title="Product Inventory"
-                                                            data-bs-content="You can add inventory for this product.">
-                                                            <i class="fa fa-fw fa-boxes-stacked"></i>
-                                                        </a>
-                                                    @endif
+                                    @endif
+                                    @if (Auth::guard('merchant')->user()->permission == '1' ||
+                                            Auth::guard('merchant')->user()->permission == '2' ||
+                                            Auth::guard('merchant')->user()->permission == '4')
+                                        <td class="text-center">
+                                            <div class="btn-group">
+                                                @if (Auth::guard('merchant')->user()->permission == '1' || Auth::guard('merchant')->user()->permission == '2')
+                                                    <a class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                        href="{{ route('product.inventory', $product->slug) }}"
+                                                        data-bs-toggle="popover" data-bs-placement="top"
+                                                        title="Product Inventory"
+                                                        data-bs-content="You can add inventory for this product.">
+                                                        <i class="fa fa-fw fa-boxes-stacked"></i>
+                                                    </a>
+                                                @endif
 
-                                                    @if (Auth::guard('merchant')->user()->permission == '1' ||
-                                                            Auth::guard('merchant')->user()->permission == '2' ||
-                                                            Auth::guard('merchant')->user()->permission == '4')
-                                                        <a class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                                            href="{{ route('product.edit', $product->slug) }}"
-                                                            data-bs-toggle="popover" data-bs-placement="top"
-                                                            title="Product Edit"
-                                                            data-bs-content="You can edit this product">
-                                                            <i class="fa fa-fw fa-pencil-alt"></i>
-                                                        </a>
-                                                    @endif
-                                                    @if (Auth::guard('merchant')->user()->permission == '1' || Auth::guard('merchant')->user()->permission == '2')
-                                                        <button type="button"
-                                                            class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                                            onclick="deleteProduct(this)" data-id="{{ $product->id }}"
-                                                            data-bs-toggle="popover" data-bs-placement="bottom"
-                                                            title="Product Delete"
-                                                            data-bs-content="You can delete this product">
-                                                            <i class="fa fa-fw fa-times"></i>
-                                                        </button>
-                                                    @endif
-                                                </div>
-                                            </td>
-                                        @endif
-                                    </tr>
-                                @endforeach
+                                                @if (Auth::guard('merchant')->user()->permission == '1' ||
+                                                        Auth::guard('merchant')->user()->permission == '2' ||
+                                                        Auth::guard('merchant')->user()->permission == '4')
+                                                    <a class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                        href="{{ route('product.edit', $product->slug) }}"
+                                                        data-bs-toggle="popover" data-bs-placement="top"
+                                                        title="Product Edit" data-bs-content="You can edit this product">
+                                                        <i class="fa fa-fw fa-pencil-alt"></i>
+                                                    </a>
+                                                @endif
+                                                @if (Auth::guard('merchant')->user()->permission == '1' || Auth::guard('merchant')->user()->permission == '2')
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                        onclick="deleteProduct(this)" data-id="{{ $product->id }}"
+                                                        data-bs-toggle="popover" data-bs-placement="bottom"
+                                                        title="Product Delete"
+                                                        data-bs-content="You can delete this product">
+                                                        <i class="fa fa-fw fa-times"></i>
+                                                    </button>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    @endif
+                                </tr>
+                            @endforeach
 
-                            </tbody>
-                        </table>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 @endsection
 
 @push('script')

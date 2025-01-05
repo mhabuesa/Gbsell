@@ -2,9 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Shop;
 use Closure;
+use App\Models\Shop;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 
 class ValidateShop
@@ -24,6 +25,10 @@ class ValidateShop
 
         if (!$shop) {
             return response()->view('errors.404', ['message' => 'Shop not found'], 404);
+        }
+        if (!Cookie::has('visited_shop_' . $shop->id)) {
+            $shop->increment('visitors');
+            Cookie::queue('visited_shop_' . $shop->id, true, 60);
         }
 
         // Share the shop_id and shop_url globally

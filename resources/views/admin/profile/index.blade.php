@@ -27,9 +27,8 @@
           <h3 class="block-title">Profile</h3>
         </div>
         <div class="block-content">
-          <form action="{{route('profile.update' , auth()->user()->id)}}" method="POST" enctype="multipart/form-data">
+          <form action="{{route('admin.profile.update')}}" method="POST" enctype="multipart/form-data">
             @csrf
-            @method('PUT')
             <div class="row push">
               <div class="col-lg-8 col-xl-5 m-auto">
                 <div class="mb-4">
@@ -75,7 +74,7 @@
           <h3 class="block-title">Change Password</h3>
         </div>
         <div class="block-content">
-          <form action="{{route('profile.password', auth()->user())}}" method="POST">
+          <form action="{{route('admin.profile.password')}}" method="POST">
             @csrf
             <div class="row push">
               <div class="col-lg-8 col-xl-5 m-auto">

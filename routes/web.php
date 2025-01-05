@@ -1,21 +1,37 @@
 <?php
 
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
+use PHPUnit\Framework\Attributes\Group;
 
-Route::middleware('auth')->group(function () {
-    // Route::controller(HomeController::class)->group(function(){
-    //     Route::get('/dashboard', 'dashboard')->name('dashboard');
-    // });
+Route::middleware(['auth'])->group(function () {
+    Route::controller(AdminController::class)->group(function(){
+        Route::get('/admin/dashboard', 'dashboard')->name('dashboard');
+    });
 
-    // Route::controller(ProfileController::class)->name('profile.')->prefix('profile')->group(function () {
-    //     Route::post('/profile_password/{profile}', 'profile_password')->name('password');
-    // });
+    // Admin Profile route inside a prefixed group
+    Route::name('admin.')->prefix('admin')->group(function () {
+        Route::controller(AdminController::class)->group(function(){
+            Route::get('/profile', 'profile')->name('profile');
+            Route::post('/profile/update', 'profile_update')->name('profile.update');
+            Route::post('/profile/password', 'profile_password')->name('profile.password');
+            Route::get('/shop', 'shop')->name('shop');
+            Route::get('/shop/delete/{id}', 'shop_delete')->name('shop.delete');
+            Route::get('/shop/details/{id}', 'shop_details')->name('shop.details');
+            Route::post('/shop/status/update/{id}', 'status_update')->name('shop.status.update');
+            Route::post('/subscription.update/{id}', 'subscription_update')->name('subscription.update');
 
-
-    // Resource Controller
-    // Route::resource('/profile', ProfileController::class);
+            // Home Page Customize
+            Route::get('/favicon', 'favicon')->name('home.favicon');
+            Route::post('/favicon/update', 'favicon_update')->name('favicon.update');
+            Route::get('/logo', 'logo')->name('home.logo');
+            Route::post('/logo/update', 'logo_update')->name('logo.update');
+            Route::get('/info', 'info')->name('home.info');
+            Route::post('/info/update', 'info_update')->name('info.update');
+            Route::get('/social', 'social')->name('home.social');
+            Route::post('/social/update', 'social_update')->name('social.update');
+        });
+    });
 });
 
 

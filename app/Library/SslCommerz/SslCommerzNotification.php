@@ -24,24 +24,37 @@ class SslCommerzNotification extends AbstractSslCommerz
     {
         $this->shop_id = $shop_id;
 
-        $paymentGatewaInfo = PaymentGateway::where('shop_id', $shop_id)->where('method', 'ssl')->first() ?? null;
 
-        info($paymentGatewaInfo);
+
+        if ($shop_id == 'owner') {
+            $paymentGatewaInfo = (object) [
+                'sendbox_status' => 1,
+                'store_id' => 'devhu672e22b90b052',
+                'store_password' => 'devhu672e22b90b052@ssl',
+            ];
+        }
+        else {
+            $paymentGatewaInfo = PaymentGateway::where('shop_id', $shop_id)
+            ->where('method', 'ssl')
+            ->first();
+        }
+
+        info('message', [$paymentGatewaInfo]);
+
+
         if (!$paymentGatewaInfo) {
-
             return false;
         }
 
+        // Ensure consistent object access
         $sendbox_enabled = $paymentGatewaInfo->sendbox_status == 1 ? true : false;
+
 
         $this->apiDomain = $sendbox_enabled ? "https://sandbox.sslcommerz.com" : "https://securepay.sslcommerz.com";
 
-        info($this->shop_id);
         $this->config = config('sslcommerz');
-
         $this->setStoreId($paymentGatewaInfo->store_id);
         $this->setStorePassword($paymentGatewaInfo->store_password);
-
     }
 
     public function orderValidate($post_data, $trx_id = '', $amount = 0, $currency = "BDT")

@@ -38,7 +38,7 @@
               <p class="mb-0 text-muted fs-sm fw-medium">Web Developer</p>
             </div>
             <div class="p-2">
-              <a class="dropdown-item d-flex align-items-center justify-content-between" href="{{ route('profile.index') }}">
+              <a class="dropdown-item d-flex align-items-center justify-content-between" href="{{ route('admin.profile') }}">
                 <span class="fs-sm fw-medium">Profile</span>
               </a>
             </div>

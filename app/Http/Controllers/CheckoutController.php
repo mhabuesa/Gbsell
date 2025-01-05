@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Cookie;
 
 class CheckoutController extends Controller
 {
-    public function checkout($shopUrl, $coupon_code)
+    public function checkout($shopUrl, $coupon_code = null)
     {
         $shop = Shop::where('url', $shopUrl)->first();
 
@@ -24,6 +24,8 @@ class CheckoutController extends Controller
             return redirect()->route('home')->with('error', 'Shop not found.');
         }
 
+        $coupon_code = $coupon_code ?: ''; // Blank manage
+        
         $cartData = json_decode(Cookie::get('cart'), true);
 
         if (!$cartData || !isset($cartData[$shopUrl])) {

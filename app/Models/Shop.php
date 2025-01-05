@@ -26,5 +26,18 @@ class Shop extends Model
         return $this->hasMany(SocialMedia::class, 'shop_id', 'shop_id');
     }
 
+    function merchant(){
+        return $this->belongsTo(Merchant::class, 'shop_id', 'shop_id');
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'shop_id', 'shop_id');
+    }
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'shop_id', 'shop_id');
+    }
+
 
 }

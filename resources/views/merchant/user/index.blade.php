@@ -7,257 +7,255 @@
 @endpush
 @extends('merchant.layout.app')
 @section('content')
-    <main id="main-container">
-        <div class="content content-boxed">
-            <div class="block block-rounded">
-                <div class="block-header block-header-default">
-                    <h3 class="block-title">Users & Permission Table</h3>
-                    <div class="block-options">
-                        <div class="block-options-item">
-                            <a href="{{ route('user.create') }}" class="btn btn-sm btn-primary"> <i class="fa fa-plus"></i>
-                                Add User</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="block-content">
-                    <div class="table-responsive">
-                        <table class="table table-sm table-vcenter" id="userTable">
-                            <thead>
-                                <tr>
-                                    <th class="text-center" style="width: 50px;">#</th>
-                                    <th style="width: 150px;">Photo</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th class="d-none d-sm-table-cell" style="width: 15%;">Access</th>
-                                    <th class="d-none d-sm-table-cell" style="width: 15%;">Status</th>
-                                    <th class="text-center" style="width: 100px;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($users as $key => $user)
-                                    <tr>
-                                        <th class="text-center" scope="row">{{ $key + 1 }}</th>
-                                        <td class="fw-semibold fs-sm">
-                                            @if ($user->photo == null)
-                                                <img src="{{ asset('assets') }}/media/photos/img.png" width="40"
-                                                    alt="">
-                                            @else
-                                                <img src="{{ asset($user->photo) }}" width="40" class="img-avatar"
-                                                    style="width: 40px; height: 40px" alt="Photo">
-                                            @endif
-                                        </td>
-                                        <td class="fw-semibold fs-sm">
-                                            {{ $user->name }}
-                                        </td>
-                                        <td class="fw-semibold fs-sm">
-                                            {{ $user->email }}
-                                        </td>
-                                        <td class="d-none d-sm-table-cell">
-                                            <span
-                                                class="fs-xs fw-semibold d-inline-block py-1 px-3 rounded-pill bg-info-light text-info">
-                                                @if ($user->permission == '2')
-                                                    Admin
-                                                @elseif ($user->permission == '3')
-                                                    Moderator
-                                                @elseif ($user->permission == '4')
-                                                    Editor
-                                                @endif
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div class="form-check form-switch">
-                                                <input class="form-check-input" type="checkbox"
-                                                    {{ $user->status == 1 ? 'checked' : '' }} name="status"
-                                                    data-id="{{ $user->id }}" data-status="{{ $user->status }}"
-                                                    onchange="updateUserStatus(this)">
-                                            </div>
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="btn-group">
-                                                <a class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                                    href="{{ route('user.edit', $user->id) }}">
-                                                    <i class="fa fa-fw fa-pencil-alt"></i>
-                                                </a>
-                                                <button type="button"
-                                                    class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                                    data-bs-toggle="tooltip" aria-label="Remove Client"
-                                                    data-bs-original-title="Remove Client" onclick="deleteUser(this)"
-                                                    data-id="{{ $user->id }}">
-                                                    <i class="fa fa-fw fa-times"></i>
-                                                </button>
-
-                                            </div>
-                                        </td>
-                                    </tr>
-
-
-                                @empty
-                                    <tr>
-                                        <td colspan="6" class="text-center">No Data Found</td>
-                                    </tr>
-                                @endforelse
-
-                            </tbody>
-                        </table>
+    <div class="content content-boxed">
+        <div class="block block-rounded">
+            <div class="block-header block-header-default">
+                <h3 class="block-title">Users & Permission Table</h3>
+                <div class="block-options">
+                    <div class="block-options-item">
+                        <a href="{{ route('user.create') }}" class="btn btn-sm btn-primary"> <i class="fa fa-plus"></i>
+                            Add User</a>
                     </div>
                 </div>
             </div>
-            <div class="block block-rounded">
-                <div class="block-header block-header-default">
-                    <h3 class="block-title">Permission Table Summary:</h3>
-                </div>
-                <div class="block-content">
-                    <div class="table-responsive">
-                        <table class="table table-sm table-vcenter">
-                            <thead>
+            <div class="block-content">
+                <div class="table-responsive">
+                    <table class="table table-sm table-vcenter" id="userTable">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="width: 50px;">#</th>
+                                <th style="width: 150px;">Photo</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th class="d-none d-sm-table-cell" style="width: 15%;">Access</th>
+                                <th class="d-none d-sm-table-cell" style="width: 15%;">Status</th>
+                                <th class="text-center" style="width: 100px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($users as $key => $user)
                                 <tr>
-                                    <th class="text-center">Feature</th>
-                                    <th>Admin</th>
-                                    <th>Moderator</th>
-                                    <th>Editor</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Product List</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                    <td>✅</td>
-                                </tr>
-                                <tr>
-                                    <td>Add New Product</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                    <td>✅</td>
-                                </tr>
-                                <tr>
-                                    <td>Edit Product</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                    <td>✅</td>
-                                </tr>
-                                <tr>
-                                    <td>Delete Product</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr>
-                                    <td>Add Variant</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr>
-                                    <td>Product Status</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr>
-                                    <td>New Order List</td>
-                                    <td>✅</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr>
-                                    <td>Order In Deliver</td>
-                                    <td>✅</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr>
-                                    <td>Order Complete</td>
-                                    <td>✅</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr>
-                                    <td>Order Cancel</td>
-                                    <td>✅</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr>
-                                    <td>Order Status</td>
-                                    <td>✅</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr>
-                                    <td>Order Details</td>
-                                    <td>✅</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr>
-                                    <td>Coupon List</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr>
-                                    <td>Add New Coupon</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr>
-                                    <td>Edit Coupon</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr>
-                                    <td>Delete Coupon</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr>
-                                    <td>Coupon Status</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr>
-                                    <td>Review List</td>
-                                    <td>✅</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr>
-                                    <td>Approval</td>
-                                    <td>✅</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr>
-                                    <td>Delete Review</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                    <td>❌</td>
-                                </tr>
-                                <tr>
-                                    <td>Banner Image Customize</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                    <td>✅</td>
-                                </tr>
-                                <tr>
-                                    <td>Banner Item Customize</td>
-                                    <td>✅</td>
-                                    <td>❌</td>
-                                    <td>✅</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                    <th class="text-center" scope="row">{{ $key + 1 }}</th>
+                                    <td class="fw-semibold fs-sm">
+                                        @if ($user->photo == null)
+                                            <img src="{{ asset('assets') }}/media/photos/img.png" width="40"
+                                                alt="">
+                                        @else
+                                            <img src="{{ asset($user->photo) }}" width="40" class="img-avatar"
+                                                style="width: 40px; height: 40px" alt="Photo">
+                                        @endif
+                                    </td>
+                                    <td class="fw-semibold fs-sm">
+                                        {{ $user->name }}
+                                    </td>
+                                    <td class="fw-semibold fs-sm">
+                                        {{ $user->email }}
+                                    </td>
+                                    <td class="d-none d-sm-table-cell">
+                                        <span
+                                            class="fs-xs fw-semibold d-inline-block py-1 px-3 rounded-pill bg-info-light text-info">
+                                            @if ($user->permission == '2')
+                                                Admin
+                                            @elseif ($user->permission == '3')
+                                                Moderator
+                                            @elseif ($user->permission == '4')
+                                                Editor
+                                            @endif
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox"
+                                                {{ $user->status == 1 ? 'checked' : '' }} name="status"
+                                                data-id="{{ $user->id }}" data-status="{{ $user->status }}"
+                                                onchange="updateUserStatus(this)">
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group">
+                                            <a class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                href="{{ route('user.edit', $user->id) }}">
+                                                <i class="fa fa-fw fa-pencil-alt"></i>
+                                            </a>
+                                            <button type="button"
+                                                class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                data-bs-toggle="tooltip" aria-label="Remove Client"
+                                                data-bs-original-title="Remove Client" onclick="deleteUser(this)"
+                                                data-id="{{ $user->id }}">
+                                                <i class="fa fa-fw fa-times"></i>
+                                            </button>
 
-                    </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center">No Data Found</td>
+                                </tr>
+                            @endforelse
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    </main>
+        <div class="block block-rounded">
+            <div class="block-header block-header-default">
+                <h3 class="block-title">Permission Table Summary:</h3>
+            </div>
+            <div class="block-content">
+                <div class="table-responsive">
+                    <table class="table table-sm table-vcenter">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Feature</th>
+                                <th>Admin</th>
+                                <th>Moderator</th>
+                                <th>Editor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Product List</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                                <td>✅</td>
+                            </tr>
+                            <tr>
+                                <td>Add New Product</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                                <td>✅</td>
+                            </tr>
+                            <tr>
+                                <td>Edit Product</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                                <td>✅</td>
+                            </tr>
+                            <tr>
+                                <td>Delete Product</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>Add Variant</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>Product Status</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>New Order List</td>
+                                <td>✅</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>Order In Deliver</td>
+                                <td>✅</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>Order Complete</td>
+                                <td>✅</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>Order Cancel</td>
+                                <td>✅</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>Order Status</td>
+                                <td>✅</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>Order Details</td>
+                                <td>✅</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>Coupon List</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>Add New Coupon</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>Edit Coupon</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>Delete Coupon</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>Coupon Status</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>Review List</td>
+                                <td>✅</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>Approval</td>
+                                <td>✅</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>Delete Review</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>Banner Image Customize</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                                <td>✅</td>
+                            </tr>
+                            <tr>
+                                <td>Banner Item Customize</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                                <td>✅</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('script')

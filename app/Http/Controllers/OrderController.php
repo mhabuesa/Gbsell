@@ -23,6 +23,7 @@ use App\Models\DeliverySystem;
 
 class OrderController extends Controller
 {
+
     function order_store(Request $request, $shopUrl)
     {
 
@@ -40,32 +41,32 @@ class OrderController extends Controller
         $data = $cartData[$shopUrl];
 
 
-        if($request->delivery == 'interCity'){
+        if ($request->delivery == 'interCity') {
             $charge = 100;
-        }else{
+        } else {
             $charge = 150;
         }
 
-        $order_id = 'cod'. random_int(10000, 99999) .now()->format('dm');
+        $order_id = 'cod' . random_int(10000, 99999) . now()->format('dm');
         $subtotal = 0;
 
         foreach ($data as $value) {
-             $after_subtotal = $value['quantity'] * $value['current_price'];
-             $subtotal += $after_subtotal;
-         }
+            $after_subtotal = $value['quantity'] * $value['current_price'];
+            $subtotal += $after_subtotal;
+        }
 
 
-         // Get the input phone number
-         $phone = $request->input('phone');
+        // Get the input phone number
+        $phone = $request->input('phone');
 
-         // Check if the phone number starts with +88
-         if (str_starts_with($phone, '+88')) {
-             $phone = substr($phone, 3); // Remove +88 from the phone number
-         }
+        // Check if the phone number starts with +88
+        if (str_starts_with($phone, '+88')) {
+            $phone = substr($phone, 3); // Remove +88 from the phone number
+        }
 
 
         // if selected payment method is Cash On Delivery
-        if($request->payment == 'cod'){
+        if ($request->payment == 'cod') {
             $customer = Customer::firstOrCreate(
                 [
                     'phone' => $phone,
@@ -105,7 +106,7 @@ class OrderController extends Controller
                 ]);
             }
 
-            if($request->ship_check == 'on'){
+            if ($request->ship_check == 'on') {
 
                 $request->validate([
                     'ship_name' => 'required',
@@ -136,7 +137,7 @@ class OrderController extends Controller
                     'ship_city' => $request->ship_city,
                     'ship_address' => $request->ship_address,
                 ]);
-            }else{
+            } else {
 
                 Billing::create([
                     'shop_id' => $shop->shop_id,
@@ -159,14 +160,13 @@ class OrderController extends Controller
                     'ship_city' => $request->city,
                     'ship_address' => $request->address,
                 ]);
-
             }
 
             foreach ($data as $product) {
                 Variant::where('product_id', $product['product_id'])
-                ->where('attribute_id', $product['attribute_id'])
-                ->where('color_id', $product['color_id'])
-                ->decrement('quantity', $product['quantity']);
+                    ->where('attribute_id', $product['attribute_id'])
+                    ->where('color_id', $product['color_id'])
+                    ->decrement('quantity', $product['quantity']);
             }
 
 
@@ -178,10 +178,10 @@ class OrderController extends Controller
 
 
             $sslSmsApi = SmsConfig::where('shop_id', $shop->shop_id)
-            ->where('status', 1)
-            ->whereNotNull('api_key')
-            ->whereNotNull('sender_id')
-            ->first();
+                ->where('status', 1)
+                ->whereNotNull('api_key')
+                ->whereNotNull('sender_id')
+                ->first();
 
             if ($sslSmsApi) {
                 $url = "http://bulksmsbd.net/api/smsapi";
@@ -221,10 +221,10 @@ class OrderController extends Controller
 
 
 
-        // if selected payment method is ssl
-        }elseif($request->payment == 'ssl'){
+            // if selected payment method is ssl
+        } elseif ($request->payment == 'ssl') {
 
-            if($request->ship_check == 'on'){
+            if ($request->ship_check == 'on') {
 
                 $request->validate([
                     'ship_name' => 'required',
@@ -237,13 +237,11 @@ class OrderController extends Controller
 
 
             $request = $request->all();
-            return redirect()->route('sslpay',$shopUrl)->with([
+            return redirect()->route('sslpay', $shopUrl)->with([
                 'data' => $data,
                 'request' => $request,
             ]);
-
         }
-
     }
 
     function order_placed($shopUrl)
@@ -270,51 +268,102 @@ class OrderController extends Controller
 
 
     // Customer Order Controller
-    public function index(){
-        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '3'])) {
+    public function index()
+    {
+        $merchant = Auth::guard('merchant')->user();
+        $shop_id = $merchant->shop_id;
+        $expired = $merchant->shop->expiry_date < date('Y-m-d');
+        $hasPermission = in_array($merchant->permission, ['1', '2', '3']);
+
+        if (!$hasPermission) {
             return redirect()->route('accessDeny');
         }
 
-        $merchant = Auth::guard('merchant')->user();
-        $orders = Order::where('shop_id', $merchant->shop_id)->whereIn('status', ['pending', 'processing'])->latest()->get();
+        if ($expired) {
+            return view('merchant.subscription.lock');
+        }
+
+
+        $orders = Order::where('shop_id', $shop_id)->whereIn('status', ['pending', 'processing'])->latest()->get();
         return view('merchant.order.index', compact('orders'));
     }
-    public function deliver(){
-        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '3'])) {
+    public function deliver()
+    {
+        $merchant = Auth::guard('merchant')->user();
+        $shop_id = $merchant->shop_id;
+        $expired = $merchant->shop->expiry_date < date('Y-m-d');
+        $hasPermission = in_array($merchant->permission, ['1', '2', '3']);
+
+        if (!$hasPermission) {
             return redirect()->route('accessDeny');
         }
-        $merchant = Auth::guard('merchant')->user();
-        $orders = Order::where('shop_id', $merchant->shop_id)->where('delivery_status', 'sended')->where('status', 'delivering')->latest()->get();
+
+        if ($expired) {
+            return view('merchant.subscription.lock');
+        }
+
+        $orders = Order::where('shop_id', $shop_id)->where('delivery_status', 'sended')->where('status', 'delivering')->latest()->get();
         return view('merchant.order.deliver', compact('orders'));
     }
-    public function complate(){
-        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '3'])) {
+    public function complate()
+    {
+        $merchant = Auth::guard('merchant')->user();
+        $shop_id = $merchant->shop_id;
+        $expired = $merchant->shop->expiry_date < date('Y-m-d');
+        $hasPermission = in_array($merchant->permission, ['1', '2', '3']);
+
+        if (!$hasPermission) {
             return redirect()->route('accessDeny');
         }
-        $merchant = Auth::guard('merchant')->user();
-        $orders = Order::where('shop_id', $merchant->shop_id)->where('status', 'delivered')->latest()->get();
+
+        if ($expired) {
+            return view('merchant.subscription.lock');
+        }
+
+        $orders = Order::where('shop_id', $shop_id)->where('status', 'delivered')->latest()->get();
         return view('merchant.order.complate', compact('orders'));
     }
 
-    public function cancel(){
-        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '3'])) {
+    public function cancel()
+    {
+        $merchant = Auth::guard('merchant')->user();
+        $shop_id = $merchant->shop_id;
+        $expired = $merchant->shop->expiry_date < date('Y-m-d');
+        $hasPermission = in_array($merchant->permission, ['1', '2', '3']);
+
+        if (!$hasPermission) {
             return redirect()->route('accessDeny');
         }
-        $merchant = Auth::guard('merchant')->user();
-        $orders = Order::where('shop_id', $merchant->shop_id)->whereIn('status', ['cancelled', 'cancel'])->latest()->get();
+
+        if ($expired) {
+            return view('merchant.subscription.lock');
+        }
+
+        $orders = Order::where('shop_id', $shop_id)->whereIn('status', ['cancelled', 'cancel'])->latest()->get();
         return view('merchant.order.cancel', compact('orders'));
     }
-    public function details($order_id){
-        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '3'])) {
+    public function details($order_id)
+    {
+
+        $merchant = Auth::guard('merchant')->user();
+        $shop_id = $merchant->shop_id;
+        $expired = $merchant->shop->expiry_date < date('Y-m-d');
+        $hasPermission = in_array($merchant->permission, ['1', '2', '3']);
+
+        if (!$hasPermission) {
             return redirect()->route('accessDeny');
         }
-        $merchant = Auth::guard('merchant')->user();
+
+        if ($expired) {
+            return view('merchant.subscription.lock');
+        }
+
         $products = OrderProduct::where('order_id', $order_id)->get();
-        $shop = Shop::where('shop_id', $merchant->shop_id)->first();
+        $shop = Shop::where('shop_id', $shop_id)->first();
         $order = Order::where('order_id', $order_id)->first();
-        $redx = DeliverySystem::where('shop_id', $shop->shop_id)->where('method', 'redx')->where('status', '1')->first();
-        $steadfast = DeliverySystem::where('shop_id', $shop->shop_id)->where('method', 'steadfast')->where('status', '1')->first();
-        $pathao = DeliverySystem::where('shop_id', $shop->shop_id)->where('method', 'pathao')->where('status', '1')->first();
+        $redx = DeliverySystem::where('shop_id', $shop_id)->where('method', 'redx')->where('status', '1')->first();
+        $steadfast = DeliverySystem::where('shop_id', $shop_id)->where('method', 'steadfast')->where('status', '1')->first();
+        $pathao = DeliverySystem::where('shop_id', $shop_id)->where('method', 'pathao')->where('status', '1')->first();
         return view('merchant.order.details', [
             'products' => $products,
             'order_id' => $order_id,
@@ -332,21 +381,19 @@ class OrderController extends Controller
             Order::find($id)->update([
                 'status' => 'pending',
             ]);
-        }elseif ($request->status == 'processing') {
+        } elseif ($request->status == 'processing') {
             Order::find($id)->update([
                 'status' => 'processing',
             ]);
-        }elseif ($request->status == 'delivered') {
+        } elseif ($request->status == 'delivered') {
             Order::find($id)->update([
                 'status' => 'delivered',
             ]);
-        }elseif ($request->status == 'cancel') {
+        } elseif ($request->status == 'cancel') {
             Order::find($id)->update([
                 'status' => 'cancel',
             ]);
         }
         return redirect()->back()->with('success', 'Order Status Updated Successfully!');
     }
-
-
 }

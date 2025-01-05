@@ -4,287 +4,311 @@
 @include('merchant.product.header_script')
 @extends('merchant.layout.app')
 @section('content')
-    <main id="main-container">
-        <div class="content">
-            <div class="block block-rounded">
-                <div class="block-header block-header-default">
-                    <h3 class="block-title"> Add New Product</h3>
-                    <div class="block-options">
-                        <div class="block-options-item">
-                            <a href="{{ route('product.index') }}" class="btn btn-sm btn-primary"> <i
-                                    class="fa fa-arrow-left"></i>
-                                Product List</a>
-                        </div>
+    <div class="content">
+        <div class="block block-rounded">
+            <div class="block-header block-header-default">
+                <h3 class="block-title"> Add New Product</h3>
+                <div class="block-options">
+                    <div class="block-options-item">
+                        <a href="{{ route('product.index') }}" class="btn btn-sm btn-primary"> <i class="fa fa-arrow-left"></i>
+                            Product List</a>
                     </div>
                 </div>
-                <div class="block-content">
+            </div>
+            <div class="block-content">
 
-                    <form action="{{ route('product.update', $product->id) }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        @method('PUT')
-                        <div class="row justify-content-center">
-                            <div class="col-md-10 col-lg-10">
-                                <div class="mb-4">
-                                    <label class="form-label" for="name">Item Name</label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ $product->name }}">
-                                    @error('name')
-                                        <small class="text-danger px-2">{{ $message }}</small>
-                                    @enderror
+                <form action="{{ route('product.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <div class="row justify-content-center">
+                        <div class="col-md-10 col-lg-10">
+                            <div class="mb-4">
+                                <label class="form-label" for="name">Item Name</label>
+                                <input type="text" class="form-control" id="name" name="name"
+                                    value="{{ $product->name }}">
+                                @error('name')
+                                    <small class="text-danger px-2">{{ $message }}</small>
+                                @enderror
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="mb-4">
+                                        <label class="form-label" for="category">Category</label>
+                                        <select name="category_id" id="category" class="form-select" required>
+                                            <option value="">Select Category</option>
+                                            @foreach ($categories as $category)
+                                                <option {{ $category->id == $product->category_id ? 'selected' : '' }}
+                                                    value="{{ $category->id }}">{{ $category->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('category')
+                                            <small class="text-danger px-2">{{ $message }}</small>
+                                        @enderror
+                                    </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <div class="mb-4">
-                                            <label class="form-label" for="category">Category</label>
-                                            <select name="category_id" id="category" class="form-select" required>
-                                                <option value="">Select Category</option>
-                                                @foreach ($categories as $category)
-                                                    <option {{ $category->id == $product->category_id ? 'selected' : '' }} value="{{ $category->id }}">{{ $category->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('category')
-                                                <small class="text-danger px-2">{{ $message }}</small>
-                                            @enderror
-                                        </div>
+                                <div class="col-sm-3">
+                                    <div class="mb-4">
+                                        <label class="form-label" for="brand">Brand <small>(Optional)</small></label>
+                                        <input type="text" class="form-control" id="brand" name="brand"
+                                            value="{{ $product->brand }}">
                                     </div>
-                                    <div class="col-sm-3">
-                                        <div class="mb-4">
-                                            <label class="form-label" for="brand">Brand <small>(Optional)</small></label>
-                                            <input type="text" class="form-control" id="brand" name="brand" value="{{ $product->brand }}">
-                                        </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="mb-4">
+                                        <label class="form-label" for="warranty">Warranty <small>(Optional)</small>
+                                        </label>
+                                        <input type="text" class="form-control" id="warranty" name="warranty"
+                                            value="{{ $product->warranty }}">
                                     </div>
-                                    <div class="col-sm-3">
-                                        <div class="mb-4">
-                                            <label class="form-label" for="warranty">Warranty <small>(Optional)</small>
-                                            </label>
-                                            <input type="text" class="form-control" id="warranty" name="warranty" value="{{ $product->warranty }}">
-                                        </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="mb-4">
+                                        <label class="form-label" for="condition">Condition </label>
+                                        <select name="condition" id="condition" class="form-select" required>
+                                            <option value="">Select Condition</option>
+                                            <option {{ $product->condition == 'new' ? 'selected' : '' }} value="new">New
+                                            </option>
+                                            <option {{ $product->condition == 'used' ? 'selected' : '' }} value="used">
+                                                Used</option>
+                                            <option {{ $product->condition == 'refurbished' ? 'selected' : '' }}
+                                                value="refurbished">Refurbished</option>
+                                        </select>
+                                        @error('condition')
+                                            <small class="text-danger px-2">{{ $message }}</small>
+                                        @enderror
                                     </div>
-                                    <div class="col-sm-3">
-                                        <div class="mb-4">
-                                            <label class="form-label" for="condition">Condition </label>
-                                            <select name="condition" id="condition" class="form-select" required>
-                                                <option value="">Select Condition</option>
-                                                <option {{ $product->condition == 'new' ? 'selected' : '' }} value="new">New</option>
-                                                <option {{ $product->condition == 'used' ? 'selected' : '' }} value="used">Used</option>
-                                                <option {{ $product->condition == 'refurbished' ? 'selected' : '' }} value="refurbished">Refurbished</option>
-                                            </select>
-                                            @error('condition')
-                                                <small class="text-danger px-2">{{ $message }}</small>
-                                            @enderror
-                                        </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="mb-4">
+                                        <label class="form-label" for="short_description">Short Description</label>
+                                        <textarea class="form-control" id="short_description" name="short_description" rows="4"
+                                            placeholder="Enter Short Description" required> {{ $product->short_description }}</textarea>
+                                        @error('short_description')
+                                            <small class="text-danger px-2">{{ $message }}</small>
+                                        @enderror
                                     </div>
-                                    <div class="col-sm-12">
-                                        <div class="mb-4">
-                                            <label class="form-label" for="short_description">Short Description</label>
-                                            <textarea class="form-control" id="short_description" name="short_description" rows="4"
-                                                placeholder="Enter Short Description" required> {{ $product->short_description }}</textarea>
-                                            @error('short_description')
-                                                <small class="text-danger px-2">{{ $message }}</small>
-                                            @enderror
-                                        </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="mb-4">
+                                        <label class="form-label" for="js-ckeditor5-classic">Description</label>
+                                        <textarea id="js-ckeditor5-classic" name="description" rows="4" placeholder="Enter Description" required> {{ $product->description }}</textarea>
+                                        @error('description')
+                                            <small class="text-danger px-2">{{ $message }}</small>
+                                        @enderror
                                     </div>
-                                    <div class="col-sm-12">
-                                        <div class="mb-4">
-                                            <label class="form-label" for="js-ckeditor5-classic">Description</label>
-                                            <textarea id="js-ckeditor5-classic" name="description" rows="4" placeholder="Enter Description" required > {{ $product->description }}</textarea>
-                                            @error('description')
-                                                <small class="text-danger px-2">{{ $message }}</small>
-                                            @enderror
-                                        </div>
-                                    </div>
+                                </div>
 
-                                    <div class="col-sm-12 mb-4">
-                                        <div class="p-3 border border-gray-300">
-                                            <div class="d-flex justify-content-between">
-                                                <div class="mb-2">
-                                                    <label class="form-label d-block mb-0" for="js-ckeditor5-classic">SEO</label>
-                                                    <small>To add meta information to this product, toggle the switch.</small>
-                                                </div>
-                                                <div class="form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox" id="meta_toggle" name="meta_toggle" {{ $product->meta ? 'checked' : ''}}>
-                                                    <label for="meta_toggle">Toggle Meta Info</label>
-                                                </div>
+                                <div class="col-sm-12 mb-4">
+                                    <div class="p-3 border border-gray-300">
+                                        <div class="d-flex justify-content-between">
+                                            <div class="mb-2">
+                                                <label class="form-label d-block mb-0"
+                                                    for="js-ckeditor5-classic">SEO</label>
+                                                <small>To add meta information to this product, toggle the switch.</small>
+                                            </div>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="meta_toggle"
+                                                    name="meta_toggle" {{ $product->meta ? 'checked' : '' }}>
+                                                <label for="meta_toggle">Toggle Meta Info</label>
+                                            </div>
+                                        </div>
+
+                                        <div id="meta" {{ $product->meta ? '' : 'style=display:none;' }}>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="meta_title">Meta Title</label>
+                                                <input type="text" class="form-control" id="meta_title"
+                                                    name="meta_title" placeholder="Enter Meta Title"
+                                                    value="{{ $product->meta ? $product->meta->meta_title : '' }}">
                                             </div>
 
-                                            <div id="meta" {{ $product->meta ? '' : 'style=display:none;'}} >
-                                                <div class="mb-3">
-                                                    <label class="form-label" for="meta_title">Meta Title</label>
-                                                    <input type="text" class="form-control" id="meta_title" name="meta_title" placeholder="Enter Meta Title" value="{{ $product->meta ? $product->meta->meta_title : ''}}" >
-                                                </div>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="meta_description">Meta Description</label>
+                                                <textarea class="form-control" id="meta_description" name="meta_description" rows="4"
+                                                    placeholder="Enter Meta Description"> {{ $product->meta ? $product->meta->meta_description : '' }}</textarea>
+                                            </div>
 
-                                                <div class="mb-3">
-                                                    <label class="form-label" for="meta_description">Meta Description</label>
-                                                    <textarea class="form-control" id="meta_description" name="meta_description" rows="4"
-                                                        placeholder="Enter Meta Description"> {{ $product->meta ? $product->meta->meta_description : ''}}</textarea>
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label class="form-label" for="meta_keywords">Meta Keywords</label>
-                                                    <input type="text" name="meta_keyword[]" data-role="tagsinput" class="form-control" value="{{ $product->meta ? $product->meta->meta_keywords : ''}}" />
-                                                </div>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="meta_keywords">Meta Keywords</label>
+                                                <input type="text" name="meta_keyword[]" data-role="tagsinput"
+                                                    class="form-control"
+                                                    value="{{ $product->meta ? $product->meta->meta_keywords : '' }}" />
                                             </div>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="col-sm-12">
-                                        <div class="row">
-                                            <div class="col-lg-4">
-                                                <div class="mb-4">
-                                                    <label class="form-label mb-0">Product Preview <small
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <div class="mb-4">
+                                                <label class="form-label mb-0">Product Preview <small
                                                         class="text-muted">(260px x 330px)</small></label>
-                                                <small class="text-muted d-block mb-3">For better view, use png and exact size</small>
-                                                    <div class="cover-upload">
-                                                        <label for="cover-input" class="cover-label border border-gray-300 rounded">
-                                                            <span class="">Upload Preview Image</span>
-                                                        </label>
-                                                        <input type="file" id="cover-input" name="preview"
-                                                            class="d-none"  />
-                                                        <img src="{{ asset($product->preview) }}" alt="preview image" />
-                                                    </div>
-                                                    @error('preview')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-8">
-                                                <div class="mb-4">
-                                                    <label class="form-label mb-3" for="gallery">Previous Product Gallery</label>
-                                                    <div class="d-flex flex-wrap">
-                                                        @foreach ($product->gallery as $gallery)
-                                                            <div class="image m-2 position-relative" data-id="{{ $gallery->id }}">
-                                                                <img src="{{ asset($gallery->image) }}" alt="product image" class="d-block" width="100">
-                                                                <button class="btn btn-danger btn-sm position-absolute top-0 end-0 delete-gallery" data-id="{{ $gallery->id }}">
-                                                                    <i class="fa fa-times fa-sm"></i>
-                                                                </button>
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                </div>
-                                                <div class="mb-4">
-                                                    <label class="form-label mb-3" for="gallery">Product Gallery
-                                                        <small class="text-muted">(270x400)</small>
-                                                        <small class="text-muted d-block mb-3">Maximum 5 images </small>
+                                                <small class="text-muted d-block mb-3">For better view, use png and exact
+                                                    size</small>
+                                                <div class="cover-upload">
+                                                    <label for="cover-input"
+                                                        class="cover-label border border-gray-300 rounded">
+                                                        <span class="">Upload Preview Image</span>
                                                     </label>
-                                                    <div class="upload__box">
-                                                        <div class="upload__btn-box">
-                                                            <label class="upload__btn dropzone dz-clickable">
-                                                                <p class="dz-default dz-message">Upload Product Gallery images</p>
-                                                                <input type="file" name="gallery[]" multiple="" data-max_length="20"
-                                                                    class="upload__inputfile" >
-                                                            </label>
+                                                    <input type="file" id="cover-input" name="preview"
+                                                        class="d-none" />
+                                                    <img src="{{ asset($product->preview) }}" alt="preview image" />
+                                                </div>
+                                                @error('preview')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-8">
+                                            <div class="mb-4">
+                                                <label class="form-label mb-3" for="gallery">Previous Product
+                                                    Gallery</label>
+                                                <div class="d-flex flex-wrap">
+                                                    @foreach ($product->gallery as $gallery)
+                                                        <div class="image m-2 position-relative"
+                                                            data-id="{{ $gallery->id }}">
+                                                            <img src="{{ asset($gallery->image) }}" alt="product image"
+                                                                class="d-block" width="100">
+                                                            <button
+                                                                class="btn btn-danger btn-sm position-absolute top-0 end-0 delete-gallery"
+                                                                data-id="{{ $gallery->id }}">
+                                                                <i class="fa fa-times fa-sm"></i>
+                                                            </button>
                                                         </div>
-                                                        <div class="upload__img-wrap"></div>
-                                                    </div>
-                                                    @error('gallery')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
+                                                    @endforeach
                                                 </div>
                                             </div>
-
-                                            <div class="col-12 col-lg-12">
-                                                <div class="mb-4 mt-3 text-center">
-                                                    <button type="submit" class="btn btn-primary w-50 m-auto">Update Product</button>
+                                            <div class="mb-4">
+                                                <label class="form-label mb-3" for="gallery">Product Gallery
+                                                    <small class="text-muted">(270x400)</small>
+                                                    <small class="text-muted d-block mb-3">Maximum 5 images </small>
+                                                </label>
+                                                <div class="upload__box">
+                                                    <div class="upload__btn-box">
+                                                        <label class="upload__btn dropzone dz-clickable">
+                                                            <p class="dz-default dz-message">Upload Product Gallery images
+                                                            </p>
+                                                            <input type="file" name="gallery[]" multiple=""
+                                                                data-max_length="20" class="upload__inputfile">
+                                                        </label>
+                                                    </div>
+                                                    <div class="upload__img-wrap"></div>
                                                 </div>
+                                                @error('gallery')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 col-lg-12">
+                                            <div class="mb-4 mt-3 text-center">
+                                                <button type="submit" class="btn btn-primary w-50 m-auto">Update
+                                                    Product</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
+                </form>
 
-                </div>
             </div>
         </div>
-    </main>
+    </div>
 @endsection
 @include('merchant.product.footer_script')
 @push('script')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.delete-gallery').forEach(function (button) {
-            button.addEventListener('click', function (e) {
-                e.preventDefault();
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.delete-gallery').forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
 
-                // Get gallery ID
-                let galleryId = this.dataset.id;
+                    // Get gallery ID
+                    let galleryId = this.dataset.id;
 
-                // Show SweetAlert confirmation
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: "You won't be able to revert this!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes, delete it!"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Send AJAX request
-                        fetch("{{ route('product.gallery.delete') }}", {
-                            method: 'DELETE',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            },
-                            body: JSON.stringify({ id: galleryId }),
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                // Remove the image from the DOM
-                                document.querySelector(`.image[data-id="${galleryId}"]`).remove();
+                    // Show SweetAlert confirmation
+                    Swal.fire({
+                        title: "Are you sure?",
+                        text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, delete it!"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Send AJAX request
+                            fetch("{{ route('product.gallery.delete') }}", {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    },
+                                    body: JSON.stringify({
+                                        id: galleryId
+                                    }),
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        // Remove the image from the DOM
+                                        document.querySelector(
+                                                `.image[data-id="${galleryId}"]`)
+                                            .remove();
 
-                                // Call the custom toast function
-                                showToast(data.message, 'success');
-                            } else {
-                                // Show error toast
-                                showToast(data.message, 'error');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            showToast('An error occurred while deleting the image.', 'error');
-                        });
-                    }
+                                        // Call the custom toast function
+                                        showToast(data.message, 'success');
+                                    } else {
+                                        // Show error toast
+                                        showToast(data.message, 'error');
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    showToast(
+                                        'An error occurred while deleting the image.',
+                                        'error');
+                                });
+                        }
+                    });
                 });
             });
         });
-    });
 
-    // Custom Toast Function Using Toastify
-    function showToast(text, type = 'success') {
-        let from, to;
+        // Custom Toast Function Using Toastify
+        function showToast(text, type = 'success') {
+            let from, to;
 
-        switch (type) {
-            case 'error':
-                from = '#ff5b5c';
-                to = '#ff5b5c';
-                break;
-            case 'success':
-                from = '#00b09b';
-                to = '#96c93d';
-                break;
-            default:
-                from = '#00b09b';
-                to = '#96c93d';
-                break;
+            switch (type) {
+                case 'error':
+                    from = '#ff5b5c';
+                    to = '#ff5b5c';
+                    break;
+                case 'success':
+                    from = '#00b09b';
+                    to = '#96c93d';
+                    break;
+                default:
+                    from = '#00b09b';
+                    to = '#96c93d';
+                    break;
+            }
+
+            Toastify({
+                text,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                close: true,
+                stopOnFocus: true,
+                style: {
+                    background: `linear-gradient(to right, ${from}, ${to})`
+                },
+                onClick: function() {} // Optional
+            }).showToast();
         }
-
-        Toastify({
-            text,
-            duration: 3000,
-            gravity: "top",
-            position: "right",
-            close: true,
-            stopOnFocus: true,
-            style: {
-                background: `linear-gradient(to right, ${from}, ${to})`
-            },
-            onClick: function() {} // Optional
-        }).showToast();
-    }
-</script>
-
+    </script>
 @endpush

@@ -154,7 +154,7 @@
                                         </div>
                                         @if (count($data ?? []) > 0)
                                             <div class="d-md-flex">
-                                                <a href="{{ route('checkout', ['shopUrl' => $shop->url, 'coupon_code' => Session::get('coupon_code') ?? 0]) }}"
+                                                <a href="{{ route('checkout', ['shopUrl' => $shop->url, 'coupon_code' => Session::get('coupon_code') ?? '']) }}"
                                                     class="btn btn-primary-dark-w ml-md-2 px-5 px-md-4 px-lg-5 w-100 w-md-auto d-none d-md-inline-block">
                                                     Proceed to checkout
                                                 </a>
@@ -228,9 +228,14 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <button type="button"
-                                class="btn btn-primary-dark-w ml-md-2 px-5 px-md-4 px-lg-5 w-100 w-md-auto d-md-none">Proceed
-                                to checkout</button>
+                            @if (count($data ?? []) > 0)
+                                <div class="d-md-flex">
+                                    <a href="{{ route('checkout', ['shopUrl' => $shop->url, 'coupon_code' => Session::get('coupon_code') ?? '']) }}"
+                                        class="btn btn-primary-dark-w ml-md-2 px-5 px-md-4 px-lg-5 w-100 w-md-auto d-md-none">
+                                        Proceed to checkout
+                                    </a>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

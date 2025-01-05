@@ -67,8 +67,6 @@ class ProfileController extends Controller
             'password' => 'required|confirmed',
         ]);
 
-        // Get the user (profile)
-
 
         // Check if the current password matches
         if (!Hash::check($request->current_password, $user->password)) {

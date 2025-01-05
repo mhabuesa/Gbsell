@@ -24,18 +24,21 @@ class ProductController extends Controller
      */
     public function index()
     {
-        // $auth = Auth::guard('merchant')->user();
+        $merchant = Auth::guard('merchant')->user();
 
-        // if($auth->permission != 1){
-        //     return redirect()->route('accessDeny');
-        // }
+        $expired = $merchant->shop->expiry_date < date('Y-m-d');
+        $hasPermission = in_array($merchant->permission, ['1', '2', '4']);
 
-        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '4'])) {
+        if (!$hasPermission) {
             return redirect()->route('accessDeny');
         }
 
+        if ($expired) {
+            return view('merchant.subscription.lock');
+        }
+
         $products = Product::where('shop_id', Auth::guard('merchant')->user()->shop_id)->get();
-        return view('merchant.product.index', compact('products'));
+        return view('merchant.product.index', compact('products', 'expired', 'hasPermission'));
     }
 
     /**
@@ -43,13 +46,22 @@ class ProductController extends Controller
      */
     public function create()
     {
-        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2', '4'])) {
+        $merchant = Auth::guard('merchant')->user();
+
+        $expired = $merchant->shop->expiry_date < date('Y-m-d');
+        $hasPermission = in_array($merchant->permission, ['1', '2', '4']);
+
+        if (!$hasPermission) {
             return redirect()->route('accessDeny');
         }
 
-        $categories = Category::where('shop_id', Auth::guard('merchant')->user()->shop_id)->get();
-        $attributes = Attribute::where('shop_id', Auth::guard('merchant')->user()->shop_id)->get();
-        $colors = Color::where('shop_id', Auth::guard('merchant')->user()->shop_id)->get();
+        if ($expired) {
+            return view('merchant.subscription.lock');
+        }
+
+        $categories = Category::where('shop_id', $merchant->shop_id)->get();
+        $attributes = Attribute::where('shop_id', $merchant->shop_id)->get();
+        $colors = Color::where('shop_id', $merchant->shop_id)->get();
         return view('merchant.product.create', compact('categories', 'attributes', 'colors'));
     }
 
@@ -349,8 +361,17 @@ class ProductController extends Controller
 
     public function inventory($slug)
     {
-        if (!in_array(Auth::guard('merchant')->user()->permission, ['1', '2'])) {
+        $merchant = Auth::guard('merchant')->user();
+
+        $expired = $merchant->shop->expiry_date < date('Y-m-d');
+        $hasPermission = in_array($merchant->permission, ['1', '2']);
+
+        if (!$hasPermission) {
             return redirect()->route('accessDeny');
+        }
+
+        if ($expired) {
+            return view('merchant.subscription.lock');
         }
 
         $product = Product::where('slug', $slug)->first();

@@ -7,7 +7,6 @@
 @endpush
 @extends('merchant.layout.app')
 @section('content')
-    <main id="main-container">
         <div class="content content-boxed">
             <div class="block block-rounded">
                 <div class="block-header block-header-default">
@@ -16,7 +15,7 @@
                 <div class="block-content">
                     <div class="col-lg-8 m-auto ">
                         <div class="row items-push">
-                            <div class="col-md-4">
+                            {{-- <div class="col-md-4">
                               <div class="form-check form-block">
                                 <input class="form-check-input" {{ $redx && $redx->status == 1 ? 'checked' : '' }} type="checkbox" value="" id="redx_input" name="redx_input">
                                 <label class="form-check-label" for="redx_input">
@@ -28,8 +27,8 @@
                                     </span>
                                   </label>
                               </div>
-                            </div>
-                            <div class="col-md-4">
+                            </div> --}}
+                            <div class="col-md-4 m-auto">
                               <div class="form-check form-block">
                                 <input class="form-check-input" {{ $steadfast && $steadfast->status == 1 ? 'checked' : '' }} type="checkbox" value="" id="steadfast_input" name="steadfast_input">
                                 <label class="form-check-label" for="steadfast_input">
@@ -42,7 +41,7 @@
                                 </label>
                               </div>
                             </div>
-                            <div class="col-md-4">
+                            {{-- <div class="col-md-4">
                               <div class="form-check form-block">
                                 <input class="form-check-input" {{ $pathao && $pathao->status == 1 ? 'checked' : '' }} type="checkbox" value="" id="pathao_input" name="pathao_input">
                                 <label class="form-check-label" for="pathao_input">
@@ -54,7 +53,7 @@
                                   </span>
                                 </label>
                               </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -225,7 +224,6 @@
                 </div>
             </div>
         </div>
-    </main>
 @endsection
 
 @push('script')

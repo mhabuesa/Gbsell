@@ -188,7 +188,7 @@
                                         <input type="text" id="couponCode" name="coupon_code" value="{{ $coupon_code ?? ''}}">
                                     </div>
                                     <button type="submit"
-                                        class="btn btn-primary-dark-w btn-block btn-pill font-size-20 mb-3 py-3">Place
+                                        class="btn btn-primary-dark-w btn-block btn-pill font-size-20 mb-3 py-3 d-none d-md-inline-block">Place
                                         order</button>
                                 </div>
                                 <!-- End Order Summary -->
@@ -419,6 +419,7 @@
                                 </div>
                             </div>
                             <!-- End Input -->
+                            <button type="submit" class="btn btn-primary-dark-w ml-md-2 px-5 px-md-4 px-lg-5 w-100 w-md-auto d-md-none">Place order</button>
                         </div>
                     </div>
                 </div>

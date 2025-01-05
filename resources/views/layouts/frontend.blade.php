@@ -12,8 +12,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="/assets/favicon.png">
-
+    @if ($shop->favicon)
+        <link rel="shortcut icon" href="{{ asset($shop->favicon) }}">
+    @else
+        <link rel="shortcut icon" href="{{ asset('frontend') }}/assets/images/favicon.png">
+    @endif
     <!-- Google Fonts -->
     <link
         href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&amp;display=swap"
@@ -340,7 +343,8 @@
                                                                 <li class="nav-item u-header__nav-item"
                                                                     data-event="hover" data-position="left">
                                                                     <a href="javascript:void(0)"
-                                                                        class="nav-link u-header__nav-link font-weight-bold">No Category</a>
+                                                                        class="nav-link u-header__nav-link font-weight-bold">No
+                                                                        Category</a>
                                                                 </li>
                                                             @endforelse
                                                         </ul>
@@ -366,7 +370,8 @@
                                         <li class="nav-item u-header__nav-item mr-1 my-1">
                                             <a class="nav-link u-header__nav-link border p-2 font-weight-bold rounded coursor-pointer"
                                                 href="{{ route('track', $shop->url) }}" aria-haspopup="true"
-                                                aria-expanded="false" aria-labelledby="pagesSubMenu">Track Orders</a>
+                                                aria-expanded="false" aria-labelledby="pagesSubMenu"><i
+                                                    class="ec ec-transport mr-1 fs-5"></i>Track Orders</a>
                                         </li>
 
                                         <li class="nav-item u-header__nav-last-item mr-1 my-1">
@@ -517,8 +522,13 @@
             <div class="container">
                 <div class="flex-center-between d-block d-md-flex">
                     <div class="mb-3 mb-md-0">© <a href="#" class="font-weight-bold text-gray-90">GBSELL</a> -
-                        All
-                        rights Reserved</div>
+                        All rights Reserved</div>
+                    <div class="text-md-right">
+                        <span class="d-inline-block border rounded p-1">
+                            Crafted with <i class="fa fa-heart text-danger font-weight-bold"></i> by <a class="font-weight-bold text-blue"
+                                href="https://devhunter.dev" target="_blank">Dev Hunter</a>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>

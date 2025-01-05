@@ -4,7 +4,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>OneUI - Bootstrap 5 Admin Template &amp; UI Framework | DEMO</title>
+  @stack('title')
   <meta name="description" content="OneUI - Bootstrap 5 Admin Template &amp; UI Framework created by pixelcave | This is the demo of OneUI! You need to purchase a license for legal use! | DEMO">
   <meta name="author" content="pixelcave">
   <meta name="robots" content="index, follow">

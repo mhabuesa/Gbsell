@@ -7,7 +7,6 @@
 @endpush
 @extends('merchant.layout.app')
 @section('content')
-    <main id="main-container">
         <div class="content content-boxed">
             <div class="block block-rounded">
                 <div class="block-header block-header-default">
@@ -92,7 +91,6 @@
 
             </div>
         </div>
-    </main>
 @endsection
 
 @push('script')

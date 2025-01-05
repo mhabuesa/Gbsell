@@ -49,7 +49,8 @@ class FrontendController extends Controller
         ]);
     }
 
-    public function order_track(Request $request){
+    public function order_track(Request $request)
+    {
         $data = Order::where('order_id', $request->order_id)->first();
         return view('frontend.home.track', [
             'data' => $data
@@ -58,28 +59,44 @@ class FrontendController extends Controller
 
     public function shop($shopUrl)
     {
+        // Retrieve the shop by URL
         $shop = Shop::where('url', $shopUrl)->first();
 
+        // If shop is not found, return 404 error
         if (!$shop) {
             return response()->view('errors.404', ['message' => 'Shop not found'], 404);
         }
 
+        // Get the banner and banner items for the shop
         $banner = BannerImage::where('shop_id', $shop->shop_id)->first();
         $bannerItems = BannerItem::where('shop_id', $shop->shop_id)->where('status', 1)->get();
+
+        // Retrieve the products for the shop, excluding categories with status 0
         $products = Product::where('shop_id', $shop->shop_id)
             ->where('category_id', '!=', Category::where('status', 0)->pluck('id')->first())
             ->where('status', 1)
             ->latest()
             ->paginate(18);
 
-        $topRatedProducts = Product::select('products.*', DB::raw('AVG(reviews.rating) as avg_rating'))
+        // Get the top-rated products based on reviewsF
+        $topRatedProducts = Product::with('reviews')
+            ->select(
+                'products.id',
+                'products.slug',
+                'products.name',
+                'products.preview',
+                DB::raw('AVG(reviews.rating) as avg_rating')
+            )
             ->join('reviews', 'products.id', '=', 'reviews.product_id')
             ->whereIn('products.id', $products->pluck('id'))
-            ->groupBy('products.id')
+            ->groupBy('products.id', 'products.slug', 'products.name', 'products.preview')
             ->orderByDesc('avg_rating')
-            ->take(5)
+            ->limit(5)
             ->get();
 
+
+
+        // Get the top-selling products based on order quantity
         $topSellingProducts = OrderProduct::select('product_id', DB::raw('SUM(quantity) as sold'))
             ->groupBy('product_id')
             ->where('shop_id', $shop->shop_id)
@@ -87,24 +104,31 @@ class FrontendController extends Controller
             ->take(5)
             ->get();
 
+        // Retrieve recent products from the cookie
         $recent = json_decode(Cookie::get('recent'), true) ?? [];
 
-        // Check if $recent is empty
+        // Check if recent products exist
         if (!empty($recent)) {
             // Extract product IDs
             $productIds = array_column($recent, 'product_id');
 
             // Filter products based on shop_id
-            $recentProducts = Product::whereIn('id', $productIds)
-                ->where('shop_id', $shop->shop_id) // Match shop_id
-                ->orderByRaw('FIELD(id, ' . implode(',', $productIds) . ')') // Maintain order
-                ->get();
+            if (!empty($productIds)) {
+                // If productIds is not empty, proceed with the query
+                $recentProducts = Product::whereIn('id', $productIds)
+                    ->where('shop_id', $shop->shop_id) // Match shop_id
+                    ->orderByRaw('FIELD(id, ' . implode(',', $productIds) . ')') // Maintain order
+                    ->get();
+            } else {
+                // If no recent products, set $recentProducts as empty
+                $recentProducts = collect(); // Empty collection
+            }
         } else {
-            // Handle case where recent is empty (optional)
+            // Handle case where recent is empty
             $recentProducts = collect(); // Empty collection
         }
 
-
+        // Return the view with the necessary data
         return view('frontend.shop.index', [
             'shop' => $shop,
             'products' => $products,
@@ -115,6 +139,7 @@ class FrontendController extends Controller
             'recentProducts' => $recentProducts
         ]);
     }
+
 
     public function category_product($shopUrl, $slug)
     {
@@ -154,6 +179,9 @@ class FrontendController extends Controller
         }
 
         $recent = json_decode(Cookie::get('recent'), true) ?? [];
+        $recent = array_filter($recent, function ($item) {
+            return is_array($item) && isset($item['product_id'], $item['shop_id']);
+        });
         $recent = array_filter($recent, fn($item) => $item['product_id'] != $product->id || $item['shop_id'] != $product->shop_id);
         array_unshift($recent, ['product_id' => $product->id, 'shop_id' => $product->shop_id]);
         $recent = array_slice($recent, 0, 5);

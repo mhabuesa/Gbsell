@@ -18,310 +18,305 @@
     </style>
 @endpush
 @section('content')
-    <main id="main-container">
-        <div class="content content">
-            <div class="block block-rounded">
-                <div class="block-header block-header-default">
-                    <h3 class="block-title">Product Inventory - <span
-                            class="p-2 rounded text-light bg-success">{{ $product->name }}</span> </h3>
-                    <div class="block-options">
-                        <div class="block-options-item">
-                            <a href="{{ route('product.index') }}" class="btn btn-sm btn-primary"> <i
-                                    class="fa fa-arrow-left"></i>
-                                Product List</a>
-                        </div>
-
+    <div class="content content">
+        <div class="block block-rounded">
+            <div class="block-header block-header-default">
+                <h3 class="block-title">Product Inventory - <span
+                        class="p-2 rounded text-light bg-success">{{ $product->name }}</span> </h3>
+                <div class="block-options">
+                    <div class="block-options-item">
+                        <a href="{{ route('product.index') }}" class="btn btn-sm btn-primary"> <i
+                                class="fa fa-arrow-left"></i>
+                            Product List</a>
                     </div>
+
                 </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="block-content">
-                            <div class="block block-rounded border border-gray-300">
-                                <div class="block-header block-header-default">
-                                    <h3 class="block-title">Variant List</h3>
-                                </div>
-                                <div class="block-content block-content-full">
-                                    <div class="table table-responsive">
-                                        <table class="table table-vcenter" id="inventoryTable">
-                                            <thead>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="block-content">
+                        <div class="block block-rounded border border-gray-300">
+                            <div class="block-header block-header-default">
+                                <h3 class="block-title">Variant List</h3>
+                            </div>
+                            <div class="block-content block-content-full">
+                                <div class="table table-responsive">
+                                    <table class="table table-vcenter" id="inventoryTable">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" style="width: 50px;">#</th>
+                                                <th style="width: 150px;">Atribute</th>
+                                                <th style="width: 150px;">Color</th>
+                                                <th style="width: 150px;">Current Price</th>
+                                                <th style="width: 150px;">Reguler Price</th>
+                                                <th style="width: 150px;">Quantity</th>
+                                                <th class="text-center" style="width: 100px;">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse ($variants as $key => $variant)
                                                 <tr>
-                                                    <th class="text-center" style="width: 50px;">#</th>
-                                                    <th style="width: 150px;">Atribute</th>
-                                                    <th style="width: 150px;">Color</th>
-                                                    <th style="width: 150px;">Current Price</th>
-                                                    <th style="width: 150px;">Reguler Price</th>
-                                                    <th style="width: 150px;">Quantity</th>
-                                                    <th class="text-center" style="width: 100px;">Actions</th>
+                                                    <th class="text-center" scope="row">{{ $key + 1 }}</th>
+                                                    <td>
+                                                        {{ $variant->attribute->name }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $variant->color->name }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $variant->current_price }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $variant->regular_price }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $variant->quantity }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <div class="btn-group">
+                                                            <a class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#inventory_modal_{{ $variant->id }}"
+                                                                href="{{ route('category.edit', $variant->id) }}">
+                                                                <i class="fa fa-fw fa-pencil-alt"></i>
+                                                            </a>
+
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
+                                                                onclick="deleteInventory(this)"
+                                                                data-id="{{ $variant->id }}">
+                                                                <i class="fa fa-fw fa-times"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
                                                 </tr>
-                                            </thead>
-                                            <tbody>
-                                                @forelse ($variants as $key => $variant)
-                                                    <tr>
-                                                        <th class="text-center" scope="row">{{ $key + 1 }}</th>
-                                                        <td>
-                                                            {{ $variant->attribute->name }}
-                                                        </td>
-                                                        <td>
-                                                            {{ $variant->color->name }}
-                                                        </td>
-                                                        <td>
-                                                            {{ $variant->current_price }}
-                                                        </td>
-                                                        <td>
-                                                            {{ $variant->regular_price }}
-                                                        </td>
-                                                        <td>
-                                                            {{ $variant->quantity }}
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <div class="btn-group">
-                                                                <a class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#inventory_modal_{{ $variant->id }}"
-                                                                    href="{{ route('category.edit', $variant->id) }}">
-                                                                    <i class="fa fa-fw fa-pencil-alt"></i>
-                                                                </a>
 
-                                                                <button type="button"
-                                                                    class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled"
-                                                                    onclick="deleteInventory(this)"
-                                                                    data-id="{{ $variant->id }}">
-                                                                    <i class="fa fa-fw fa-times"></i>
-                                                                </button>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-
-                                                    {{-- Inventory Update Modal Start --}}
-                                                    <div class="modal" id="inventory_modal_{{ $variant->id }}"
-                                                        tabindex="-1"
-                                                        aria-labelledby="inventory_modal_{{ $variant->id }}"
-                                                        style="display: none;" aria-hidden="true">
-                                                        <div class="modal-dialog modal-xl" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="block block-rounded block-transparent mb-0">
-                                                                    <div class="block-header block-header-default">
-                                                                        <h3 class="block-title">Variant Update</h3>
-                                                                        <div class="block-options">
-                                                                            <button type="button" class="btn-block-option"
-                                                                                data-bs-dismiss="modal" aria-label="Close">
-                                                                                <i class="fa fa-fw fa-times"></i>
-                                                                            </button>
-                                                                        </div>
+                                                {{-- Inventory Update Modal Start --}}
+                                                <div class="modal" id="inventory_modal_{{ $variant->id }}" tabindex="-1"
+                                                    aria-labelledby="inventory_modal_{{ $variant->id }}"
+                                                    style="display: none;" aria-hidden="true">
+                                                    <div class="modal-dialog modal-xl" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="block block-rounded block-transparent mb-0">
+                                                                <div class="block-header block-header-default">
+                                                                    <h3 class="block-title">Variant Update</h3>
+                                                                    <div class="block-options">
+                                                                        <button type="button" class="btn-block-option"
+                                                                            data-bs-dismiss="modal" aria-label="Close">
+                                                                            <i class="fa fa-fw fa-times"></i>
+                                                                        </button>
                                                                     </div>
-                                                                    <form action="{{ route('product.inventory.update', $variant->id) }}" method="POST">
-                                                                        @csrf
-                                                                        <div class="block-content fs-sm">
-                                                                            <div class="row">
-                                                                                <div class="col-lg-3 col-6">
-                                                                                    <div class="mt-2 mb-3">
-                                                                                        <label for="attribute"
-                                                                                            class="form-label"> Attribute
-                                                                                        </label>
-                                                                                        <select name="attribute_id"
-                                                                                            id="attribute"
-                                                                                            class="form-select">
-                                                                                            @foreach ($attributes as $attribute)
-                                                                                                <option
-                                                                                                    value="{{ $attribute->id }}"
-                                                                                                    {{ $variant->attribute_id == $attribute->id ? 'selected' : '' }}>
-                                                                                                    {{ $attribute->name }}
-                                                                                                </option>
-                                                                                            @endforeach
-                                                                                        </select>
-                                                                                    </div>
+                                                                </div>
+                                                                <form
+                                                                    action="{{ route('product.inventory.update', $variant->id) }}"
+                                                                    method="POST">
+                                                                    @csrf
+                                                                    <div class="block-content fs-sm">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-3 col-6">
+                                                                                <div class="mt-2 mb-3">
+                                                                                    <label for="attribute"
+                                                                                        class="form-label"> Attribute
+                                                                                    </label>
+                                                                                    <select name="attribute_id"
+                                                                                        id="attribute" class="form-select">
+                                                                                        @foreach ($attributes as $attribute)
+                                                                                            <option
+                                                                                                value="{{ $attribute->id }}"
+                                                                                                {{ $variant->attribute_id == $attribute->id ? 'selected' : '' }}>
+                                                                                                {{ $attribute->name }}
+                                                                                            </option>
+                                                                                        @endforeach
+                                                                                    </select>
                                                                                 </div>
-                                                                                <div class="col-lg-3 col-6">
-                                                                                    <div class="mt-2 mb-3">
-                                                                                        <label for="color_id"
-                                                                                            class="form-label"> Color
-                                                                                        </label>
-                                                                                        <select name="color_id"
-                                                                                            id="color_id"
-                                                                                            class="form-select">
-                                                                                            @foreach ($colors as $color)
-                                                                                                <option
-                                                                                                    value="{{ $color->id }}"
-                                                                                                    {{ $variant->color_id == $color->id ? 'selected' : '' }}>
-                                                                                                    {{ $color->name }}
-                                                                                                </option>
-                                                                                            @endforeach
-                                                                                        </select>
-                                                                                    </div>
+                                                                            </div>
+                                                                            <div class="col-lg-3 col-6">
+                                                                                <div class="mt-2 mb-3">
+                                                                                    <label for="color_id"
+                                                                                        class="form-label"> Color
+                                                                                    </label>
+                                                                                    <select name="color_id" id="color_id"
+                                                                                        class="form-select">
+                                                                                        @foreach ($colors as $color)
+                                                                                            <option
+                                                                                                value="{{ $color->id }}"
+                                                                                                {{ $variant->color_id == $color->id ? 'selected' : '' }}>
+                                                                                                {{ $color->name }}
+                                                                                            </option>
+                                                                                        @endforeach
+                                                                                    </select>
                                                                                 </div>
-                                                                                <div class="col-lg-2 col-6">
-                                                                                    <div class="mt-2 mb-3">
-                                                                                        <label for="current_price"
-                                                                                            class="form-label"> Current Price
-                                                                                        </label>
-                                                                                        <input type="number" id="current_price"
-                                                                                            class="form-control"
-                                                                                            name="current_price"
-                                                                                            placeholder="Current price"
-                                                                                            value="{{ $variant->current_price }}" required>
-                                                                                    </div>
+                                                                            </div>
+                                                                            <div class="col-lg-2 col-6">
+                                                                                <div class="mt-2 mb-3">
+                                                                                    <label for="current_price"
+                                                                                        class="form-label"> Current Price
+                                                                                    </label>
+                                                                                    <input type="number" id="current_price"
+                                                                                        class="form-control"
+                                                                                        name="current_price"
+                                                                                        placeholder="Current price"
+                                                                                        value="{{ $variant->current_price }}"
+                                                                                        required>
                                                                                 </div>
-                                                                                <div class="col-lg-2 col-6">
-                                                                                    <div class="mt-2 mb-3">
-                                                                                        <label for="regular_price"
-                                                                                            class="form-label"> Regular Price
-                                                                                        </label>
-                                                                                        <input type="number" id="regular_price"
-                                                                                            class="form-control"
-                                                                                            name="regular_price"
-                                                                                            placeholder="Regular price"
-                                                                                            value="{{ $variant->regular_price }}">
-                                                                                    </div>
+                                                                            </div>
+                                                                            <div class="col-lg-2 col-6">
+                                                                                <div class="mt-2 mb-3">
+                                                                                    <label for="regular_price"
+                                                                                        class="form-label"> Regular Price
+                                                                                    </label>
+                                                                                    <input type="number" id="regular_price"
+                                                                                        class="form-control"
+                                                                                        name="regular_price"
+                                                                                        placeholder="Regular price"
+                                                                                        value="{{ $variant->regular_price }}">
                                                                                 </div>
-                                                                                <div class="col-lg-2 col-6">
-                                                                                    <div class="mt-2 mb-3">
-                                                                                        <label for="quantity"
-                                                                                            class="form-label"> Quantity
-                                                                                        </label>
-                                                                                        <input type="number" id="quantity"
-                                                                                            class="form-control"
-                                                                                            name="quantity"
-                                                                                            placeholder="Quantity"
-                                                                                            value="{{ $variant->quantity }}" required>
-                                                                                    </div>
+                                                                            </div>
+                                                                            <div class="col-lg-2 col-6">
+                                                                                <div class="mt-2 mb-3">
+                                                                                    <label for="quantity"
+                                                                                        class="form-label"> Quantity
+                                                                                    </label>
+                                                                                    <input type="number" id="quantity"
+                                                                                        class="form-control"
+                                                                                        name="quantity"
+                                                                                        placeholder="Quantity"
+                                                                                        value="{{ $variant->quantity }}"
+                                                                                        required>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div
-                                                                            class="block-content block-content-full text-end">
-                                                                            <button type="button"
-                                                                                class="btn btn-sm btn-alt-secondary me-1"
-                                                                                data-bs-dismiss="modal">Close</button>
-                                                                            <button type="submit"
-                                                                                class="btn btn-sm btn-primary"
-                                                                                data-bs-dismiss="modal">Update Variant</button>
-                                                                        </div>
-                                                                    </form>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    {{-- Inventory Update Modal End --}}
-                                                @empty
-                                                    <tr>
-                                                        <td colspan="4" class="text-center">No Variant Found</td>
-                                                    </tr>
-                                                @endforelse
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-12">
-                        <div class="block-content">
-                            <div class="block block-rounded border border-gray-300">
-                                <div class="block-header block-header-default">
-                                    <h3 class="block-title">Add New Variant</h3>
-                                </div>
-                                <div class="block-content block-content-full">
-                                    <form action="{{ route('product.inventory.store', $product->id) }}" method="POST">
-                                        @csrf
-
-                                        <div class="mb-3 mt-3">
-                                            <div class="row" id="variants">
-                                                <div class="col-sm-12 variant-options-container">
-                                                    <!-- Initial row will be here -->
-                                                    <div
-                                                        class="row variant-option border border-gray-300 p-2 mx-2 mb-3 d-flex align-items-center justify-content-between">
-                                                        <div class="col-lg-3 col-4">
-                                                            <div class="mb-4">
-                                                                <label class="form-label"
-                                                                    for="one-ecom-attribute">Attribute</label>
-                                                                <select name="attribute_id[]" class="form-select"
-                                                                    required>
-                                                                    <option value="">Select Attribute</option>
-                                                                    @foreach ($attributes as $attribute)
-                                                                        <option value="{{ $attribute->id }}">
-                                                                            {{ $attribute->name }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-lg-3 col-4">
-                                                            <div class="mb-4">
-                                                                <label class="form-label"
-                                                                    for="one-ecom-extra-price">Color</label>
-                                                                <select name="color_id[]" class="form-select" required>
-                                                                    <option value="">Select Color</option>
-                                                                    @foreach ($colors as $color)
-                                                                        <option value="{{ $color->id }}">
-                                                                            {{ $color->name }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-lg-2 col-4">
-                                                            <div class="mb-4">
-                                                                <label class="form-label"
-                                                                    for="one-ecom-extra-price">Current
-                                                                    Price</label>
-                                                                <input type="number" class="form-control"
-                                                                    name="current_price[]" placeholder="Current price"
-                                                                    required>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-lg-2 col-6">
-                                                            <div class="mb-4">
-                                                                <label class="form-label"
-                                                                    for="one-ecom-extra-price">Regular
-                                                                    Price</label>
-                                                                <input type="number" class="form-control"
-                                                                    name="regular_price[]" placeholder="Regular price">
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-lg-2 col-6">
-                                                            <div class="mb-4">
-                                                                <label class="form-label"
-                                                                    for="one-ecom-extra-price">Quantity (Stock)</label>
-                                                                <div class="d-flex">
-                                                                    <input type="number" class="form-control"
-                                                                        name="quantity[]" placeholder="Quantity" required>
-                                                                    <button class="btn btn-danger ms-2 remove-option"
-                                                                        type="button"><i class="fa fa-x"></i></button>
-                                                                </div>
+                                                                    </div>
+                                                                    <div class="block-content block-content-full text-end">
+                                                                        <button type="button"
+                                                                            class="btn btn-sm btn-alt-secondary me-1"
+                                                                            data-bs-dismiss="modal">Close</button>
+                                                                        <button type="submit"
+                                                                            class="btn btn-sm btn-primary"
+                                                                            data-bs-dismiss="modal">Update Variant</button>
+                                                                    </div>
+                                                                </form>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-6">
-                                                    <div class="mb-4">
-                                                        <button id="add-more-option" class="btn btn-alt-primary mt-2"
-                                                            type="button">
-                                                            <i class="fa fa-plus"></i> Add More Option
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-
-                                        <div class="col-lg-12">
-                                            <div class="d-flex justify-content-center">
-                                                <button class="btn btn-primary w-50" type="submit">Submit</button>
-                                            </div>
-                                        </div>
-                                    </form>
+                                                {{-- Inventory Update Modal End --}}
+                                            @empty
+                                                <tr>
+                                                    <td colspan="4" class="text-center">No Variant Found</td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="col-lg-12">
+                    <div class="block-content">
+                        <div class="block block-rounded border border-gray-300">
+                            <div class="block-header block-header-default">
+                                <h3 class="block-title">Add New Variant</h3>
+                            </div>
+                            <div class="block-content block-content-full">
+                                <form action="{{ route('product.inventory.store', $product->id) }}" method="POST">
+                                    @csrf
 
+                                    <div class="mb-3 mt-3">
+                                        <div class="row" id="variants">
+                                            <div class="col-sm-12 variant-options-container">
+                                                <!-- Initial row will be here -->
+                                                <div
+                                                    class="row variant-option border border-gray-300 p-2 mx-2 mb-3 d-flex align-items-center justify-content-between">
+                                                    <div class="col-lg-3 col-4">
+                                                        <div class="mb-4">
+                                                            <label class="form-label"
+                                                                for="one-ecom-attribute">Attribute</label>
+                                                            <select name="attribute_id[]" class="form-select" required>
+                                                                <option value="">Select Attribute</option>
+                                                                @foreach ($attributes as $attribute)
+                                                                    <option value="{{ $attribute->id }}">
+                                                                        {{ $attribute->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-3 col-4">
+                                                        <div class="mb-4">
+                                                            <label class="form-label"
+                                                                for="one-ecom-extra-price">Color</label>
+                                                            <select name="color_id[]" class="form-select" required>
+                                                                <option value="">Select Color</option>
+                                                                @foreach ($colors as $color)
+                                                                    <option value="{{ $color->id }}">
+                                                                        {{ $color->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-2 col-4">
+                                                        <div class="mb-4">
+                                                            <label class="form-label" for="one-ecom-extra-price">Current
+                                                                Price</label>
+                                                            <input type="number" class="form-control"
+                                                                name="current_price[]" placeholder="Current price"
+                                                                required>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-2 col-6">
+                                                        <div class="mb-4">
+                                                            <label class="form-label" for="one-ecom-extra-price">Regular
+                                                                Price</label>
+                                                            <input type="number" class="form-control"
+                                                                name="regular_price[]" placeholder="Regular price">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-2 col-6">
+                                                        <div class="mb-4">
+                                                            <label class="form-label" for="one-ecom-extra-price">Quantity
+                                                                (Stock)</label>
+                                                            <div class="d-flex">
+                                                                <input type="number" class="form-control"
+                                                                    name="quantity[]" placeholder="Quantity" required>
+                                                                <button class="btn btn-danger ms-2 remove-option"
+                                                                    type="button"><i class="fa fa-x"></i></button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="mb-4">
+                                                    <button id="add-more-option" class="btn btn-alt-primary mt-2"
+                                                        type="button">
+                                                        <i class="fa fa-plus"></i> Add More Option
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-lg-12">
+                                        <div class="d-flex justify-content-center">
+                                            <button class="btn btn-primary w-50" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </div>
-    </main>
+    </div>
 @endsection
 
 @push('script')

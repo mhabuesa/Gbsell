@@ -8,9 +8,17 @@
           <ul class="nav nav-pills flex-column push">
 
             <li class="nav-item my-1">
+              <a class="nav-link d-flex justify-content-between align-items-center {{Route::is('front.favicon') ? 'active': ''}}" href="{{route('front.favicon')}}">
+                <span class="fs-sm">
+                  <i class="fa-brands fa-pied-piper me-1 fa-lg"></i> Favicon
+                </span>
+              </a>
+            </li>
+
+            <li class="nav-item my-1">
               <a class="nav-link d-flex justify-content-between align-items-center {{Route::is('front.banner.image') ? 'active': ''}}" href="{{route('front.banner.image')}}">
                 <span class="fs-sm">
-                  <i class="fa fa-image me-1 opacity-50"></i> Banner Image
+                  <i class="fa fa-image me-1 fa-lg"></i> Banner Image
                 </span>
               </a>
             </li>
@@ -18,7 +26,7 @@
             <li class="nav-item my-1">
               <a class="nav-link d-flex justify-content-between align-items-center {{Route::is('front.banner.item') ? 'active': ''}}" href="{{route('front.banner.item')}}">
                 <span class="fs-sm">
-                  <i class="fa fa-image me-1 opacity-50"></i> Banner Item
+                    <i class="fa-brands fa-itch-io me-1 fa-lg"></i> Banner Item
                 </span>
               </a>
             </li>

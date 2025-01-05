@@ -33,7 +33,6 @@ Route::prefix('{shopUrl}')
         Route::get('/category/{slug}', [FrontendController::class, 'category_product'])->name('category.product');
         Route::get('/products', [FrontendController::class, 'products'])->name('shop.products');
         Route::get('/product/{slug}', [FrontendController::class, 'single_product'])->name('shop.product');
-        Route::get('/checkout', [FrontendController::class, 'checkout'])->name('shop.checkout');
 
         Route::get('/getAttribute', [CartController::class, 'getAttribute']);
         Route::get('/getPrice', [CartController::class, 'getPrice']);
@@ -45,7 +44,7 @@ Route::prefix('{shopUrl}')
         Route::post('/setShipping', [CartController::class, 'setShipping'])->name('setShipping');
 
 
-        Route::get('/checkout/{coupon_code}', [CheckoutController::class, 'checkout'])->name('checkout');
+        Route::get('/checkout/{coupon_code?}', [CheckoutController::class, 'checkout'])->name('checkout');
         Route::post('/order/store', [OrderController::class, 'order_store'])->name('order.store');
         Route::get('/pay', [SslCommerzPaymentController::class, 'index'])->name('sslpay');
         Route::get('/order/placed', [OrderController::class, 'order_placed'])->name('order.placed');
