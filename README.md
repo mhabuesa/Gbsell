@@ -19,7 +19,7 @@ Welcome to our Laravel project! This repository combines Laravel’s robust capa
   <li>
     <p><strong>Clone the repository</strong>:</p>
     <pre style="background-color:#F6F8FA; border: 1px solid #D0D7DE; border-radius: 5px;">
-    git clone [https://github.com/mhabuesa/Gbsell.git](https://github.com/mhabuesa/Gbsell.git)
+    git clone https://github.com/mhabuesa/Gbsell.git
     cd laravel11_coreProject
     </pre>
   </li>
