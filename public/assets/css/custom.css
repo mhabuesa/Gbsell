@@ -1,0 +1,19 @@
+.notification-menu {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.notification-header {
+    position: sticky;
+    top: 0;
+    background: #f8f9fa;
+    z-index: 1;
+    padding: 10px 0;
+}
+
+.clear-notification {
+    position: sticky;
+    background: #fff;
+    padding: 10px 0;
+    z-index: 2;
+}

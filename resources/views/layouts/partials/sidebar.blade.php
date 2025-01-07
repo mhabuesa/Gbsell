@@ -4,7 +4,7 @@
             <span class="smini-visible">
                 <i class="fa fa-circle-notch text-primary"></i>
             </span>
-            <span class="smini-hide fs-5 tracking-wider">OneUI</span>
+            <span class="smini-hide fs-5 tracking-wider">GBSell</span>
         </a>
         <div>
             <button type="button" class="btn btn-sm btn-alt-secondary" data-toggle="layout"
@@ -61,44 +61,23 @@
                 </li>
                 <li class="nav-main-item">
                     <a class="nav-main-link {{ Route::is('admin.home.*') ? 'active' : '' }}"
-                        href="{{ route('admin.home.logo') }}">
+                        href="{{ route('admin.home.favicon') }}">
                         <i class="nav-main-link-icon fa-solid fa-ticket"></i>
                         <span class="nav-main-link-name">Home Page Customize</span>
                     </a>
                 </li>
                 <li class="nav-main-item">
-                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true"
-                        aria-expanded="false" href="#">
-                        <i class="nav-main-link-icon si si-energy"></i>
-                        <span class="nav-main-link-name">Shops</span>
+                    <a class="nav-main-link {{ Route::is('admin.subcription') ? 'active' : '' }}"
+                        href="{{ route('admin.subcription') }}">
+                        <i class="nav-main-link-icon fa-solid fa-star"></i>
+                        <span class="nav-main-link-name">Subscription List</span>
                     </a>
-                    <ul class="nav-main-submenu">
-                        <li class="nav-main-item">
-                            <a class="nav-main-link" href="be_blocks_styles.html">
-                                <span class="nav-main-link-name">Styles</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link" href="be_blocks_options.html">
-                                <span class="nav-main-link-name">Options</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link" href="be_blocks_forms.html">
-                                <span class="nav-main-link-name">Forms</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link" href="be_blocks_themed.html">
-                                <span class="nav-main-link-name">Themed</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link" href="be_blocks_api.html">
-                                <span class="nav-main-link-name">API</span>
-                            </a>
-                        </li>
-                    </ul>
+                </li>
+                <li class="nav-main-item">
+                    <a class="nav-main-link {{ Route::is('users.*') ? 'active' : '' }}" href="{{ route('users.index') }}">
+                        <i class="nav-main-link-icon fa-solid fa-users"></i>
+                        <span class="nav-main-link-name">User List</span>
+                    </a>
                 </li>
             </ul>
         </div>

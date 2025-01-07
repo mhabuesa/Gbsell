@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\OrderProduct;
+use App\Models\SubscribersModel;
 use Illuminate\Http\Request;
 use App\Traits\ImageSaveTrait;
 use Illuminate\Support\Carbon;
@@ -261,5 +262,12 @@ class AdminController extends Controller
             'youtube' => $request->youtube,
         ]);
         return redirect()->back()->with('success', 'Social Updated Successfully');
+    }
+
+    public function subcription(){
+        $subcriptions = SubscribersModel::latest()->get();
+        return view('admin.subcriptions', [
+            'shops' => $subcriptions
+        ]);
     }
 }

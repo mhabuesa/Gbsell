@@ -15,6 +15,7 @@ use App\Models\OrderProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Events\InvoiceGenerated;
+use App\Models\SubscribersModel;
 use App\Models\CartVariantProduct;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -164,14 +165,19 @@ class SslCommerzPaymentController extends Controller
             ];
 
             if (isset($subscriptionPeriods[$info->package_type])) {
+                SubscribersModel::create([
+                    'shop_id' => $info->shop_id,
+                    'package' => $info->package_type,
+                ]);
                 $shop->expiry_date = Carbon::parse($shop->expiry_date)
                     ->addMonths($subscriptionPeriods[$info->package_type]); // Correct key usage
                 $shop->save();
+
             } else {
                 return redirect()->route('subscription.index')->with('error', 'Invalid Package Type');
             }
 
-            return redirect()->route('subscription.index')->with('success', 'Order Placed Successfully');
+            return redirect()->route('subscription.index')->with('success', 'Subscription Successfully');
         }
         // Subscription Package End
 

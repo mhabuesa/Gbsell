@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use DateTime;
-use Carbon\Carbon;
 use App\Models\SslOrder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Library\SslCommerz\SslCommerzNotification;
 

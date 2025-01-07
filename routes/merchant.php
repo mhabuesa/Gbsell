@@ -7,7 +7,9 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -15,15 +17,14 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\SocialMediaController;
 use App\Http\Controllers\MerchantAuthController;
 use App\Http\Controllers\MerchantUserController;
 use App\Http\Controllers\OrderDeliverController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\FrontCustomizeController;
 use App\Http\Controllers\PaymentGatewayController;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\ReportController;
-use App\Http\Controllers\SocialMediaController;
-use App\Http\Controllers\SubscriptionController;
 
 // Signin & Signup
 Route::get('/signin', [MerchantAuthController::class, 'signin_view'])->name('signin.view');
@@ -174,6 +175,12 @@ Route::middleware('merchant')->group(function () {
         Route::post('/subscription/store', 'subscription')->name('subscription');
         Route::get('/subscription/pay', 'pay')->name('subscription.pay');
     });
+
+    // Clear Notification
+    Route::post('/clear-notifications', [CommonController::class, 'clearNotifications']);
+    Route::get('/order/notification/{id}', [CommonController::class, 'ordernotification'])->name('order.notification');
+    Route::get('/review/notification/{id}', [CommonController::class, 'reviewnotification'])->name('review.notification');
+
 
      // Resource Controller
     Route::resource('/category', CategoryController::class);

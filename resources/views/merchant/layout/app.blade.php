@@ -25,6 +25,7 @@
     @stack('style')
     <!-- Main CSS -->
     <link rel="stylesheet" id="css-main" href="{{ asset('assets') }}/css/oneui.min-5.9.css">
+    <link rel="stylesheet" id="css-main" href="{{ asset('assets') }}/css/custom.css">
 </head>
 
 <body>

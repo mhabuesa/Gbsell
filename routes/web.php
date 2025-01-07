@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use PHPUnit\Framework\Attributes\Group;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 
 Route::middleware(['auth'])->group(function () {
     Route::controller(AdminController::class)->group(function(){
@@ -30,8 +31,15 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/info/update', 'info_update')->name('info.update');
             Route::get('/social', 'social')->name('home.social');
             Route::post('/social/update', 'social_update')->name('social.update');
+            Route::get('/subcription', 'subcription')->name('subcription');
         });
     });
+
+    // User Profile route
+    Route::controller(UserController::class)->name('users.')->prefix('users')->group(function () {
+        Route::post('/update-status/{user}', 'updateStatus')->name('status.update');
+    });
+    Route::resource('/users', UserController::class);
 });
 
 

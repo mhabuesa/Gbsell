@@ -1,6 +1,3 @@
-@php
-    $info = App\Models\AdminInfo::first();
-@endphp
 <!DOCTYPE html>
 <html lang="en">
 

@@ -64,105 +64,79 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0 border-0 fs-sm"
                     aria-labelledby="page-header-notifications-dropdown">
-                    <div class="p-2 bg-body-light border-bottom text-center rounded-top">
+                    <div class="p-2 bg-body-light border-bottom text-center rounded-top notification-header">
                         <h5 class="dropdown-header text-uppercase">Notifications</h5>
                     </div>
-                    <ul class="nav-items mb-0">
-                        <li>
-                            <a class="text-dark d-flex py-2" href="javascript:void(0)">
-                                <div class="flex-shrink-0 me-2 ms-3">
-                                    <i class="fa fa-fw fa-check-circle text-success"></i>
-                                </div>
-                                <div class="flex-grow-1 pe-2">
-                                    <div class="fw-semibold">You have a new follower</div>
-                                    <span class="fw-medium text-muted">15 min ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="text-dark d-flex py-2" href="javascript:void(0)">
-                                <div class="flex-shrink-0 me-2 ms-3">
-                                    <i class="fa fa-fw fa-plus-circle text-primary"></i>
-                                </div>
-                                <div class="flex-grow-1 pe-2">
-                                    <div class="fw-semibold">1 new sale, keep it up</div>
-                                    <span class="fw-medium text-muted">22 min ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="text-dark d-flex py-2" href="javascript:void(0)">
-                                <div class="flex-shrink-0 me-2 ms-3">
-                                    <i class="fa fa-fw fa-times-circle text-danger"></i>
-                                </div>
-                                <div class="flex-grow-1 pe-2">
-                                    <div class="fw-semibold">Update failed, restart server</div>
-                                    <span class="fw-medium text-muted">26 min ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="text-dark d-flex py-2" href="javascript:void(0)">
-                                <div class="flex-shrink-0 me-2 ms-3">
-                                    <i class="fa fa-fw fa-plus-circle text-primary"></i>
-                                </div>
-                                <div class="flex-grow-1 pe-2">
-                                    <div class="fw-semibold">2 new sales, keep it up</div>
-                                    <span class="fw-medium text-muted">33 min ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="text-dark d-flex py-2" href="javascript:void(0)">
-                                <div class="flex-shrink-0 me-2 ms-3">
-                                    <i class="fa fa-fw fa-user-plus text-success"></i>
-                                </div>
-                                <div class="flex-grow-1 pe-2">
-                                    <div class="fw-semibold">You have a new subscriber</div>
-                                    <span class="fw-medium text-muted">41 min ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="text-dark d-flex py-2" href="javascript:void(0)">
-                                <div class="flex-shrink-0 me-2 ms-3">
-                                    <i class="fa fa-fw fa-check-circle text-success"></i>
-                                </div>
-                                <div class="flex-grow-1 pe-2">
-                                    <div class="fw-semibold">You have a new follower</div>
-                                    <span class="fw-medium text-muted">42 min ago</span>
-                                </div>
-                            </a>
-                        </li>
+                    <ul class="nav-items mb-0 notification-menu">
+                        @forelse ($combinedData as $key => $data)
+                            <li id="notification-{{ $data->id }}">
+                                <a class="text-dark d-flex py-2"
+                                    href="{{ $data->type == 'order' ? route('order.notification', $data->id) : route('review.notification', $data->id) }}">
+                                    <div class="flex-shrink-0 me-2 ms-3">
+                                        <i
+                                            class="fa fa-fw {{ $data->type == 'order' ? 'fa-shopping-cart text-success' : 'fa-star text-primary' }}"></i>
+                                    </div>
+                                    <div class="flex-grow-1 pe-2">
+                                        <div class="fw-semibold">You have a new <span
+                                                class="text-capitalize">{{ $data->type }}</span></div>
+                                        <span
+                                            class="fw-medium text-muted">{{ $data->created_at->diffForHumans() }}</span>
+                                    </div>
+                                </a>
+                            </li>
+                        @empty
+                            <li>
+                                <a class="text-dark d-flex py-2" href="javascript:void(0)">
+                                    <div class="flex-grow-1 pe-2">
+                                        <div class="fw-semibold text-center">Notifications Not Available</div>
+                                    </div>
+                                </a>
+                            </li>
+                        @endforelse
                     </ul>
-                    <div class="p-2 border-top text-center">
-                        <a class="d-inline-block fw-medium" href="javascript:void(0)">
-                            <i class="fa fa-fw fa-arrow-down me-1 opacity-50"></i> Load More..
-                        </a>
+                    @if (count($combinedData) > 0)
+                        <div id="clearBtn" class="p-2 border-top text-center clear-notification">
+                            <a id="clear-notifications" class="d-inline-block fw-medium" href="javascript:void(0)">
+                                <i class="fa fa-fw fa-eraser me-1 opacity-50"></i> Clear
+                            </a>
+                        </div>
+                    @endif
+                    <div id="notAvailable" class="p-2 border-top text-center clear-notification d-none">
+                        <p class="d-inline-block fw-medium mb-0" >
+                            Notifications Not Available
+                        </p>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div id="page-header-search" class="overlay-header bg-body-extra-light">
-        <div class="content-header">
-            <form class="w-100" action="be_pages_generic_search.html" method="POST">
-                <div class="input-group">
-                    <button type="button" class="btn btn-alt-danger" data-toggle="layout"
-                        data-action="header_search_off">
-                        <i class="fa fa-fw fa-times-circle"></i>
-                    </button>
-                    <input type="text" class="form-control" placeholder="Search or hit ESC.."
-                        id="page-header-search-input" name="page-header-search-input">
-                </div>
-            </form>
-        </div>
-    </div>
-    <div id="page-header-loader" class="overlay-header bg-body-extra-light">
-        <div class="content-header">
-            <div class="w-100 text-center">
-                <i class="fa fa-fw fa-circle-notch fa-spin"></i>
             </div>
         </div>
     </div>
 </header>
+
+@push('script')
+    <script>
+        $(document).ready(function() {
+            $('#clear-notifications').click(function() {
+                $.ajax({
+                    url: '/clear-notifications',
+                    method: 'POST',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            $('ul.nav-items li').remove();
+                            $('#clearBtn').remove();
+                            $('#notAvailable').removeClass('d-none');
+                            showToast('Notifications cleared', 'success');
+                        } else {
+                            showToast('Failed to clear notifications', 'error');
+                        }
+                    },
+                    error: function() {
+                        showToast('An error occurred. Please try again', 'error');
+                    }
+                });
+            });
+        });
+    </script>
+@endpush

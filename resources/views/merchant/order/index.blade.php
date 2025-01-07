@@ -46,7 +46,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($orders as $key => $order)
-                                        <tr class="hover_tr">
+                                        <tr class="hover_tr {{session('order') == $order->id ? 'bg-gray' : ''}}">
                                             <td class="text-center" scope="row">{{ $key + 1 }}.</td>
                                             <td class="fw-semibold fs-sm">
                                                 {{ $order->order_id }}
